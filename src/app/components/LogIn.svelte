@@ -42,7 +42,8 @@
     loading = "nip07"
 
     try {
-      const pubkey = await getNip07()?.getPublicKey()
+      const nip07 = getNip07() as any
+      const pubkey = nip07?.peekPublicKey ? await nip07.peekPublicKey() : await nip07?.getPublicKey()
 
       if (pubkey) {
         await onSuccess(makeNip07Session(pubkey))

@@ -21,6 +21,8 @@ fi
 
 # Ensure generator uses local path (dotenv may have loaded URL from .env)
 VITE_PLATFORM_LOGO="${VITE_PLATFORM_LOGO}" npx pwa-assets-generator
+npx svelte-kit sync
+npx pwa-assets-generator
 npx vite build
 
 # Replace index.html variables with stuff from our env
