@@ -19,6 +19,7 @@ if [[ $VITE_PLATFORM_LOGO =~ ^https://* ]]; then
   export VITE_PLATFORM_LOGO=static/logo.png
 fi
 
+npx svelte-kit sync
 npx pwa-assets-generator
 npx vite build
 

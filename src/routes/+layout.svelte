@@ -10,7 +10,14 @@
   import {sync, throttled} from "@welshman/store"
   import {call} from "@welshman/lib"
   import {defaultSocketPolicies} from "@welshman/net"
-  import {pubkey, sessions, signerLog, shouldUnwrap} from "@welshman/app"
+  import {
+    pubkey,
+    sessions,
+    signerLog,
+    shouldUnwrap,
+    addSession,
+    makeNip07Session,
+  } from "@welshman/app"
   import * as lib from "@welshman/lib"
   import * as util from "@welshman/util"
   import * as feeds from "@welshman/feeds"
@@ -114,6 +121,16 @@
         storage: kv,
       }),
     ])
+
+    // Try to auto-login if we don't have a pubkey
+    if (!get(pubkey)) {
+      // @ts-ignore
+      const maybeUserPk = await window.nostr?.peekPublicKey?.()
+
+      if (maybeUserPk) {
+        addSession(makeNip07Session(maybeUserPk))
+      }
+    }
 
     // Set up our storage adapters
     db.adapters = storage.adapters
