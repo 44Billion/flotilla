@@ -4,7 +4,7 @@ import {
   uniq,
   int,
   YEAR,
-  DAY,
+  WEEK,
   insertAt,
   sortBy,
   now,
@@ -47,7 +47,7 @@ export const makeFeed = ({
   onForwardExhausted?: () => void
   at?: number
 }) => {
-  const interval = int(DAY)
+  const interval = int(WEEK)
   const controller = new AbortController()
   const events = writable<TrustedEvent[]>([])
 
@@ -191,7 +191,7 @@ export const makeCalendarFeed = ({
   element: HTMLElement
   onExhausted?: () => void
 }) => {
-  const interval = int(5, DAY)
+  const interval = int(5, WEEK)
   const controller = new AbortController()
 
   let exhaustedScrollers = 0

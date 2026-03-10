@@ -31,7 +31,7 @@
   import {decodeRelay, deriveEventsForUrl, CONTENT_KINDS} from "@app/core/state"
 
   const url = decodeRelay($page.params.relay!)
-  const since = ago(MONTH)
+  const since = ago(3, MONTH)
 
   const messages = deriveEventsForUrl(url, [{kinds: [MESSAGE], since}])
   const content = deriveEventsForUrl(url, [{kinds: CONTENT_KINDS, since}])
