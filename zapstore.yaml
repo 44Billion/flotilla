@@ -1,13 +1,13 @@
-identifier: social.flotilla
 name: Flotilla
-tags: nostr nip29 community chat group
-changelog: CHANGELOG.md
-homepage: https://flotilla.social
 description: Self-hosted community chat and threads built on the nostr protocol.
-repository: https://github.com/coracle-social/flotilla
-blossom_servers:
-  - https://cdn.zapstore.dev
-  - https://hbr.coracle.social
-assets:
-  - app-release-signed.apk
-
+tags:
+  - nostr
+  - nip29
+  - community
+  - chat
+  - group
+license: MIT
+website: https://flotilla.social
+repository: https://gitea.coracle.social/coracle/flotilla
+release_source: ./android/app/build/outputs/apk/release/app-release-signed.apk
+release_notes: ./CHANGELOG.md
