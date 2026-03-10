@@ -14,6 +14,7 @@ import {
   uniqBy,
   sortBy,
   append,
+  reject,
   sort,
   uniq,
   indexBy,
@@ -457,7 +458,7 @@ export const splitChatId = (id: string) => getChatPubkeys(id.split(","))
 
 export const chatsById = call(() => {
   const chatsById = new Map<string, Chat>()
-  const chatsByPubkey = new Map<string, Chat[]>()
+  const chatsByPubkey = new Map<string, string[]>()
 
   const addSearchText = (chat: Override<Chat, {search_text?: string}>) => {
     chat.search_text =
@@ -469,6 +470,12 @@ export const chatsById = call(() => {
   }
 
   return readable(chatsById, set => {
+    const indexChatByPubkeys = (chat: Chat) => {
+      for (const pubkey of chat.pubkeys) {
+        chatsByPubkey.set(pubkey, uniq(append(chat.id, chatsByPubkey.get(pubkey) || [])))
+      }
+    }
+
     const addEvents = (events: TrustedEvent[]) => {
       let dirty = false
       for (const event of events) {
@@ -484,21 +491,19 @@ export const chatsById = call(() => {
           const updatedChat = addSearchText({id, pubkeys, messages, last_activity})
 
           chatsById.set(id, updatedChat)
-
-          for (const pubkey of pubkeys) {
-            const pubkeyChats = chatsByPubkey.get(pubkey) || []
-            const uniqueChats = uniqBy(chat => chat.id, append(updatedChat, pubkeyChats))
-
-            chatsByPubkey.set(pubkey, uniqueChats)
-          }
+          indexChatByPubkeys(updatedChat)
 
           dirty = true
         }
 
         if (event.kind === PROFILE) {
-          for (const chat of chatsByPubkey.get(event.pubkey) || []) {
-            addSearchText(chat)
-            dirty = true
+          for (const chatId of chatsByPubkey.get(event.pubkey) || []) {
+            const chat = chatsById.get(chatId)
+
+            if (chat) {
+              addSearchText(chat)
+              dirty = true
+            }
           }
         }
       }
@@ -508,10 +513,36 @@ export const chatsById = call(() => {
       }
     }
 
-    addEvents(repository.query([{kinds: [...DM_KINDS, PROFILE]}]))
+    const removeEvents = (removed: Set<string>) => {
+      let dirty = false
+
+      for (const id of removed) {
+        const event = repository.getEvent(id)
+
+        if (event && DM_KINDS.includes(event.kind)) {
+          for (const chatId of chatsByPubkey.get(event.pubkey) || []) {
+            const chat = chatsById.get(chatId)
+
+            if (chat) {
+              chat.messages = reject(spec({id: event.id}), chat.messages)
+              dirty = true
+            }
+          }
+        }
+      }
+
+      if (dirty) {
+        set(chatsById)
+      }
+    }
+
+    addEvents(repository.query([{kinds: [...DM_KINDS, DELETE, PROFILE]}]))
 
     const unsubscribers = [
-      on(repository, "update", ({added}: RepositoryUpdate) => addEvents(added)),
+      on(repository, "update", ({added, removed}: RepositoryUpdate) => {
+        addEvents(added)
+        removeEvents(removed)
+      }),
     ]
 
     return () => unsubscribers.forEach(call)

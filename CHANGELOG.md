@@ -1,5 +1,10 @@
 # Changelog
 
+# Current
+
+* Enable email/password login
+* Add up/edit to direct messages
+
 # 1.6.5
 
 * Attempt to fix permission grant for notifications

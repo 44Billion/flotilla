@@ -156,7 +156,7 @@
     {/if}
     <SignerStatus />
     {#if $session?.method === SessionMethod.Pomade}
-      <div class="flex gap-2 justify-end">
+      <div class="flex flex-col lg:flex-row gap-4 lg:gap-2 justify-end">
         <Button class="btn" onclick={startPasswordReset}>
           <Spinner {loading}>Update your password</Spinner>
         </Button>

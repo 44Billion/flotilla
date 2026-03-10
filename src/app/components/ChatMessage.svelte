@@ -23,11 +23,13 @@
   interface Props {
     event: TrustedEvent
     replyTo: (event: TrustedEvent) => void
+    canEdit?: (event: TrustedEvent) => boolean
+    onEdit?: (event: TrustedEvent) => void
     pubkeys: string[]
     showPubkey?: boolean
   }
 
-  const {event, replyTo, pubkeys, showPubkey = false}: Props = $props()
+  const {event, replyTo, canEdit, onEdit, pubkeys, showPubkey = false}: Props = $props()
 
   const isOwn = event.pubkey === $pubkey
   const profileDisplay = deriveProfileDisplay(event.pubkey)
@@ -35,6 +37,7 @@
   const [_, colorValue] = colors[hash(event.pubkey) % colors.length]
 
   const reply = () => replyTo(event)
+  const edit = canEdit?.(event) ? () => onEdit?.(event) : undefined
 
   const deleteReaction = (event: TrustedEvent) =>
     sendWrapped({event: makeDelete({event, protect: false}), recipients: pubkeys})
@@ -44,7 +47,7 @@
 
   const openProfile = () => pushModal(ProfileDetail, {pubkey: event.pubkey})
 
-  const showMobileMenu = () => pushModal(ChatMessageMenuMobile, {event, pubkeys, reply})
+  const showMobileMenu = () => pushModal(ChatMessageMenuMobile, {event, pubkeys, reply, edit})
 
   const togglePopover = () => {
     if (popoverIsVisible) {
@@ -71,7 +74,7 @@
     <Tippy
       bind:popover
       component={ChatMessageMenu}
-      props={{event, pubkeys, popover, replyTo}}
+      props={{event, pubkeys, popover, replyTo, edit}}
       params={{
         interactive: true,
         trigger: "manual",
@@ -93,7 +96,7 @@
   {/if}
   <div class="flex min-w-0 flex-col" class:items-end={isOwn}>
     <TapTarget
-      class="bg-alt chat-bubble mx-1 mb-2 flex cursor-auto flex-col gap-1 text-left lg:max-w-2xl"
+      class="bg-alt chat-bubble mx-1 mb-2 flex cursor-auto flex-col gap-1 text-left lg:max-w-2xl min-w-[100px]"
       onTap={showMobileMenu}>
       {#if showPubkey}
         <div class="flex items-center gap-2">

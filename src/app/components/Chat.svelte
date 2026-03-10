@@ -2,9 +2,11 @@
   import type {Snippet} from "svelte"
   import {onMount} from "svelte"
   import {
+    ago,
     int,
     ms,
     partition,
+    ifLet,
     spec,
     nthEq,
     nthNe,
@@ -46,11 +48,12 @@
   import ChatMembers from "@app/components/ChatMembers.svelte"
   import ChatMessage from "@app/components/ChatMessage.svelte"
   import ChatCompose from "@app/components/ChatCompose.svelte"
+  import ChatComposeEdit from "@app/components/ChatComposeEdit.svelte"
   import ChatComposeParent from "@app/components/ChatComposeParent.svelte"
   import ThunkToast from "@app/components/ThunkToast.svelte"
   import {userSettingsValues, PLATFORM_NAME, deriveChat} from "@app/core/state"
   import {pushModal} from "@app/util/modal"
-  import {prependParent} from "@app/core/commands"
+  import {makeDelete, prependParent} from "@app/core/commands"
   import {pushToast} from "@app/util/toast"
 
   type Props = {
@@ -78,73 +81,115 @@
     parent = undefined
   }
 
-  const onSubmit = async (params: EventContent) => {
-    const ptags = remove($pubkey!, pubkeys).map(tagPubkey)
-
-    // Remove p tags since they result in forking the conversation
-    params.tags = params.tags.filter(nthNe(0, "p"))
-
-    // Add our reply quote to content
-    params = prependParent(parent, params)
-
-    const [imetaTags, tags] = partition(nthEq(0, "imeta"), params.tags)
-    const imetas = getTags("imeta", imetaTags).map(tagsFromIMeta)
-    const templates: EventTemplate[] = []
-    const buffer = []
-
-    const addTemplate = (kind: number, content: string, tags: string[][]) => {
-      content = content.trim()
-
-      if (content) {
-        templates.push(makeEvent(kind, {content, tags: [...tags, ...ptags]}))
-      }
-    }
-
-    for (const p of parse(params)) {
-      const imeta = isLink(p)
-        ? imetas.find(tags => tags.find(spec(["url", p.value.url.toString()])))
-        : undefined
-
-      if (isLink(p) && imeta) {
-        addTemplate(DIRECT_MESSAGE, buffer.splice(0).join(""), tags)
-        addTemplate(
-          DIRECT_MESSAGE_FILE,
-          p.value.url.toString(),
-          imeta.slice(1).filter(nthNe(0, "url")),
-        )
-      } else {
-        buffer.push(p.raw)
-      }
-    }
-
-    addTemplate(DIRECT_MESSAGE, buffer.splice(0).join(""), tags)
-
-    // Split the message into multiple pieces so that we can use kind 15 to send images per nip 17
-    // Sleep 1 second between each one to make sure timestamps are distinct
-    const thunks = await Promise.all(
-      Array.from(enumerate(templates)).map(([i, event]) =>
-        sendWrapped({
-          event,
-          recipients: pubkeys,
-          delay: $userSettingsValues.send_delay + ms(i),
-        }),
-      ),
-    )
-
-    pushToast({
-      timeout: 30_000,
-      children: {
-        component: ThunkToast,
-        props: {thunk: mergeThunks(thunks)},
-      },
-    })
-
-    clearParent()
+  const clearEventToEdit = () => {
+    eventToEdit = undefined
   }
+
+  const onSubmit = async (params: EventContent) => {
+    try {
+      const ptags = remove($pubkey!, pubkeys).map(tagPubkey)
+
+      // Remove p tags since they result in forking the conversation
+      params.tags = params.tags.filter(nthNe(0, "p"))
+
+      // Add our reply quote to content
+      params = prependParent(parent, params)
+
+      if (eventToEdit) {
+        if (eventToEdit.content === params.content) {
+          return
+        }
+
+        await sendWrapped({
+          event: makeDelete({event: eventToEdit, protect: false}),
+          recipients: pubkeys,
+        })
+      }
+
+      const [imetaTags, tags] = partition(nthEq(0, "imeta"), params.tags)
+      const imetas = getTags("imeta", imetaTags).map(tagsFromIMeta)
+      const templates: EventTemplate[] = []
+      const buffer = []
+
+      const addTemplate = (kind: number, content: string, tags: string[][]) => {
+        content = content.trim()
+
+        if (content) {
+          templates.push(
+            makeEvent(kind, {
+              content,
+              tags: [...tags, ...ptags],
+              created_at: eventToEdit?.created_at,
+            }),
+          )
+        }
+      }
+
+      for (const p of parse(params)) {
+        const imeta = isLink(p)
+          ? imetas.find(tags => tags.find(spec(["url", p.value.url.toString()])))
+          : undefined
+
+        if (isLink(p) && imeta) {
+          addTemplate(DIRECT_MESSAGE, buffer.splice(0).join(""), tags)
+          addTemplate(
+            DIRECT_MESSAGE_FILE,
+            p.value.url.toString(),
+            imeta.slice(1).filter(nthNe(0, "url")),
+          )
+        } else {
+          buffer.push(p.raw)
+        }
+      }
+
+      addTemplate(DIRECT_MESSAGE, buffer.splice(0).join(""), tags)
+
+      // Split the message into multiple pieces so that we can use kind 15 to send images per nip 17
+      // Sleep 1 second between each one to make sure timestamps are distinct
+      const thunks = await Promise.all(
+        Array.from(enumerate(templates)).map(([i, event]) =>
+          sendWrapped({
+            event,
+            recipients: pubkeys,
+            delay: $userSettingsValues.send_delay + ms(i),
+          }),
+        ),
+      )
+
+      pushToast({
+        timeout: 30_000,
+        children: {
+          component: ThunkToast,
+          props: {thunk: mergeThunks(thunks)},
+        },
+      })
+    } finally {
+      clearParent()
+      clearEventToEdit()
+    }
+  }
+
+  const onEscape = () => {
+    clearParent()
+    clearEventToEdit()
+  }
+
+  const canEditEvent = (event: TrustedEvent) =>
+    event.pubkey === $pubkey &&
+    event.kind === DIRECT_MESSAGE &&
+    event.created_at >= ago(500, MINUTE)
+
+  const onEditEvent = (event: TrustedEvent) => {
+    clearParent()
+    eventToEdit = event
+  }
+
+  const onEditPrevious = () => ifLet($chat?.messages.toReversed().find(canEditEvent), onEditEvent)
 
   let loading = $state(true)
   let compose: ChatCompose | undefined = $state()
   let parent: TrustedEvent | undefined = $state()
+  let eventToEdit: TrustedEvent | undefined = $state()
   let chatCompose: HTMLElement | undefined = $state()
   let dynamicPadding: HTMLElement | undefined = $state()
 
@@ -285,7 +330,9 @@
         event={$state.snapshot(value as TrustedEvent)}
         {pubkeys}
         {showPubkey}
-        {replyTo} />
+        {replyTo}
+        canEdit={canEditEvent}
+        onEdit={onEditEvent} />
     {/if}
   {/each}
   <p class="m-auto flex h-10 max-w-sm flex-col items-center justify-center gap-4 py-20 text-center">
@@ -305,6 +352,16 @@
     {#if parent}
       <ChatComposeParent event={parent} clear={clearParent} verb="Replying to" />
     {/if}
+    {#if eventToEdit}
+      <ChatComposeEdit clear={clearEventToEdit} />
+    {/if}
   </div>
-  <ChatCompose bind:this={compose} {onSubmit} />
+  {#key eventToEdit}
+    <ChatCompose
+      bind:this={compose}
+      {onSubmit}
+      {onEscape}
+      {onEditPrevious}
+      content={eventToEdit?.content} />
+  {/key}
 </div>

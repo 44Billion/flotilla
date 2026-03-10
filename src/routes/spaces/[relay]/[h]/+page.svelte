@@ -5,7 +5,7 @@
   import {goto} from "$app/navigation"
   import type {Readable} from "svelte/store"
   import {pubkey, publishThunk, waitForThunkError, joinRoom, leaveRoom} from "@welshman/app"
-  import {now, int, formatTimestampAsDate, ago, MINUTE} from "@welshman/lib"
+  import {now, ifLet, int, formatTimestampAsDate, ago, MINUTE} from "@welshman/lib"
   import type {MakeNonOptional} from "@welshman/lib"
   import type {TrustedEvent, EventContent} from "@welshman/util"
   import {
@@ -336,13 +336,7 @@
     eventToEdit = event
   }
 
-  const onEditPrevious = () => {
-    const prev = $events.toReversed().find(e => e.pubkey === $pubkey)
-
-    if (prev && canEditEvent(prev)) {
-      onEditEvent(prev)
-    }
-  }
+  const onEditPrevious = () => ifLet($events.toReversed().find(canEditEvent), onEditEvent)
 
   onMount(() => {
     const observer = new ResizeObserver(() => {

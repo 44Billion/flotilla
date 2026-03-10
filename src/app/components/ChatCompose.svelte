@@ -1,4 +1,5 @@
 <script lang="ts">
+  import {onDestroy, onMount} from "svelte"
   import {writable} from "svelte/store"
   import type {EventContent} from "@welshman/util"
   import {isMobile, preventDefault} from "@lib/html"
@@ -10,16 +11,32 @@
   import {makeEditor} from "@app/editor"
 
   type Props = {
+    content?: string
+    onEscape?: () => void
+    onEditPrevious?: () => void
     onSubmit: (event: EventContent) => void
   }
 
-  const {onSubmit}: Props = $props()
+  const {content, onEscape, onEditPrevious, onSubmit}: Props = $props()
 
   const autofocus = !isMobile
 
   const uploading = writable(false)
 
   export const focus = () => editor.then(ed => ed.chain().focus().run())
+
+  export const canEnterEditPrevious = () =>
+    editor.then(ed => ed.getText({blockSeparator: "\n"}) === "")
+
+  const handleKeyDown = async (event: KeyboardEvent) => {
+    if (event.key === "Escape") {
+      onEscape?.()
+    }
+
+    if (event.key === "ArrowUp" && (await canEnterEditPrevious())) {
+      onEditPrevious?.()
+    }
+  }
 
   const uploadFiles = () => editor.then(ed => ed.chain().selectFiles().run())
 
@@ -38,11 +55,22 @@
   }
 
   const editor = makeEditor({
+    content,
     autofocus,
     submit,
     uploading,
     aggressive: true,
     encryptFiles: true,
+  })
+
+  onMount(async () => {
+    const ed = await editor
+    ed.view.dom.addEventListener("keydown", handleKeyDown)
+  })
+
+  onDestroy(async () => {
+    const ed = await editor
+    ed?.view?.dom.removeEventListener("keydown", handleKeyDown)
   })
 </script>
 

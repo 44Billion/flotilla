@@ -3,6 +3,7 @@
   import type {TrustedEvent} from "@welshman/util"
   import {sendWrapped} from "@welshman/app"
   import SmileCircle from "@assets/icons/smile-circle.svg?dataurl"
+  import Pen from "@assets/icons/pen.svg?dataurl"
   import Reply from "@assets/icons/reply-2.svg?dataurl"
   import Copy from "@assets/icons/copy.svg?dataurl"
   import Code2 from "@assets/icons/code-2.svg?dataurl"
@@ -20,9 +21,10 @@
     pubkeys: string[]
     event: TrustedEvent
     reply: () => void
+    edit?: () => void
   }
 
-  const {event, pubkeys, reply}: Props = $props()
+  const {event, pubkeys, reply, edit}: Props = $props()
 
   const onEmoji = ((event: TrustedEvent, pubkeys: string[], emoji: NativeEmoji) => {
     history.back()
@@ -37,6 +39,11 @@
   const sendReply = () => {
     history.back()
     reply()
+  }
+
+  const sendEdit = () => {
+    history.back()
+    edit?.()
   }
 
   const copyText = () => {
@@ -62,6 +69,12 @@
         <Icon size={4} icon={Reply} />
         Send Reply
       </Button>
+      {#if edit}
+        <Button class="btn btn-neutral w-full" onclick={sendEdit}>
+          <Icon size={4} icon={Pen} />
+          Edit Message
+        </Button>
+      {/if}
       <Button class="btn btn-primary w-full" onclick={showEmojiPicker}>
         <Icon size={4} icon={SmileCircle} />
         Send Reaction

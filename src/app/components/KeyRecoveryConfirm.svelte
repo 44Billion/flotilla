@@ -82,7 +82,7 @@
     <p>Your recovery codes have been sent!</p>
     <p>
       For security reasons, you may receive three or more emails with recovery codes in them. Please
-      paste <strong>all</strong> recovery codes into the text box below, on separate lines.
+      paste <strong>all</strong> recovery codes into the text box below.
     </p>
     <StringMultiInput bind:value={otps} placeholder="Enter your recovery codes..." />
   </ModalBody>

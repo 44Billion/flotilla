@@ -89,7 +89,7 @@
     <p>Let's start by confirming your email.</p>
     <p>
       For security reasons, you may receive three or more emails with confirmation codes in them.
-      Please paste <strong>all</strong> confirmation codes into the text box below, on separate lines.
+      Please paste <strong>all</strong> confirmation codes into the text box below.
     </p>
     <StringMultiInput bind:value={otps} placeholder="Enter your confirmation codes..." />
   </ModalBody>
