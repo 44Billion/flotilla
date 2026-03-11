@@ -3,16 +3,16 @@
   import {between, throttle} from "@welshman/lib"
   import {isMobile} from "@lib/html"
   import Button from "@lib/components/Button.svelte"
-  import Dialog from "@lib/components/Dialog.svelte"
   import Tippy from "@lib/components/Tippy.svelte"
   import IconPickerModal from "@app/components/IconPickerModal.svelte"
   import IconPickerPopover from "@app/components/IconPickerPopover.svelte"
+  import {pushModal, popModal} from "@app/util/modal"
 
   const {...props} = $props()
 
   const open = () => {
     if (isMobile) {
-      showIconPicker = true
+      pushModal(IconPickerModal, {onSelect: onClick}, {nested: true})
     } else {
       popover?.show()
     }
@@ -20,7 +20,7 @@
 
   const close = () => {
     if (isMobile) {
-      showIconPicker = false
+      popModal()
     } else {
       popover?.hide()
     }
@@ -41,7 +41,6 @@
     }
   })
 
-  let showIconPicker = $state(false)
   let popover: Instance | undefined = $state()
 </script>
 
@@ -56,14 +55,3 @@
     {@render props.children?.()}
   </Button>
 </Tippy>
-
-{#if showIconPicker}
-  <Dialog
-    onClose={close}
-    children={{
-      component: IconPickerModal,
-      props: {
-        onSelect: onClick,
-      },
-    }} />
-{/if}

@@ -2,38 +2,46 @@
   import {onMount, mount, unmount} from "svelte"
   import Drawer from "@lib/components/Drawer.svelte"
   import Dialog from "@lib/components/Dialog.svelte"
-  import {modal, clearModals} from "@app/util/modal"
+  import {modal, modalStack, popModal} from "@app/util/modal"
 
-  const closeModals = () => {
+  const closeModal = () => {
     if ($modal && !$modal.options.noEscape) {
-      clearModals()
+      popModal()
     }
   }
 
   const onKeyDown = (e: any) => {
     if (e.code === "Escape" && e.target === document.body) {
-      closeModals()
+      closeModal()
     }
   }
 
   let element: HTMLElement
-  let instance: any | undefined
+  const instances: Record<string, any> = {}
 
   onMount(() => {
-    return modal.subscribe($modal => {
-      if (instance) {
-        unmount(instance, {outro: true})
-        instance = undefined
+    return modalStack.subscribe($modalStack => {
+      const ids = $modalStack.map(({id}) => id)
+
+      for (const [id, instance] of Object.entries(instances)) {
+        if (!ids.includes(id)) {
+          unmount(instance, {outro: true})
+          delete instances[id]
+        }
       }
 
-      if ($modal) {
-        const {options, component, props} = $modal
+      for (const item of $modalStack) {
+        if (instances[item.id]) {
+          continue
+        }
+
+        const {options, component, props} = item
         const wrapper = options.drawer ? Drawer : Dialog
 
-        instance = mount(wrapper as any, {
+        instances[item.id] = mount(wrapper as any, {
           target: element,
           props: {
-            onClose: closeModals,
+            onClose: closeModal,
             fullscreen: options.fullscreen,
             children: {component, props},
           },

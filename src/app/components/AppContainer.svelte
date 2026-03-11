@@ -1,12 +1,11 @@
 <script lang="ts">
   import type {Snippet} from "svelte"
-  import {page} from "$app/stores"
   import {pubkey} from "@welshman/app"
   import Dialog from "@lib/components/Dialog.svelte"
   import Landing from "@app/components/Landing.svelte"
   import Toast from "@app/components/Toast.svelte"
   import PrimaryNav from "@app/components/PrimaryNav.svelte"
-  import {modals} from "@app/util/modal"
+  import {modal} from "@app/util/modal"
 
   interface Props {
     children: Snippet
@@ -20,7 +19,7 @@
     <PrimaryNav>
       {@render children?.()}
     </PrimaryNav>
-  {:else if !$modals[$page.url.hash.slice(1)]}
+  {:else if !$modal}
     <Dialog children={{component: Landing, props: {}}} />
   {/if}
 </div>
