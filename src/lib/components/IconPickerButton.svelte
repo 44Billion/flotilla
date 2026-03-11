@@ -5,8 +5,8 @@
   import Button from "@lib/components/Button.svelte"
   import Dialog from "@lib/components/Dialog.svelte"
   import Tippy from "@lib/components/Tippy.svelte"
-  import IconPicker from "@app/components/IconPicker.svelte"
-  import IconPickerDialog from "@app/components/IconPickerDialog.svelte"
+  import IconPickerModal from "@app/components/IconPickerModal.svelte"
+  import IconPickerPopover from "@app/components/IconPickerPopover.svelte"
 
   const {...props} = $props()
 
@@ -49,7 +49,7 @@
 
 <Tippy
   bind:popover
-  component={IconPickerDialog}
+  component={IconPickerPopover}
   props={{onSelect: onClick}}
   params={{trigger: "manual", interactive: true, placement: "top-end"}}>
   <Button onclick={open} class={props.class}>
@@ -61,7 +61,7 @@
   <Dialog
     onClose={close}
     children={{
-      component: IconPicker,
+      component: IconPickerModal,
       props: {
         onSelect: onClick,
       },
