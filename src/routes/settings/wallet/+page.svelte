@@ -83,9 +83,9 @@
 <div class="content column gap-4">
   <div class="card2 bg-alt flex flex-col gap-6 shadow-md">
     <div class="flex items-center justify-between">
-      <strong class="flex items-center gap-3">
+      <strong class="flex items-center gap-3 text-lg">
         <Icon icon={Wallet2} />
-        Wallet
+        Your Wallet
       </strong>
       {#if $session?.wallet}
         <div class={statusClass}>

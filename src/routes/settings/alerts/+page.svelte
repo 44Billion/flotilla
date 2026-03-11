@@ -3,8 +3,10 @@
   import {sleep} from "@welshman/lib"
   import {Capacitor} from "@capacitor/core"
   import {Badge} from "@capawesome/capacitor-badge"
+  import Bell from "@assets/icons/bell.svg?dataurl"
   import {preventDefault} from "@lib/html"
   import Spinner from "@lib/components/Spinner.svelte"
+  import Icon from "@lib/components/Icon.svelte"
   import Button from "@lib/components/Button.svelte"
   import {pushToast} from "@app/util/toast"
   import {Push, clearBadges} from "@app/util/notifications"
@@ -51,7 +53,10 @@
 
 <form class="content column gap-4" {onsubmit}>
   <div class="card2 bg-alt col-4 shadow-md">
-    <strong class="text-lg">Alert Settings</strong>
+    <strong class="flex items-center gap-3 text-lg">
+      <Icon icon={Bell} />
+      Alert Settings
+    </strong>
     {#await Badge.isSupported()}
       <!-- pass -->
     {:then { isSupported }}

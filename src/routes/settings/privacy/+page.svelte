@@ -1,5 +1,7 @@
 <script lang="ts">
+  import ShieldMinimalistic from "@assets/icons/shield-minimalistic.svg?dataurl"
   import {preventDefault} from "@lib/html"
+  import Icon from "@lib/components/Icon.svelte"
   import Button from "@lib/components/Button.svelte"
   import {pushToast} from "@app/util/toast"
   import {PLATFORM_NAME, RelayAuthMode, userSettingsValues} from "@app/core/state"
@@ -24,7 +26,10 @@
 
 <form class="content column gap-4" {onsubmit}>
   <div class="card2 bg-alt flex flex-col gap-4 shadow-md">
-    <strong class="text-lg">Privacy Settings</strong>
+    <strong class="flex items-center gap-3 text-lg">
+      <Icon icon={ShieldMinimalistic} />
+      Privacy Settings
+    </strong>
     <div class="grid grid-cols-2 gap-2">
       <p>Authenticate with unknown relays?</p>
       <input

@@ -577,7 +577,7 @@ export const makeRoomId = (url: string, h: string) => `${url}'${h}`
 export const splitRoomId = (id: string) => id.split("'")
 
 export const hasNip29 = (relay?: RelayProfile) =>
-  relay?.supported_nips?.map?.(String)?.includes?.("29")
+  Boolean(relay?.supported_nips?.map?.(String)?.includes?.("29"))
 
 export const roomMetaEventsByIdByUrl = deriveEventsByIdByUrl({
   tracker,
@@ -1224,3 +1224,8 @@ export const shouldNotify = (url: string, h?: string) => getShouldNotify(getSett
 
 export const deriveShouldNotify = (url: string, h?: string) =>
   derived(userSettingsValues, $settings => getShouldNotify($settings, url, h))
+
+// Whatever who cares
+
+export const hasNip50 = (relay?: RelayProfile) =>
+  Boolean(relay?.supported_nips?.map?.(String)?.includes?.("50"))

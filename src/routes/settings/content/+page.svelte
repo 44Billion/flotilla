@@ -10,10 +10,12 @@
   } from "@welshman/util"
   import {Router} from "@welshman/router"
   import {userMuteList, tagPubkey, publishThunk, userBlossomServerList} from "@welshman/app"
+  import NotesMinimalistic from "@assets/icons/notes-minimalistic.svg?dataurl"
   import {preventDefault} from "@lib/html"
   import Field from "@lib/components/Field.svelte"
   import FieldInline from "@lib/components/FieldInline.svelte"
   import InputList from "@lib/components/InputList.svelte"
+  import Icon from "@lib/components/Icon.svelte"
   import Button from "@lib/components/Button.svelte"
   import ProfileMultiSelect from "@app/components/ProfileMultiSelect.svelte"
   import {pushToast} from "@app/util/toast"
@@ -49,7 +51,10 @@
 
 <form class="content column gap-4" {onsubmit}>
   <div class="card2 bg-alt col-4 shadow-md">
-    <strong class="text-lg">Content Settings</strong>
+    <strong class="flex items-center gap-3 text-lg">
+      <Icon icon={NotesMinimalistic} />
+      Content Settings
+    </strong>
     <FieldInline>
       {#snippet label()}
         <p>Hide sensitive content?</p>
