@@ -1,6 +1,5 @@
 import {call} from "@welshman/lib"
 import {Preferences} from "@capacitor/preferences"
-import {Filesystem, Directory} from "@capacitor/filesystem"
 import {IDB} from "@lib/indexeddb"
 
 export const kv = call(() => {
@@ -31,22 +30,17 @@ export const kv = call(() => {
   return {get, set, clear}
 })
 
-export const db = new IDB({name: "flotilla-9gl", version: 1})
-
-// Migration - we used to use capacitor's filesystem for storage, clear it out since we're
-// going back to indexeddb
-call(async () => {
-  const res = await Filesystem.readdir({
-    path: "",
-    directory: Directory.Data,
-  })
-
-  await Promise.all(
-    res.files.map(file =>
-      Filesystem.deleteFile({
-        path: file.name,
-        directory: Directory.Data,
-      }),
-    ),
-  )
+export const db = new IDB({
+  name: "flotilla-9gl",
+  version: 1,
+  stores: [
+    {name: "events", keyPath: "id"},
+    {name: "tracker", keyPath: "id"},
+    {name: "relays", keyPath: "url"},
+    {name: "relayStats", keyPath: "url"},
+    {name: "handles", keyPath: "nip05"},
+    {name: "zappers", keyPath: "lnurl"},
+    {name: "plaintext", keyPath: "key"},
+    {name: "wrapManager", keyPath: "id"},
+  ],
 })

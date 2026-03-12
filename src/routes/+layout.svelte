@@ -126,11 +126,12 @@
       }),
     ])
 
-    // Set up our storage adapters
-    db.adapters = storage.adapters
+    const storageSync = storage.sync()
 
-    // Wait until data storage is initialized before syncing other stuff
-    await db.connect()
+    unsubscribers.push(storageSync.unsubscribe)
+
+    // Wait for critical storage data only
+    await storageSync.ready
 
     // Close the database connection on reload
     unsubscribers.push(() => db.close())

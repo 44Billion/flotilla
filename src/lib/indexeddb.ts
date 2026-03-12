@@ -1,39 +1,32 @@
 import {openDB, deleteDB} from "idb"
 import type {IDBPDatabase} from "idb"
-import type {Unsubscriber} from "svelte/store"
-import {call} from "@welshman/lib"
 import type {Maybe} from "@welshman/lib"
 
-export type IDBAdapter = {
+export type IDBStore = {
   name: string
   keyPath: string
-  init: (table: IDBTable<any>) => Promise<Unsubscriber>
 }
-
-export type IDBAdapters = IDBAdapter[]
 
 export type IDBOptions = {
   name: string
   version: number
+  stores: IDBStore[]
 }
 
 export class IDB {
-  adapters: IDBAdapters = []
   connection: Maybe<Promise<IDBPDatabase>>
-  unsubscribers: Maybe<Unsubscriber[]>
   failedToConnect = false
 
   constructor(readonly options: IDBOptions) {}
 
   async connect() {
     if (!this.failedToConnect && !this.connection) {
-      const {name, version} = this.options
-      const adapters = this.adapters
+      const {name, version, stores} = this.options
 
       try {
         this.connection = openDB(name, version, {
           upgrade(idbDb: IDBPDatabase) {
-            const names = new Set(adapters.map(a => a.name))
+            const names = new Set(stores.map(store => store.name))
 
             for (const table of idbDb.objectStoreNames) {
               if (!names.has(table)) {
@@ -41,7 +34,7 @@ export class IDB {
               }
             }
 
-            for (const {name, keyPath} of adapters) {
+            for (const {name, keyPath} of stores) {
               try {
                 idbDb.createObjectStore(name, {keyPath})
               } catch (e) {
@@ -52,10 +45,6 @@ export class IDB {
           blocked() {},
           blocking() {},
         })
-
-        this.unsubscribers = await Promise.all(
-          adapters.map(({name, init}) => init(this.table(name))),
-        )
       } catch (e) {
         console.error("Failed to connect to indexeddb", e)
         this.failedToConnect = true
@@ -115,9 +104,6 @@ export class IDB {
   }
 
   close = () => {
-    this.unsubscribers?.forEach(call)
-    this.unsubscribers = undefined
-
     this.connection?.then(c => c.close())
     this.connection = undefined
   }

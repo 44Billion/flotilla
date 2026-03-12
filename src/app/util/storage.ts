@@ -45,9 +45,8 @@ import {
   wrapManager,
   onRelay,
 } from "@welshman/app"
-import {isMobile} from "@lib/html"
-import type {IDBTable} from "@lib/indexeddb"
-import {MESSAGE_KINDS, DM_KINDS} from "@app/core/state"
+import type {Unsubscriber} from "svelte/store"
+import {db} from "@app/core/storage"
 
 const kinds = {
   meta: [PROFILE, FOLLOWS, MUTES, RELAYS, BLOSSOM_SERVERS, MESSAGING_RELAYS, APP_DATA, ROOMS],
@@ -62,204 +61,266 @@ const kinds = {
     ROOM_REMOVE_MEMBER,
     ROOM_CREATE_PERMISSION,
   ],
-  content: [...MESSAGE_KINDS, ...DM_KINDS],
 }
 
-const rankEvent = (event: TrustedEvent) => {
-  if (kinds.meta.includes(event.kind)) return 9
-  if (kinds.alert.includes(event.kind)) return 8
-  if (kinds.space.includes(event.kind)) return 7
-  if (kinds.room.includes(event.kind)) return 6
-  if (!isMobile && kinds.content.includes(event.kind)) return 5
-  return 0
-}
-
-const eventsAdapter = {
-  name: "events",
-  keyPath: "id",
-  init: async (table: IDBTable<TrustedEvent>) => {
-    const initialEvents = await table.getAll()
-
-    // Mark events verified to avoid re-verification of signatures
-    for (const event of initialEvents) {
-      event[verifiedSymbol] = true
-    }
-
-    repository.load(initialEvents)
-
-    return on(
-      repository,
-      "update",
-      batch(3000, async (updates: RepositoryUpdate[]) => {
-        const add: TrustedEvent[] = []
-        const remove = new Set<string>()
-
-        for (const update of updates) {
-          for (const event of update.added) {
-            if (rankEvent(event) > 0) {
-              add.push(event)
-              remove.delete(event.id)
-            }
-          }
-
-          for (const id of update.removed) {
-            remove.add(id)
-          }
-        }
-
-        if (add.length > 0) {
-          await table.bulkPut(add)
-        }
-
-        if (remove.size > 0) {
-          await table.bulkDelete(remove)
-        }
-      }),
-    )
-  },
-}
+const shouldPersistEvent = (event: TrustedEvent) =>
+  kinds.meta.includes(event.kind) ||
+  kinds.alert.includes(event.kind) ||
+  kinds.space.includes(event.kind) ||
+  kinds.room.includes(event.kind)
 
 type TrackerItem = {id: string; relays: string[]}
 
-const trackerAdapter = {
-  name: "tracker",
-  keyPath: "id",
-  init: async (table: IDBTable<TrackerItem>) => {
-    const relaysById = new Map<string, Set<string>>()
-
-    for (const {id, relays} of await table.getAll()) {
-      relaysById.set(id, new Set(relays))
-    }
-
-    tracker.load(relaysById)
-
-    const _onAdd = async (ids: Iterable<string>) => {
-      const items: TrackerItem[] = []
-
-      for (const id of ids) {
-        const event = repository.getEvent(id)
-
-        if (!event || rankEvent(event) === 0) continue
-
-        const relays = Array.from(tracker.getRelays(id))
-
-        if (relays.length === 0) continue
-
-        items.push({id, relays})
-      }
-
-      await table.bulkPut(items)
-    }
-
-    const _onRemove = async (ids: Iterable<string>) => {
-      await table.bulkDelete(Array.from(ids))
-    }
-
-    const onAdd = batch(3000, _onAdd)
-
-    const onRemove = batch(3000, _onRemove)
-
-    const onLoad = () => _onAdd(tracker.relaysById.keys())
-
-    const onClear = () => _onRemove(tracker.relaysById.keys())
-
-    tracker.on("add", onAdd)
-    tracker.on("remove", onRemove)
-    tracker.on("load", onLoad)
-    tracker.on("clear", onClear)
-
-    return () => {
-      tracker.off("add", onAdd)
-      tracker.off("remove", onRemove)
-      tracker.off("load", onLoad)
-      tracker.off("clear", onClear)
-    }
-  },
-}
-
-const relaysAdapter = {
-  name: "relays",
-  keyPath: "url",
-  init: async (table: IDBTable<RelayProfile>) => {
-    relaysByUrl.set(indexBy(r => r.url, await table.getAll()))
-
-    return onRelay(batch(1000, table.bulkPut))
-  },
-}
-
-const relayStatsAdapter = {
-  name: "relayStats",
-  keyPath: "url",
-  init: async (table: IDBTable<RelayStats>) => {
-    relayStatsByUrl.set(indexBy(r => r.url, await table.getAll()))
-
-    return onRelayStats(batch(1000, table.bulkPut))
-  },
-}
-
-const handlesAdapter = {
-  name: "handles",
-  keyPath: "nip05",
-  init: async (table: IDBTable<Handle>) => {
-    handlesByNip05.set(indexBy(r => r.nip05, await table.getAll()))
-
-    return onHandle(batch(1000, table.bulkPut))
-  },
-}
-
-const zappersAdapter = {
-  name: "zappers",
-  keyPath: "lnurl",
-  init: async (table: IDBTable<Zapper>) => {
-    zappersByLnurl.set(indexBy(z => z.lnurl, await table.getAll()))
-
-    return onZapper(batch(3000, table.bulkPut))
-  },
-}
-
 type PlaintextItem = {key: string; value: string}
 
-const plaintextAdapter = {
-  name: "plaintext",
-  keyPath: "key",
-  init: async (table: IDBTable<PlaintextItem>) => {
-    const initialRecords = await table.getAll()
+const loadCriticalEvents = async () => {
+  const table = db.table<TrustedEvent>("events")
+  const initialEvents = await table.getAll()
+  const keep: TrustedEvent[] = []
+  const drop: string[] = []
 
-    plaintext.set(fromPairs(initialRecords.map(({key, value}) => [key, value])))
-
-    return throttled(3000, plaintext).subscribe($plaintext => {
-      table.bulkPut(Object.entries($plaintext).map(([key, value]) => ({key, value})))
-    })
-  },
-}
-
-const wrapManagerAdapter = {
-  name: "wrapManager",
-  keyPath: "id",
-  init: async (table: IDBTable<WrapItem>) => {
-    wrapManager.load(await table.getAll())
-
-    const addOne = batch(3000, table.bulkPut)
-
-    const removeOne = throttle(3000, table.bulkDelete)
-
-    wrapManager.on("add", addOne)
-    wrapManager.on("remove", removeOne)
-
-    return () => {
-      wrapManager.off("add", addOne)
-      wrapManager.off("remove", removeOne)
+  for (const event of initialEvents) {
+    if (shouldPersistEvent(event)) {
+      event[verifiedSymbol] = true
+      keep.push(event)
+    } else {
+      drop.push(event.id)
     }
-  },
+  }
+
+  repository.load(keep)
+
+  if (drop.length > 0) {
+    void table.bulkDelete(drop)
+  }
 }
 
-export const adapters = [
-  eventsAdapter,
-  trackerAdapter,
-  relaysAdapter,
-  relayStatsAdapter,
-  handlesAdapter,
-  zappersAdapter,
-  plaintextAdapter,
-  wrapManagerAdapter,
-]
+const syncEvents = () => {
+  const table = db.table<TrustedEvent>("events")
+
+  return on(
+    repository,
+    "update",
+    batch(3000, async (updates: RepositoryUpdate[]) => {
+      const add: TrustedEvent[] = []
+      const remove = new Set<string>()
+
+      for (const update of updates) {
+        for (const event of update.added) {
+          if (shouldPersistEvent(event)) {
+            add.push(event)
+            remove.delete(event.id)
+          }
+        }
+
+        for (const id of update.removed) {
+          remove.add(id)
+        }
+      }
+
+      if (add.length > 0) {
+        await table.bulkPut(add)
+      }
+
+      if (remove.size > 0) {
+        await table.bulkDelete(remove)
+      }
+    }),
+  )
+}
+
+const loadCriticalTracker = async () => {
+  const table = db.table<TrackerItem>("tracker")
+  const relaysById = new Map<string, Set<string>>()
+  const stale: string[] = []
+
+  for (const {id, relays} of await table.getAll()) {
+    if (!repository.getEvent(id)) {
+      stale.push(id)
+      continue
+    }
+
+    relaysById.set(id, new Set(relays))
+  }
+
+  tracker.load(relaysById)
+
+  if (stale.length > 0) {
+    void table.bulkDelete(stale)
+  }
+}
+
+const syncTracker = () => {
+  const table = db.table<TrackerItem>("tracker")
+
+  const _onAdd = async (ids: Iterable<string>) => {
+    const items: TrackerItem[] = []
+
+    for (const id of ids) {
+      const event = repository.getEvent(id)
+
+      if (!event || !shouldPersistEvent(event)) continue
+
+      const relays = Array.from(tracker.getRelays(id))
+
+      if (relays.length === 0) continue
+
+      items.push({id, relays})
+    }
+
+    await table.bulkPut(items)
+  }
+
+  const _onRemove = async (ids: Iterable<string>) => {
+    await table.bulkDelete(Array.from(ids))
+  }
+
+  const onAdd = batch(3000, _onAdd)
+  const onRemove = batch(3000, _onRemove)
+  const onLoad = () => _onAdd(tracker.relaysById.keys())
+  const onClear = () => _onRemove(tracker.relaysById.keys())
+
+  tracker.on("add", onAdd)
+  tracker.on("remove", onRemove)
+  tracker.on("load", onLoad)
+  tracker.on("clear", onClear)
+
+  return () => {
+    tracker.off("add", onAdd)
+    tracker.off("remove", onRemove)
+    tracker.off("load", onLoad)
+    tracker.off("clear", onClear)
+  }
+}
+
+const loadCriticalRelays = async () => {
+  const table = db.table<RelayProfile>("relays")
+
+  relaysByUrl.set(indexBy(r => r.url, await table.getAll()))
+}
+
+const syncRelays = () => onRelay(batch(1000, db.table<RelayProfile>("relays").bulkPut))
+
+const initRelayStats = async () => {
+  const table = db.table<RelayStats>("relayStats")
+
+  relayStatsByUrl.set(indexBy(r => r.url, await table.getAll()))
+
+  return onRelayStats(batch(1000, table.bulkPut))
+}
+
+const initHandles = async () => {
+  const table = db.table<Handle>("handles")
+
+  handlesByNip05.set(indexBy(r => r.nip05, await table.getAll()))
+
+  return onHandle(batch(1000, table.bulkPut))
+}
+
+const initZappers = async () => {
+  const table = db.table<Zapper>("zappers")
+
+  zappersByLnurl.set(indexBy(z => z.lnurl, await table.getAll()))
+
+  return onZapper(batch(3000, table.bulkPut))
+}
+
+const initPlaintext = async () => {
+  const table = db.table<PlaintextItem>("plaintext")
+  const initialRecords = await table.getAll()
+
+  plaintext.set(fromPairs(initialRecords.map(({key, value}) => [key, value])))
+
+  return throttled(3000, plaintext).subscribe($plaintext => {
+    table.bulkPut(Object.entries($plaintext).map(([key, value]) => ({key, value})))
+  })
+}
+
+const initWrapManager = async () => {
+  const table = db.table<WrapItem>("wrapManager")
+
+  wrapManager.load(await table.getAll())
+
+  const addOne = batch(3000, table.bulkPut)
+  const removeOne = throttle(3000, table.bulkDelete)
+
+  wrapManager.on("add", addOne)
+  wrapManager.on("remove", removeOne)
+
+  return () => {
+    wrapManager.off("add", addOne)
+    wrapManager.off("remove", removeOne)
+  }
+}
+
+type StorageSync = {
+  unsubscribe: Unsubscriber
+  ready: Promise<void>
+}
+
+export const sync = (): StorageSync => {
+  const unsubscribers: Unsubscriber[] = []
+  const deferredTimers: ReturnType<typeof setTimeout>[] = []
+  let stopped = false
+
+  const addUnsubscriber = (unsubscriber: Unsubscriber) => {
+    if (stopped) {
+      unsubscriber()
+    } else {
+      unsubscribers.push(unsubscriber)
+    }
+  }
+
+  const scheduleDeferred = (task: () => Promise<void>) => {
+    const timeout = setTimeout(() => {
+      if (stopped) return
+
+      void task()
+    }, 0)
+
+    deferredTimers.push(timeout)
+  }
+
+  const ready = (async () => {
+    await db.connect()
+
+    await Promise.all([loadCriticalEvents(), loadCriticalRelays()])
+    await loadCriticalTracker()
+
+    addUnsubscriber(syncEvents())
+    addUnsubscriber(syncTracker())
+    addUnsubscriber(syncRelays())
+
+    scheduleDeferred(async () => {
+      addUnsubscriber(await initRelayStats())
+    })
+
+    scheduleDeferred(async () => {
+      addUnsubscriber(await initHandles())
+    })
+
+    scheduleDeferred(async () => {
+      addUnsubscriber(await initZappers())
+    })
+
+    scheduleDeferred(async () => {
+      addUnsubscriber(await initPlaintext())
+    })
+
+    scheduleDeferred(async () => {
+      addUnsubscriber(await initWrapManager())
+    })
+  })()
+
+  const unsubscribe = () => {
+    stopped = true
+
+    for (const timeout of deferredTimers) {
+      clearTimeout(timeout)
+    }
+
+    unsubscribers.forEach(unsubscriber => unsubscriber())
+  }
+
+  return {unsubscribe, ready}
+}
