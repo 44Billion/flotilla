@@ -47,7 +47,7 @@ export const makeSpacePath = (url: string, ...extra: (string | undefined)[]) => 
 export const goToSpace = async (url: string) => {
   const prevPath = lastPageBySpaceUrl.get(encodeRelay(url))
 
-  if (prevPath) {
+  if (prevPath && prevPath !== makeSpacePath(url)) {
     goto(prevPath)
   } else if (hasNip29(await loadRelay(url))) {
     goto(makeSpacePath(url, "recent"))

@@ -1,9 +1,6 @@
 <script lang="ts">
   import type {Snippet} from "svelte"
-  import {splitAt} from "@welshman/lib"
   import {userProfile} from "@welshman/app"
-  import Widget from "@assets/icons/widget.svg?dataurl"
-  import Compass from "@assets/icons/compass.svg?dataurl"
   import Letter from "@assets/icons/letter.svg?dataurl"
   import Magnifier from "@assets/icons/magnifier.svg?dataurl"
   import HomeSmile from "@assets/icons/home-smile.svg?dataurl"
@@ -12,10 +9,10 @@
   import Settings from "@assets/icons/settings.svg?dataurl"
   import ImageIcon from "@lib/components/ImageIcon.svelte"
   import Divider from "@lib/components/Divider.svelte"
-  import PrimaryNavItem from "@lib/components/PrimaryNavItem.svelte"
   import MenuSettings from "@app/components/MenuSettings.svelte"
-  import PrimaryNavItemSpace from "@app/components/PrimaryNavItemSpace.svelte"
-  import {userSpaceUrls, PLATFORM_RELAYS, PLATFORM_LOGO} from "@app/core/state"
+  import PrimaryNavItem from "@lib/components/PrimaryNavItem.svelte"
+  import PrimaryNavSpaces from "@app/components/PrimaryNavSpaces.svelte"
+  import {userSpaceUrls, PLATFORM_RELAYS} from "@app/core/state"
   import {pushModal} from "@app/util/modal"
   import {notifications} from "@app/util/notifications"
   import {goToLastChat} from "@app/util/routes"
@@ -28,44 +25,13 @@
 
   const showSettingsMenu = () => pushModal(MenuSettings)
 
-  let windowHeight = $state(0)
-
-  const itemHeight = 56
-  const navPadding = 8 * itemHeight
-  const itemLimit = $derived((windowHeight - navPadding) / itemHeight)
-  const [primarySpaceUrls, secondarySpaceUrls] = $derived(splitAt(itemLimit, $userSpaceUrls))
   const anySpaceNotifications = $derived($userSpaceUrls.some(p => $notifications.has(p)))
-  const otherSpaceNotifications = $derived(secondarySpaceUrls.some(p => $notifications.has(p)))
 </script>
-
-<svelte:window bind:innerHeight={windowHeight} />
 
 <div
   class="ml-sai mt-sai mb-sai relative z-nav hidden w-14 flex-shrink-0 bg-base-200 pt-4 md:block">
   <div class="flex h-full flex-col" class:justify-between={PLATFORM_RELAYS.length === 0}>
-    <div>
-      {#each PLATFORM_RELAYS as url (url)}
-        <PrimaryNavItemSpace {url} />
-      {:else}
-        <PrimaryNavItem title="Home" href="/home" class="tooltip-right">
-          <ImageIcon alt="Home" src={PLATFORM_LOGO} class="rounded-full" size={10} />
-        </PrimaryNavItem>
-        <Divider />
-        {#each primarySpaceUrls as url (url)}
-          <PrimaryNavItemSpace {url} />
-        {/each}
-        <PrimaryNavItem
-          href="/spaces"
-          title="All Spaces"
-          class="tooltip-right"
-          notification={otherSpaceNotifications}>
-          <ImageIcon alt="All Spaces" src={Widget} size={8} />
-        </PrimaryNavItem>
-        <PrimaryNavItem title="Add a Space" href="/discover" class="tooltip-right">
-          <ImageIcon alt="Add a Space" src={Compass} size={8} />
-        </PrimaryNavItem>
-      {/each}
-    </div>
+    <PrimaryNavSpaces />
     {#if PLATFORM_RELAYS.length > 0}
       <Divider />
     {/if}

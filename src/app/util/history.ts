@@ -8,6 +8,7 @@ export const setupHistory = () =>
     if ($page.params.relay) {
       lastPageBySpaceUrl.set($page.params.relay, $page.url.pathname)
     }
+
     if ($page.params.chat) {
       lastChatUrl = $page.url.pathname
     }
