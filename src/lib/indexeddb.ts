@@ -72,7 +72,7 @@ export class IDB {
 
     if (!connection) return []
 
-    const tx = connection.transaction(table, "readwrite")
+    const tx = connection.transaction(table, "readonly")
     const store = tx.objectStore(table)
     const result = await store.getAll()
 
