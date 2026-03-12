@@ -159,9 +159,11 @@
       <Icon icon={AltArrowLeft} />
       Go back
     </Button>
-    <Button class="btn btn-primary" onclick={addMember}>
-      <Icon icon={AddCircle} />
-      Add members
-    </Button>
+    {#if $userIsAdmin}
+      <Button class="btn btn-primary" onclick={addMember}>
+        <Icon icon={AddCircle} />
+        Add members
+      </Button>
+    {/if}
   </ModalFooter>
 </Modal>
