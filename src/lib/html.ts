@@ -115,7 +115,18 @@ export const compressFile = async (
       maxHeight: 2048,
       convertTypes: ["image/png"],
       ...options,
-      success: result => resolve(result as File),
+      success: result => {
+        // canvas.toBlob() returns a Blob, not a File. Capacitor's fetch interceptor
+        // checks instanceof File to handle binary uploads correctly, so we must ensure
+        // we always have a real File, not just a Blob with name/lastModified tacked on.
+        const f =
+          result instanceof File
+            ? result
+            : new File([result], (result as any).name || (file as any).name || "upload", {
+                type: result.type,
+              })
+        resolve(f)
+      },
       error: e => {
         // Non-images break compressor, return the original file
         if (e.toString().includes("File or Blob")) {
