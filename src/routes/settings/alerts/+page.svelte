@@ -34,7 +34,7 @@
 
           return pushToast({
             theme: "error",
-            message: "Failed to request notification permissions.",
+            message: `Failed to request notification permissions (${permissions}).`,
           })
         }
       }

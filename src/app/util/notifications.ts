@@ -311,14 +311,15 @@ class CapacitorNotifications implements IPushAdapter {
     }
 
     let {token} = notificationState.get()
+    let error = "failed to retrieve token"
 
     if (!token) {
       const listeners = [
         PushNotifications.addListener("registration", ({value}: Token) => {
           token = value
         }),
-        PushNotifications.addListener("registrationError", (error: RegistrationError) => {
-          console.error(error)
+        PushNotifications.addListener("registrationError", (err: RegistrationError) => {
+          error = err.error
         }),
       ]
 
@@ -334,7 +335,7 @@ class CapacitorNotifications implements IPushAdapter {
       notificationState.update(assoc("token", token))
     }
 
-    return token ? "granted" : "denied"
+    return token ? status.receive : error
   }
 
   async _syncServer(signal: AbortSignal) {
