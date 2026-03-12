@@ -7,7 +7,7 @@
   import Letter from "@assets/icons/letter.svg?dataurl"
   import Magnifier from "@assets/icons/magnifier.svg?dataurl"
   import HomeSmile from "@assets/icons/home-smile.svg?dataurl"
-  import SettingsMinimalistic from "@assets/icons/settings-minimalistic.svg?dataurl"
+  import Planet from "@assets/icons/planet-3.svg?dataurl"
   import UserRounded from "@assets/icons/user-rounded.svg?dataurl"
   import Settings from "@assets/icons/settings.svg?dataurl"
   import ImageIcon from "@lib/components/ImageIcon.svelte"
@@ -116,7 +116,7 @@
       </PrimaryNavItem>
       {#if PLATFORM_RELAYS.length !== 1}
         <PrimaryNavItem title="Spaces" href="/spaces" notification={anySpaceNotifications}>
-          <ImageIcon alt="Spaces" src={SettingsMinimalistic} size={8} />
+          <ImageIcon alt="Spaces" src={Planet} size={8} />
         </PrimaryNavItem>
       {/if}
     </div>
