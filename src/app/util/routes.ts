@@ -1,4 +1,5 @@
 import type {Page} from "@sveltejs/kit"
+import theme from "tailwindcss/defaultTheme"
 import {get} from "svelte/store"
 import * as nip19 from "nostr-tools/nip19"
 import {goto} from "$app/navigation"
@@ -6,7 +7,7 @@ import {page} from "$app/stores"
 import {nthEq} from "@welshman/lib"
 import type {TrustedEvent} from "@welshman/util"
 import {getAddress} from "@welshman/util"
-import {tracker, loadRelay} from "@welshman/app"
+import {tracker} from "@welshman/app"
 import {identity} from "@welshman/lib"
 import {
   getTagValue,
@@ -23,7 +24,6 @@ import {
   decodeRelay,
   encodeRelay,
   userSpaceUrls,
-  hasNip29,
   DM_KINDS,
   ROOM,
 } from "@app/core/state"
@@ -49,10 +49,10 @@ export const goToSpace = async (url: string) => {
 
   if (prevPath && prevPath !== makeSpacePath(url)) {
     goto(prevPath)
-  } else if (hasNip29(await loadRelay(url))) {
+  } else if (window.matchMedia(`(min-width: ${theme.screens.md})`).matches) {
     goto(makeSpacePath(url, "recent"))
   } else {
-    goto(makeSpacePath(url, "chat"))
+    goto(makeSpacePath(url))
   }
 }
 

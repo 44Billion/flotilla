@@ -8,6 +8,7 @@
   import SpaceAuthError from "@app/components/SpaceAuthError.svelte"
   import SpaceTrustRelay from "@app/components/SpaceTrustRelay.svelte"
   import {pushModal} from "@app/util/modal"
+  import {makeSpacePath} from "@app/util/routes"
   import {decodeRelay, relaysPendingTrust} from "@app/core/state"
   import {deriveRelayAuthError} from "@app/core/commands"
 
@@ -37,11 +38,15 @@
   })
 </script>
 
-<SecondaryNav>
-  <SpaceMenu {url} />
-</SecondaryNav>
-<Page>
-  {#key $page.url.pathname}
-    {@render children?.()}
-  {/key}
-</Page>
+{#if $page.url.pathname === makeSpacePath(url)}
+  {@render children?.()}
+{:else}
+  <SecondaryNav>
+    <SpaceMenu {url} />
+  </SecondaryNav>
+  <Page>
+    {#key $page.url.pathname}
+      {@render children?.()}
+    {/key}
+  </Page>
+{/if}

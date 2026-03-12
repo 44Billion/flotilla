@@ -7,17 +7,15 @@
   import {repository} from "@welshman/app"
   import {request} from "@welshman/net"
   import {deriveEventsById, deriveEventsAsc} from "@welshman/store"
-  import AltArrowLeft from "@assets/icons/alt-arrow-left.svg?dataurl"
   import SortVertical from "@assets/icons/sort-vertical.svg?dataurl"
   import Reply from "@assets/icons/reply-2.svg?dataurl"
   import Icon from "@lib/components/Icon.svelte"
-  import PageBar from "@lib/components/PageBar.svelte"
   import PageContent from "@lib/components/PageContent.svelte"
   import Spinner from "@lib/components/Spinner.svelte"
   import Button from "@lib/components/Button.svelte"
+  import SpaceBar from "@app/components/SpaceBar.svelte"
   import NoteContent from "@app/components/NoteContent.svelte"
   import NoteCard from "@app/components/NoteCard.svelte"
-  import SpaceMenuButton from "@app/components/SpaceMenuButton.svelte"
   import GoalActions from "@app/components/GoalActions.svelte"
   import CommentActions from "@app/components/CommentActions.svelte"
   import EventReply from "@app/components/EventReply.svelte"
@@ -58,24 +56,11 @@
   })
 </script>
 
-<PageBar>
-  {#snippet icon()}
-    <div>
-      <Button class="btn btn-neutral btn-sm flex-nowrap whitespace-nowrap" onclick={back}>
-        <Icon icon={AltArrowLeft} />
-        <span class="hidden sm:inline">Go back</span>
-      </Button>
-    </div>
-  {/snippet}
+<SpaceBar {back}>
   {#snippet title()}
     <h1 class="text-xl">{$event?.content}</h1>
   {/snippet}
-  {#snippet action()}
-    <div>
-      <SpaceMenuButton {url} />
-    </div>
-  {/snippet}
-</PageBar>
+</SpaceBar>
 
 <PageContent class="flex flex-col p-2 pt-4">
   {#if $event}

@@ -8,14 +8,13 @@
   import {EVENT_TIME, getTagValue} from "@welshman/util"
   import {fly} from "@lib/transition"
   import CalendarMinimalistic from "@assets/icons/calendar-minimalistic.svg?dataurl"
-  import CalendarAdd from "@assets/icons/calendar-add.svg?dataurl"
+  import Add from "@assets/icons/add.svg?dataurl"
   import Icon from "@lib/components/Icon.svelte"
   import Button from "@lib/components/Button.svelte"
   import Spinner from "@lib/components/Spinner.svelte"
-  import PageBar from "@lib/components/PageBar.svelte"
   import PageContent from "@lib/components/PageContent.svelte"
   import Divider from "@lib/components/Divider.svelte"
-  import SpaceMenuButton from "@app/components/SpaceMenuButton.svelte"
+  import SpaceBar from "@app/components/SpaceBar.svelte"
   import CalendarEventItem from "@app/components/CalendarEventItem.svelte"
   import CalendarEventCreate from "@app/components/CalendarEventCreate.svelte"
   import {pushModal} from "@app/util/modal"
@@ -111,25 +110,18 @@
   })
 </script>
 
-<PageBar>
-  {#snippet icon()}
-    <div class="center">
-      <Icon icon={CalendarMinimalistic} />
-    </div>
-  {/snippet}
+<SpaceBar>
   {#snippet title()}
+    <Icon icon={CalendarMinimalistic} />
     <strong>Calendar</strong>
   {/snippet}
   {#snippet action()}
-    <div class="row-2">
-      <Button class="btn btn-primary btn-sm" onclick={makeEvent}>
-        <Icon icon={CalendarAdd} />
-        Create an Event
-      </Button>
-      <SpaceMenuButton {url} />
-    </div>
+    <Button class="btn btn-primary btn-sm" onclick={makeEvent}>
+      <Icon icon={Add} />
+      Create
+    </Button>
   {/snippet}
-</PageBar>
+</SpaceBar>
 
 <PageContent bind:element class="flex flex-col gap-2 p-2 pt-4">
   {#each items as { event, dateDisplay, isFirstFutureEvent }, i (event.id)}

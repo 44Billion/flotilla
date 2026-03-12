@@ -7,13 +7,13 @@
   import type {TrustedEvent} from "@welshman/util"
   import {CLASSIFIED, getTagValue} from "@welshman/util"
   import {fly} from "@lib/transition"
-  import NotesMinimalistic from "@assets/icons/notes-minimalistic.svg?dataurl"
+  import CaseMinimalistic from "@assets/icons/case-minimalistic.svg?dataurl"
+  import Add from "@assets/icons/add.svg?dataurl"
   import Icon from "@lib/components/Icon.svelte"
   import Button from "@lib/components/Button.svelte"
-  import PageBar from "@lib/components/PageBar.svelte"
   import PageContent from "@lib/components/PageContent.svelte"
   import Spinner from "@lib/components/Spinner.svelte"
-  import SpaceMenuButton from "@app/components/SpaceMenuButton.svelte"
+  import SpaceBar from "@app/components/SpaceBar.svelte"
   import ClassifiedItem from "@app/components/ClassifiedItem.svelte"
   import ClassifiedCreate from "@app/components/ClassifiedCreate.svelte"
   import {decodeRelay} from "@app/core/state"
@@ -62,25 +62,18 @@
   })
 </script>
 
-<PageBar>
-  {#snippet icon()}
-    <div class="center">
-      <Icon icon={NotesMinimalistic} />
-    </div>
-  {/snippet}
+<SpaceBar>
   {#snippet title()}
-    <strong>Classified Listings</strong>
+    <Icon icon={CaseMinimalistic} />
+    <strong>Classifieds</strong>
   {/snippet}
   {#snippet action()}
-    <div class="row-2">
-      <Button class="btn btn-primary btn-sm" onclick={createClassified}>
-        <Icon icon={NotesMinimalistic} />
-        Create a Listing
-      </Button>
-      <SpaceMenuButton {url} />
-    </div>
+    <Button class="btn btn-primary btn-sm" onclick={createClassified}>
+      <Icon icon={Add} />
+      Create
+    </Button>
   {/snippet}
-</PageBar>
+</SpaceBar>
 
 <PageContent bind:element class="flex flex-col gap-2 p-2 pt-4">
   {#each items as event (event.id)}

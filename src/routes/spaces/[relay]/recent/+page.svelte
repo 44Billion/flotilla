@@ -19,9 +19,8 @@
   import History from "@assets/icons/history.svg?dataurl"
   import {createScroller} from "@lib/html"
   import Icon from "@lib/components/Icon.svelte"
-  import PageBar from "@lib/components/PageBar.svelte"
   import PageContent from "@lib/components/PageContent.svelte"
-  import SpaceMenuButton from "@app/components/SpaceMenuButton.svelte"
+  import SpaceBar from "@app/components/SpaceBar.svelte"
   import NoteItem from "@app/components/NoteItem.svelte"
   import ThreadItem from "@app/components/ThreadItem.svelte"
   import ClassifiedItem from "@app/components/ClassifiedItem.svelte"
@@ -104,21 +103,12 @@
   })
 </script>
 
-<PageBar>
-  {#snippet icon()}
-    <div class="center">
-      <Icon icon={History} />
-    </div>
-  {/snippet}
+<SpaceBar>
   {#snippet title()}
+    <Icon icon={History} />
     <strong>Recent Activity</strong>
   {/snippet}
-  {#snippet action()}
-    <div class="row-2">
-      <SpaceMenuButton {url} />
-    </div>
-  {/snippet}
-</PageBar>
+</SpaceBar>
 
 <div bind:this={element}>
   <PageContent class="flex flex-col gap-2 p-2 pt-4">

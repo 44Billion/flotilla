@@ -180,7 +180,6 @@ export const allNotifications = derived(
 
     for (const url of getSpaceUrlsFromGroupList($userGroupList)) {
       const spacePath = makeSpacePath(url)
-      const spacePathMobile = spacePath + ":mobile"
       const eventsById = eventsByIdByUrl.get(url) || new Map()
       const latestEvent = first(sortEventsDesc(eventsById.values()))
 
@@ -194,7 +193,6 @@ export const allNotifications = derived(
           const latestEvent = find(e => e.tags.some(spec(["h", h])), eventsById.values())
 
           if (hasNotification(roomPath, latestEvent)) {
-            paths.add(spacePathMobile)
             paths.add(spacePath)
             paths.add(roomPath)
           }
@@ -203,7 +201,6 @@ export const allNotifications = derived(
         const messagesPath = makeSpaceChatPath(url)
 
         if (hasNotification(messagesPath, first(eventsById.values()))) {
-          paths.add(spacePathMobile)
           paths.add(spacePath)
           paths.add(messagesPath)
         }

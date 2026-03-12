@@ -14,12 +14,11 @@
   import Icon from "@lib/components/Icon.svelte"
   import Button from "@lib/components/Button.svelte"
   import Spinner from "@lib/components/Spinner.svelte"
-  import PageBar from "@lib/components/PageBar.svelte"
   import PageContent from "@lib/components/PageContent.svelte"
   import Divider from "@lib/components/Divider.svelte"
   import ThunkToast from "@app/components/ThunkToast.svelte"
+  import SpaceBar from "@app/components/SpaceBar.svelte"
   import SpaceSearch from "@app/components/SpaceSearch.svelte"
-  import SpaceMenuButton from "@app/components/SpaceMenuButton.svelte"
   import RoomItem from "@app/components/RoomItem.svelte"
   import RoomItemAddMember from "@src/app/components/RoomItemAddMember.svelte"
   import RoomItemRemoveMember from "@src/app/components/RoomItemRemoveMember.svelte"
@@ -296,22 +295,15 @@
   })
 </script>
 
-<PageBar>
-  {#snippet icon()}
-    <div class="center">
-      <Icon icon={ChatRound} />
-    </div>
-  {/snippet}
+<SpaceBar>
   {#snippet title()}
+    <Icon icon={ChatRound} />
     <strong>Chat</strong>
   {/snippet}
   {#snippet action()}
-    <div class="row-2 items-center">
-      <SpaceSearch {url} />
-      <SpaceMenuButton {url} />
-    </div>
+    <SpaceSearch {url} />
   {/snippet}
-</PageBar>
+</SpaceBar>
 
 <PageContent bind:element onscroll={onScroll} class="flex flex-col-reverse pt-4">
   <div bind:this={dynamicPadding}></div>

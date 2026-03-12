@@ -249,36 +249,36 @@
 </script>
 
 <PageBar>
-  {#snippet title()}
-    <Button class="flex flex-col gap-1 sm:flex-row sm:gap-2" onclick={showMembers}>
-      {#if others.length === 0}
-        <div class="row-2">
-          <ProfileCircle pubkey={$pubkey!} size={5} />
-          <ProfileName pubkey={$pubkey!} />
-        </div>
-      {:else if others.length === 1}
-        <div class="row-2">
-          <ProfileCircle pubkey={others[0]} size={5} />
-          <ProfileName pubkey={others[0]} />
-        </div>
-      {:else}
-        <div class="flex items-center gap-2">
-          <ProfileCircles pubkeys={others} size={5} />
-          <p class="overflow-hidden text-ellipsis whitespace-nowrap">
+  <div class="flex items-center justify-between gap-4">
+    <div class="ellipsize flex items-center gap-4 whitespace-nowrap">
+      <Button class="flex flex-col gap-1 sm:flex-row sm:gap-2" onclick={showMembers}>
+        {#if others.length === 0}
+          <div class="row-2">
+            <ProfileCircle pubkey={$pubkey!} size={5} />
+            <ProfileName pubkey={$pubkey!} />
+          </div>
+        {:else if others.length === 1}
+          <div class="row-2">
+            <ProfileCircle pubkey={others[0]} size={5} />
             <ProfileName pubkey={others[0]} />
-            and
-            {#if others.length === 2}
-              <ProfileName pubkey={others[1]} />
-            {:else}
-              {others.length - 1}
-              {others.length > 2 ? "others" : "other"}
-            {/if}
-          </p>
-        </div>
-      {/if}
-    </Button>
-  {/snippet}
-  {#snippet action()}
+          </div>
+        {:else}
+          <div class="flex items-center gap-2">
+            <ProfileCircles pubkeys={others} size={5} />
+            <p class="overflow-hidden text-ellipsis whitespace-nowrap">
+              <ProfileName pubkey={others[0]} />
+              and
+              {#if others.length === 2}
+                <ProfileName pubkey={others[1]} />
+              {:else}
+                {others.length - 1}
+                {others.length > 2 ? "others" : "other"}
+              {/if}
+            </p>
+          </div>
+        {/if}
+      </Button>
+    </div>
     {#if remove($pubkey, missingRelayLists).length > 0}
       {@const count = remove($pubkey, missingRelayLists).length}
       {@const label = count > 1 ? "lists are" : "list is"}
@@ -289,7 +289,7 @@
         {count}
       </div>
     {/if}
-  {/snippet}
+  </div>
 </PageBar>
 
 <PageContent class="flex flex-col-reverse gap-2 pt-4">

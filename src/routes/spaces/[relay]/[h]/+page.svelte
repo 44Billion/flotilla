@@ -23,9 +23,9 @@
   import Button from "@lib/components/Button.svelte"
   import Divider from "@lib/components/Divider.svelte"
   import Icon from "@lib/components/Icon.svelte"
-  import PageBar from "@lib/components/PageBar.svelte"
   import PageContent from "@lib/components/PageContent.svelte"
   import Spinner from "@lib/components/Spinner.svelte"
+  import SpaceBar from "@app/components/SpaceBar.svelte"
   import RoomCompose from "@app/components/RoomCompose.svelte"
   import RoomComposeParent from "@app/components/RoomComposeParent.svelte"
   import RoomImage from "@app/components/RoomImage.svelte"
@@ -33,7 +33,6 @@
   import RoomItem from "@app/components/RoomItem.svelte"
   import RoomName from "@app/components/RoomName.svelte"
   import SpaceSearch from "@app/components/SpaceSearch.svelte"
-  import SpaceMenuButton from "@app/components/SpaceMenuButton.svelte"
   import ThunkToast from "@app/components/ThunkToast.svelte"
   import RoomItemAddMember from "@src/app/components/RoomItemAddMember.svelte"
   import RoomComposeEdit from "@src/app/components/RoomComposeEdit.svelte"
@@ -358,23 +357,18 @@
   })
 </script>
 
-<PageBar>
-  {#snippet icon()}
-    <RoomImage {url} {h} />
-  {/snippet}
+<SpaceBar>
   {#snippet title()}
+    <RoomImage {url} {h} />
     <RoomName {url} {h} />
   {/snippet}
   {#snippet action()}
-    <div class="row-2 items-center">
-      <SpaceSearch {url} {h} />
-      <Button class="btn btn-neutral btn-sm btn-square" onclick={showRoomDetail}>
-        <Icon size={4} icon={InfoCircle} />
-      </Button>
-      <SpaceMenuButton {url} />
-    </div>
+    <SpaceSearch {url} {h} />
+    <Button class="btn btn-neutral btn-sm btn-square" onclick={showRoomDetail}>
+      <Icon size={4} icon={InfoCircle} />
+    </Button>
   {/snippet}
-</PageBar>
+</SpaceBar>
 
 <PageContent bind:element onscroll={onScroll} class="flex flex-col-reverse pt-4">
   <div bind:this={dynamicPadding}></div>

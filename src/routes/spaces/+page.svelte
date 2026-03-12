@@ -96,22 +96,18 @@
 
 <Page class="cw-full">
   <PageBar class="cw-full">
-    {#snippet icon()}
-      <div class="center">
+    <div class="flex items-center justify-between gap-4">
+      <div class="ellipsize flex items-center gap-4 whitespace-nowrap">
         <Icon icon={SettingsMinimalistic} />
+        <strong>Your Spaces</strong>
       </div>
-    {/snippet}
-    {#snippet title()}
-      <strong>Your Spaces</strong>
-    {/snippet}
-    {#snippet action()}
       {#if $userSpaceUrls.length > 0 && PLATFORM_RELAYS.length === 0}
         <Button class="btn btn-primary btn-sm" onclick={addSpace}>
           <Icon icon={AddCircle} />
           Add Space
         </Button>
       {/if}
-    {/snippet}
+    </div>
   </PageBar>
   <PageContent class="cw-full flex flex-col gap-2 p-2 pt-4">
     {#each PLATFORM_RELAYS as url (url)}
