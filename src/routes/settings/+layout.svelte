@@ -6,7 +6,7 @@
   import Wallet from "@assets/icons/wallet.svg?dataurl"
   import Server from "@assets/icons/server.svg?dataurl"
   import Moon from "@assets/icons/moon.svg?dataurl"
-  import InfoSquare from "@assets/icons/info-square.svg?dataurl"
+  import Code2 from "@assets/icons/code-2.svg?dataurl"
   import Exit from "@assets/icons/logout-3.svg?dataurl"
   import GalleryMinimalistic from "@assets/icons/gallery-minimalistic.svg?dataurl"
   import Shield from "@assets/icons/shield-minimalistic.svg?dataurl"
@@ -73,7 +73,7 @@
     </div>
     <div in:fly|local={{delay: 350}}>
       <SecondaryNavItem href="/settings/about">
-        <Icon icon={InfoSquare} /> About
+        <Icon icon={Code2} /> About
       </SecondaryNavItem>
     </div>
     <div in:fly|local={{delay: 400}}>

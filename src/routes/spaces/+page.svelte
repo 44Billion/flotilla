@@ -1,6 +1,6 @@
 <script lang="ts">
   import {insertAt, removeAt} from "@welshman/lib"
-  import SettingsMinimalistic from "@assets/icons/settings-minimalistic.svg?dataurl"
+  import Planet from "@assets/icons/planet-3.svg?dataurl"
   import AddCircle from "@assets/icons/add-circle.svg?dataurl"
   import Icon from "@lib/components/Icon.svelte"
   import Button from "@lib/components/Button.svelte"
@@ -98,7 +98,7 @@
   <PageBar class="cw-full">
     <div class="flex items-center justify-between gap-4">
       <div class="ellipsize flex items-center gap-4 whitespace-nowrap">
-        <Icon icon={SettingsMinimalistic} />
+        <Icon icon={Planet} />
         <strong>Your Spaces</strong>
       </div>
       {#if $userSpaceUrls.length > 0 && PLATFORM_RELAYS.length === 0}

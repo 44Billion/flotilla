@@ -17,15 +17,20 @@
     url?: string
     showPubkey?: boolean
     avatarSize?: number
+    inert?: boolean
   }
 
-  const {pubkey, url, showPubkey, avatarSize = 10}: Props = $props()
+  const {pubkey, url, showPubkey, inert, avatarSize = 10}: Props = $props()
 
   const relays = removeUndefined([url])
   const profileDisplay = deriveProfileDisplay(pubkey, relays)
   const handle = deriveHandleForPubkey(pubkey)
 
-  const openProfile = () => pushModal(ProfileDetail, {pubkey, url})
+  const openProfile = () => {
+    if (!inert) {
+      pushModal(ProfileDetail, {pubkey, url})
+    }
+  }
 
   const copyPubkey = () => clip(nip19.npubEncode(pubkey))
 </script>

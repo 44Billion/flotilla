@@ -3,6 +3,10 @@
   import cx from "classnames"
   import {noop} from "@welshman/lib"
   import {fade, fly} from "@lib/transition"
+  import Close from "@assets/icons/close.svg?dataurl"
+  import Icon from "@lib/components/Icon.svelte"
+  import Button from "@lib/components/Button.svelte"
+  import {clearModals} from "@app/util/modal"
 
   type Props = {
     onClose?: any
@@ -43,6 +47,11 @@
   </button>
   <div class={wrapperClass}>
     <div class={innerClass} transition:fly>
+      <Button
+        class="absolute -top-4 right-3 btn btn-circle btn-neutral btn-sm"
+        onclick={clearModals}>
+        <Icon icon={Close} size={6} />
+      </Button>
       <children.component {...children.props} />
     </div>
   </div>

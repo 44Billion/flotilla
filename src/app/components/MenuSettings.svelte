@@ -1,12 +1,9 @@
 <script lang="ts">
   import {Capacitor} from "@capacitor/core"
-  import AltArrowLeft from "@assets/icons/alt-arrow-left.svg?dataurl"
-  import UserRounded from "@assets/icons/user-rounded.svg?dataurl"
+  import {pubkey} from "@welshman/app"
   import Server from "@assets/icons/server.svg?dataurl"
-  import Moon from "@assets/icons/moon.svg?dataurl"
-  import Settings from "@assets/icons/settings-minimalistic.svg?dataurl"
-  import Code2 from "@assets/icons/code-2.svg?dataurl"
-  import Exit from "@assets/icons/logout-3.svg?dataurl"
+  import GalleryMinimalistic from "@assets/icons/gallery-minimalistic.svg?dataurl"
+  import Shield from "@assets/icons/shield-minimalistic.svg?dataurl"
   import Bell from "@assets/icons/bell.svg?dataurl"
   import Wallet from "@assets/icons/wallet.svg?dataurl"
   import Icon from "@lib/components/Icon.svelte"
@@ -14,120 +11,69 @@
   import Button from "@lib/components/Button.svelte"
   import Modal from "@lib/components/Modal.svelte"
   import ModalBody from "@lib/components/ModalBody.svelte"
-  import CardButton from "@lib/components/CardButton.svelte"
+  import Profile from "@app/components/Profile.svelte"
   import LogOut from "@app/components/LogOut.svelte"
-  import {PLATFORM_NAME} from "@app/core/state"
   import {pushModal} from "@app/util/modal"
   import {theme} from "@app/util/theme"
 
-  const back = () => history.back()
   const logout = () => pushModal(LogOut)
   const toggleTheme = () => theme.set($theme === "dark" ? "light" : "dark")
 </script>
 
 <Modal>
   <ModalBody>
-    <div class="flex flex-col gap-2">
-      <Link replaceState href="/settings/profile">
-        <CardButton class="btn-neutral">
-          {#snippet icon()}
-            <div><Icon icon={UserRounded} size={7} /></div>
-          {/snippet}
-          {#snippet title()}
-            <div>Profile</div>
-          {/snippet}
-          {#snippet info()}
-            <div>Customize your user profile</div>
-          {/snippet}
-        </CardButton>
-      </Link>
-      <Link replaceState href="/settings/alerts">
-        <CardButton class="btn-neutral">
-          {#snippet icon()}
-            <div><Icon icon={Bell} size={7} /></div>
-          {/snippet}
-          {#snippet title()}
-            <div>Alerts</div>
-          {/snippet}
-          {#snippet info()}
-            <div>Set up email digests and push notifications</div>
-          {/snippet}
-        </CardButton>
-      </Link>
-      {#if Capacitor.getPlatform() !== "ios"}
-        <Link replaceState href="/settings/wallet">
-          <CardButton class="btn-neutral">
-            {#snippet icon()}
-              <div><Icon icon={Wallet} size={7} /></div>
-            {/snippet}
-            {#snippet title()}
-              <div>Wallet</div>
-            {/snippet}
-            {#snippet info()}
-              <div>Connect a bitcoin wallet for sending social tips</div>
-            {/snippet}
-          </CardButton>
+    <div class="flex flex-col gap-8 items-center py-12 max-w-[16rem] m-auto w-full">
+      {#if $pubkey}
+        <Link replaceState href="/settings/profile">
+          <Profile inert pubkey={$pubkey} />
         </Link>
       {/if}
-      <Link replaceState href="/settings/relays">
-        <CardButton class="btn-neutral">
-          {#snippet icon()}
-            <div><Icon icon={Server} size={7} /></div>
-          {/snippet}
-          {#snippet title()}
-            <div>Relays</div>
-          {/snippet}
-          {#snippet info()}
-            <div>Control how {PLATFORM_NAME} talks to the network</div>
-          {/snippet}
-        </CardButton>
-      </Link>
-      <Link replaceState href="/settings/content">
-        <CardButton class="btn-neutral">
-          {#snippet icon()}
-            <div><Icon icon={Settings} size={7} /></div>
-          {/snippet}
-          {#snippet title()}
-            <div>Settings</div>
-          {/snippet}
-          {#snippet info()}
-            <div>Get into the details about how {PLATFORM_NAME} works</div>
-          {/snippet}
-        </CardButton>
-      </Link>
-      <Button onclick={toggleTheme}>
-        <CardButton class="btn-neutral">
-          {#snippet icon()}
-            <div><Icon icon={Moon} size={7} /></div>
-          {/snippet}
-          {#snippet title()}
-            <div>Theme</div>
-          {/snippet}
-          {#snippet info()}
-            <div>Switch between light and dark mode</div>
-          {/snippet}
-        </CardButton>
-      </Button>
-      <Link replaceState href="/settings/about">
-        <CardButton class="btn-neutral">
-          {#snippet icon()}
-            <div><Icon icon={Code2} size={7} /></div>
-          {/snippet}
-          {#snippet title()}
-            <div>About</div>
-          {/snippet}
-          {#snippet info()}
-            <div>Learn about {PLATFORM_NAME} and support the developer</div>
-          {/snippet}
-        </CardButton>
-      </Link>
-      <Button onclick={logout} class="btn btn-neutral">
-        <Icon icon={Exit} /> Log Out
-      </Button>
-      <Button class="btn btn-link w-full md:hidden" onclick={back}>
-        <Icon icon={AltArrowLeft} />
-        Go back
-      </Button>
+      <div class="grid grid-cols-2 gap-3 w-full">
+        <Link
+          replaceState
+          href="/settings/alerts"
+          class="aspect-square btn h-[unset] btn-neutral flex flex-col gap-4 text-center">
+          <Icon icon={Bell} size={7} />
+          Alerts
+        </Link>
+        {#if Capacitor.getPlatform() !== "ios"}
+          <Link
+            replaceState
+            href="/settings/wallet"
+            class="aspect-square btn h-[unset] btn-neutral flex flex-col gap-4 text-center">
+            <Icon icon={Wallet} size={7} />
+            Wallet
+          </Link>
+        {/if}
+        <Link
+          replaceState
+          href="/settings/relays"
+          class="aspect-square btn h-[unset] btn-neutral flex flex-col gap-4 text-center">
+          <Icon icon={Server} size={7} />
+          Relays
+        </Link>
+        <Link
+          replaceState
+          href="/settings/content"
+          class="aspect-square btn h-[unset] btn-neutral flex flex-col gap-4 text-center">
+          <Icon icon={GalleryMinimalistic} size={7} />
+          Content
+        </Link>
+        <Link
+          replaceState
+          href="/settings/privacy"
+          class="aspect-square btn h-[unset] btn-neutral flex flex-col gap-4 text-center">
+          <Icon icon={Shield} size={7} />
+          Privacy
+        </Link>
+      </div>
+      <div class="flex gap-3 items-center opacity-75 text-sm">
+        <Button onclick={toggleTheme}>Theme</Button>
+        /
+        <Link replaceState href="/settings/about">About</Link>
+        /
+        <Button onclick={logout}>Log Out</Button>
+      </div>
     </div>
   </ModalBody>
 </Modal>
