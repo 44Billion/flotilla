@@ -8,11 +8,20 @@
   import SpaceMenu from "@app/components/SpaceMenu.svelte"
 
   const url = decodeRelay($page.params.relay!)
+  const md = parseInt(theme.screens.md, 10)
 
-  goToSpace(url)
+  let width = $state(0)
+
+  $effect(() => {
+    if (width > md) {
+      goToSpace(url)
+    }
+  })
 </script>
 
-{#if !window.matchMedia(`(min-width: ${theme.screens.md})`).matches}
+<svelte:window bind:innerWidth={width} />
+
+{#if width <= md}
   <div class="ml-sai mt-sai mb-sai relative z-nav w-14 flex-shrink-0 bg-base-200 pt-4">
     <PrimaryNavSpaces />
   </div>
