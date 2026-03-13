@@ -29,7 +29,7 @@ To run your own Flotilla, it's as simple as:
 ```sh
 pnpm install
 pnpm run build
-npx serve build
+npx serve -s build
 ```
 
 Or, if you prefer to use a container:
