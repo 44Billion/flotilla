@@ -19,7 +19,6 @@ import {
 import {
   on,
   call,
-  find,
   assoc,
   poll,
   prop,
@@ -180,17 +179,12 @@ export const allNotifications = derived(
 
     for (const url of getSpaceUrlsFromGroupList($userGroupList)) {
       const spacePath = makeSpacePath(url)
-      const eventsById = eventsByIdByUrl.get(url) || new Map()
-      const latestEvent = first(sortEventsDesc(eventsById.values()))
-
-      if (hasNotification(spacePath, latestEvent)) {
-        paths.add(spacePath)
-      }
+      const events = sortEventsDesc((eventsByIdByUrl.get(url) || new Map()).values())
 
       if (hasNip29($relaysByUrl.get(url))) {
         for (const h of getSpaceRoomsFromGroupList(url, $userGroupList)) {
           const roomPath = makeRoomPath(url, h)
-          const latestEvent = find(e => e.tags.some(spec(["h", h])), eventsById.values())
+          const latestEvent = events.find(e => e.tags.some(spec(["h", h])))
 
           if (hasNotification(roomPath, latestEvent)) {
             paths.add(spacePath)
@@ -200,7 +194,7 @@ export const allNotifications = derived(
       } else {
         const messagesPath = makeSpaceChatPath(url)
 
-        if (hasNotification(messagesPath, first(eventsById.values()))) {
+        if (hasNotification(messagesPath, first(events))) {
           paths.add(spacePath)
           paths.add(messagesPath)
         }
