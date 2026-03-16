@@ -20,8 +20,8 @@
   import CaseMinimalistic from "@assets/icons/case-minimalistic.svg?dataurl"
   import AddCircle from "@assets/icons/add-circle.svg?dataurl"
   import ChatRound from "@assets/icons/chat-round.svg?dataurl"
-  import VolumeLoud from "@assets/icons/volume-loud.svg?dataurl"
-  import VolumeCross from "@assets/icons/volume-cross.svg?dataurl"
+  import Bell from "@assets/icons/bell.svg?dataurl"
+  import BellOff from "@assets/icons/bell-off.svg?dataurl"
   import Icon from "@lib/components/Icon.svelte"
   import Link from "@lib/components/Link.svelte"
   import Button from "@lib/components/Button.svelte"
@@ -38,6 +38,7 @@
   import SpaceReports from "@app/components/SpaceReports.svelte"
   import RoomCreate from "@app/components/RoomCreate.svelte"
   import SpaceMenuRoomItem from "@app/components/SpaceMenuRoomItem.svelte"
+  import VoiceWidget from "@app/components/VoiceWidget.svelte"
   import SocketStatusIndicator from "@app/components/SocketStatusIndicator.svelte"
   import {
     ENABLE_ZAPS,
@@ -45,6 +46,7 @@
     deriveSpaceMembers,
     deriveUserRooms,
     deriveOtherRooms,
+    deriveOtherVoiceRooms,
     userSpaceUrls,
     hasNip29,
     deriveUserCanCreateRoom,
@@ -68,6 +70,7 @@
   const calendarPath = makeSpacePath(url, "calendar")
   const userRooms = deriveUserRooms(url)
   const otherRooms = deriveOtherRooms(url)
+  const otherVoiceRooms = deriveOtherVoiceRooms(url)
   const members = deriveSpaceMembers(url)
   const userIsAdmin = deriveUserIsSpaceAdmin(url)
   const reports = deriveEventsForUrl(url, [{kinds: [REPORT]}])
@@ -133,9 +136,9 @@
   })
 </script>
 
-<div bind:this={element} class="flex h-full flex-col justify-between">
-  <SecondaryNavSection class="pb-0">
-    <div>
+<div bind:this={element} class="flex min-h-0 flex-1 flex-col">
+  <SecondaryNavSection class="min-h-0 flex-1 flex flex-col overflow-hidden pb-0">
+    <div class="flex-shrink-0">
       <Button
         class="flex w-full flex-col rounded-xl p-3 transition-all hover:bg-base-100"
         onclick={openMenu}>
@@ -143,7 +146,7 @@
           <strong class="ellipsize flex items-center gap-1">
             <RelayName {url} />
             {#if $notificationSettings.push && !$shouldNotify}
-              <Icon icon={VolumeCross} size={3} class="opacity-50" />
+              <Icon icon={BellOff} size={3} class="opacity-50" />
             {/if}
           </strong>
           <Icon icon={AltArrowDown} />
@@ -192,12 +195,12 @@
             <li>
               {#if $notificationSettings.push}
                 <Button onclick={toggleSpaceNotifications}>
-                  <Icon icon={$shouldNotify ? VolumeLoud : VolumeCross} />
+                  <Icon icon={$shouldNotify ? Bell : BellOff} />
                   {$shouldNotify ? "Turn off" : "Turn on"} notifications
                 </Button>
               {:else}
                 <Link href="/settings/alerts">
-                  <Icon icon={VolumeLoud} />
+                  <Icon icon={Bell} />
                   Enable notifications
                 </Link>
               {/if}
@@ -219,8 +222,7 @@
         </Popover>
       {/if}
     </div>
-    <div
-      class="flex max-h-[calc(100vh-150px)] min-h-0 flex-col gap-1 overflow-auto overflow-x-hidden">
+    <div class="flex min-h-0 flex-1 flex-col gap-1 overflow-auto overflow-x-hidden">
       {#if hasNip29($relay)}
         <SecondaryNavItem {replaceState} href={makeSpacePath(url, "recent")}>
           <Icon icon={History} /> Recent Activity
@@ -252,14 +254,14 @@
       {/if}
       {#if hasNip29($relay)}
         {#if $userRooms.length > 0}
-          <div class="h-2"></div>
+          <div class="h-2 flex-shrink-0"></div>
           <SecondaryNavHeader>Your Rooms</SecondaryNavHeader>
         {/if}
-        {#each $userRooms as h, i (h)}
+        {#each $userRooms as h (h)}
           <SpaceMenuRoomItem notify {replaceState} {url} {h} />
         {/each}
         {#if $otherRooms.length > 0}
-          <div class="h-2"></div>
+          <div class="h-2 flex-shrink-0"></div>
           <SecondaryNavHeader>
             {#if $userRooms.length > 0}
               Other Rooms
@@ -274,9 +276,16 @@
             <input bind:value={term} onblur={clearTerm} class="grow" />
           </label>
         {/if}
-        {#each $roomSearch.searchValues(term) as h, i (h)}
+        {#each $roomSearch.searchValues(term) as h (h)}
           <SpaceMenuRoomItem {replaceState} {url} {h} />
         {/each}
+        {#if $otherVoiceRooms.length > 0}
+          <div class="h-2 flex-shrink-0"></div>
+          <SecondaryNavHeader>Voice Rooms</SecondaryNavHeader>
+          {#each $otherVoiceRooms as h (h)}
+            <SpaceMenuRoomItem {replaceState} {url} {h} />
+          {/each}
+        {/if}
         {#if $canCreateRoom}
           <SecondaryNavItem {replaceState} onclick={addRoom}>
             <Icon icon={AddCircle} />
@@ -284,9 +293,12 @@
           </SecondaryNavItem>
         {/if}
       {/if}
+      <div class="h-5 flex-shrink-0"></div>
     </div>
   </SecondaryNavSection>
-  <div class="flex flex-col gap-2 pb-2 p-4 pt-0">
+  <div
+    class="flex flex-shrink-0 flex-col gap-2 p-2 pt-0 -mt-4 pb-[calc(var(--saib)+3rem)] sm:pb-2 z-nav">
+    <VoiceWidget />
     <Button class="btn btn-neutral btn-sm h-10" onclick={showDetail}>
       <SocketStatusIndicator {url} />
     </Button>

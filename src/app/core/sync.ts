@@ -55,6 +55,7 @@ import {
   loadFeedsForPubkey,
 } from "@app/core/state"
 import {hasBlossomSupport} from "@app/core/commands"
+import {LIVEKIT_PARTICIPANTS} from "@app/voice"
 
 // Utils
 
@@ -315,6 +316,12 @@ const syncSpace = (url: string, rooms: string[]) => {
       filters: [{kinds: REACTION_KINDS}],
     })
   }
+
+  pullAndListen({
+    url,
+    signal: controller.signal,
+    filters: [{kinds: [LIVEKIT_PARTICIPANTS]}],
+  })
 
   return () => controller.abort()
 }

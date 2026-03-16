@@ -6,7 +6,7 @@
   import ImageIcon from "@lib/components/ImageIcon.svelte"
 
   type Props = {
-    pubkey: string
+    pubkey?: string
     class?: string
     size?: number
     url?: string

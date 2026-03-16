@@ -34,7 +34,7 @@
     {href}
     {...restProps}
     data-sveltekit-replacestate={replaceState}
-    class="{restProps.class} relative flex items-center gap-3 text-left transition-all hover:bg-base-100 hover:text-base-content"
+    class="{restProps.class} relative flex flex-shrink-0 items-center gap-3 text-left transition-all hover:bg-base-100 hover:text-base-content"
     class:text-base-content={active}
     class:bg-base-100={active}>
     {@render children?.()}
@@ -45,7 +45,7 @@
 {:else}
   <button
     {...restProps}
-    class="{restProps.class} relative flex w-full items-center gap-3 text-left transition-all hover:bg-base-100 hover:text-base-content"
+    class="{restProps.class} relative flex flex-shrink-0 w-full items-center gap-3 text-left transition-all hover:bg-base-100 hover:text-base-content"
     class:text-base-content={active}
     class:bg-base-100={active}>
     {#if notification}

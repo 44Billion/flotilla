@@ -125,6 +125,7 @@ import type {
   RelayProfile,
   PublishedList,
   PublishedRoomMeta,
+  RoomMeta,
   List,
   Filter,
 } from "@welshman/util"
@@ -146,6 +147,7 @@ import {
   displayProfileByPubkey,
   getProfile,
 } from "@welshman/app"
+import {checkRelayHasLivekit} from "$lib/livekit"
 import {readFeed} from "@lib/feeds"
 
 export const fromCsv = (s: string) => (s || "").split(",").filter(identity)
@@ -567,10 +569,18 @@ export const chatSearch = derived(throttled(800, chatsById), $chatsByPubkey => {
 
 // Rooms
 
+export enum RoomType {
+  Text = "text",
+  Voice = "voice",
+}
+
 export type Room = PublishedRoomMeta & {
   id: string
   url: string
 }
+
+export const getRoomType = (room: RoomMeta): RoomType =>
+  room.livekit ? RoomType.Voice : RoomType.Text
 
 export const makeRoomId = (url: string, h: string) => `${url}'${h}`
 
@@ -663,6 +673,30 @@ export const displayRoom = (url: string, h: string) => getRoom(makeRoomId(url, h
 
 export const roomComparator = (url: string) => (h: string) => displayRoom(url, h).toLowerCase()
 
+export const deriveVoiceRooms = (url: string) =>
+  derived(roomsById, $roomsById => {
+    const set = new Set<string>()
+    for (const room of $roomsById.values()) {
+      if (room.url === url && room.livekit) {
+        set.add(room.h)
+      }
+    }
+    return set
+  })
+
+export const deriveOtherVoiceRooms = (url: string) =>
+  derived([deriveVoiceRooms(url), deriveUserRooms(url)], ([$roomsWithLivekit, $userRooms]) => {
+    const rooms: string[] = []
+
+    for (const h of $roomsWithLivekit) {
+      if (!$userRooms.includes(h)) {
+        rooms.push(h)
+      }
+    }
+
+    return sortBy(roomComparator(url), uniq(rooms))
+  })
+
 // User space/room lists
 
 export const groupListsByPubkey = deriveItemsByKey({
@@ -752,17 +786,20 @@ export const deriveUserRooms = (url: string) =>
   })
 
 export const deriveOtherRooms = (url: string) =>
-  derived([deriveUserRooms(url), roomsByUrl], ([$userRooms, $roomsByUrl]) => {
-    const rooms: string[] = []
+  derived(
+    [deriveUserRooms(url), deriveVoiceRooms(url), roomsByUrl],
+    ([$userRooms, voiceRooms, $roomsByUrl]) => {
+      const rooms: string[] = []
 
-    for (const {h} of $roomsByUrl.get(url) || []) {
-      if (!$userRooms.includes(h)) {
-        rooms.push(h)
+      for (const {h} of $roomsByUrl.get(url) || []) {
+        if (!$userRooms.includes(h) && !voiceRooms.has(h)) {
+          rooms.push(h)
+        }
       }
-    }
 
-    return sortBy(roomComparator(url), uniq(rooms))
-  })
+      return sortBy(roomComparator(url), uniq(rooms))
+    },
+  )
 
 // Space/room memberships
 
@@ -1164,6 +1201,12 @@ export const deriveSupportedMethods = simpleCache(([url]: [string]) => {
     }).then(({result = []}) => set(result))
   })
 })
+
+export const deriveHasLivekit = simpleCache(([url]: [string]) =>
+  readable<boolean | undefined>(undefined, set => {
+    checkRelayHasLivekit(url).then(has => set(has))
+  }),
+)
 
 export const deriveTimeout = (timeout: number) => {
   const store = writable<boolean>(false)

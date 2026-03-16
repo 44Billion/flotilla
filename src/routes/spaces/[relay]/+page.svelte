@@ -25,7 +25,7 @@
   <div class="ml-sai mt-sai mb-sai relative z-nav w-14 flex-shrink-0 bg-base-200 pt-4">
     <PrimaryNavSpaces />
   </div>
-  <SecondaryNav class="!w-auto !flex flex-grow">
+  <SecondaryNav class="!flex !min-h-0 !w-auto flex-grow pb-4">
     <SpaceMenu {url} />
   </SecondaryNav>
 {/if}

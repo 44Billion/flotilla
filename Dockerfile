@@ -4,6 +4,8 @@
 
 FROM node:20-bookworm AS builder
 
+RUN apt-get update && apt-get install -y --no-install-recommends curl
+
 RUN npm install -g pnpm@latest
 
 WORKDIR /app

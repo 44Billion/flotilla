@@ -16,7 +16,7 @@
   import Lock from "@assets/icons/lock.svg?dataurl"
   import Microphone from "@assets/icons/microphone.svg?dataurl"
   import Bookmark from "@assets/icons/bookmark.svg?dataurl"
-  import VolumeLoud from "@assets/icons/volume-loud.svg?dataurl"
+  import Bell from "@assets/icons/bell.svg?dataurl"
   import {fly} from "@lib/transition"
   import Icon from "@lib/components/Icon.svelte"
   import Button from "@lib/components/Button.svelte"
@@ -255,7 +255,7 @@
       <strong class="text-lg">Room Settings</strong>
       <div class="flex items-center justify-between">
         <div class="flex items-center gap-2">
-          <Icon icon={VolumeLoud} />
+          <Icon icon={Bell} />
           <span>Notifications</span>
         </div>
         <input

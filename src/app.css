@@ -422,6 +422,14 @@ body.keyboard-open .hide-on-keyboard {
   @apply cb cw fixed z-compose;
 }
 
+.chat__compose-zone {
+  @apply cb cw fixed z-compose;
+}
+
+.chat__compose-zone .chat__compose-inner {
+  @apply min-w-0;
+}
+
 .chat__scroll-down {
   @apply pb-sai fixed bottom-28 right-4 z-feature md:bottom-16;
 }

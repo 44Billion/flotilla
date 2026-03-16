@@ -83,6 +83,7 @@
     "fuse.js": "^7.1.0",
     "husky": "^9.1.7",
     "idb": "^8.0.3",
+    "livekit-client": "^2.17.2",
     "nostr-signer-capacitor-plugin": "github:coracle-social/nostr-signer-capacitor-plugin#main",
     "nostr-tools": "^2.19.4",
     "prettier-plugin-tailwindcss": "^0.6.14",

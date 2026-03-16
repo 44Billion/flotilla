@@ -5,6 +5,7 @@
   import {waitForThunkError, createRoom, editRoom, joinRoom} from "@welshman/app"
   import StickerSmileSquare from "@assets/icons/sticker-smile-square.svg?dataurl"
   import Hashtag from "@assets/icons/hashtag.svg?dataurl"
+  import Volume from "@assets/icons/volume.svg?dataurl"
   import UploadMinimalistic from "@assets/icons/upload-minimalistic.svg?dataurl"
   import {preventDefault} from "@lib/html"
   import FieldInline from "@lib/components/FieldInline.svelte"
@@ -15,6 +16,7 @@
   import ModalBody from "@lib/components/ModalBody.svelte"
   import {pushToast} from "@app/util/toast"
   import {uploadFile} from "@app/core/commands"
+  import {deriveHasLivekit, getRoomType, RoomType} from "@app/core/state"
 
   type Props = {
     url: string
@@ -27,12 +29,25 @@
   const {url, header, footer, onsubmit, initialValues = makeRoomMeta()}: Props = $props()
 
   const values = $state(initialValues)
+  const relayHasLivekit = deriveHasLivekit(url)
 
   const submit = async () => {
     const room = $state.snapshot(values)
 
+    if (roomType === RoomType.Voice && !$relayHasLivekit) {
+      return pushToast({
+        theme: "error",
+        message: "This relay does not support voice rooms.",
+      })
+    }
+
+    room.livekit = roomType === RoomType.Voice
+
     if (imageFile) {
-      const {error, result} = await uploadFile(imageFile, {maxWidth: 256, maxHeight: 256})
+      const {error, result} = await uploadFile(imageFile, {
+        maxWidth: 256,
+        maxHeight: 256,
+      })
 
       if (error) {
         return pushToast({theme: "error", message: error})
@@ -76,6 +91,7 @@
   let loading = $state(false)
   let imageFile = $state<File | undefined>()
   let imagePreview = $state(initialValues.picture)
+  let roomType = $state(getRoomType(initialValues))
 
   const handleImageUpload = async (event: Event) => {
     const file = (event.target as HTMLInputElement).files?.[0]
@@ -145,7 +161,7 @@
           {#if imagePreview}
             <ImageIcon src={imagePreview} alt="" class="rounded-lg" />
           {:else}
-            <Icon icon={Hashtag} />
+            <Icon icon={roomType === RoomType.Voice ? Volume : Hashtag} />
           {/if}
           <input bind:value={values.name} class="grow" type="text" />
         </label>
@@ -161,6 +177,22 @@
         </label>
       {/snippet}
     </FieldInline>
+    {#if $relayHasLivekit}
+      <FieldInline>
+        {#snippet label()}
+          <p>Room type</p>
+        {/snippet}
+        {#snippet input()}
+          <select
+            class="select select-bordered w-full"
+            bind:value={roomType}
+            aria-label="Room type">
+            <option value={RoomType.Text}>Text</option>
+            <option value={RoomType.Voice}>Voice</option>
+          </select>
+        {/snippet}
+      </FieldInline>
+    {/if}
     <strong class="md:hidden">Permissions</strong>
     <div class="flex items-center gap-2">
       <input type="checkbox" class="checkbox" bind:checked={values.isRestricted} />

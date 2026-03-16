@@ -42,11 +42,15 @@
     decodeRelay,
     deriveRoom,
     deriveUserRoomMembershipStatus,
+    getRoomType,
     MESSAGE_KINDS,
     MembershipStatus,
     PROTECTED,
+    RoomType,
     userSettingsValues,
   } from "@app/core/state"
+  import VoiceWidget from "@app/components/VoiceWidget.svelte"
+  import {voiceState} from "@app/voice"
   import {makeFeed} from "@app/core/requests"
   import {popKey} from "@lib/implicit"
   import {checked} from "@app/util/notifications"
@@ -58,6 +62,7 @@
   const lastChecked = $checked[$page.url.pathname]
   const url = decodeRelay(relay)
   const room = deriveRoom(url, h)
+  const isVoiceRoom = $derived(getRoomType($room) === RoomType.Voice)
   const shouldProtect = canEnforceNip70(url)
   const membershipStatus = deriveUserRoomMembershipStatus(url, h)
   const at = $derived(parseInt($page.url.searchParams.get("at")!))
@@ -358,8 +363,10 @@
 </script>
 
 <SpaceBar>
-  {#snippet title()}
+  {#snippet icon()}
     <RoomImage {url} {h} />
+  {/snippet}
+  {#snippet title()}
     <RoomName {url} {h} />
   {/snippet}
   {#snippet action()}
@@ -442,52 +449,61 @@
   {/if}
 </PageContent>
 
-<div class="chat__compose bg-base-200" bind:this={chatCompose}>
-  {#if $room.isPrivate && $membershipStatus !== MembershipStatus.Granted}
-    <!-- pass -->
-  {:else if $room.isRestricted && $membershipStatus !== MembershipStatus.Granted}
-    <div class="bg-alt card m-4 flex flex-row items-center justify-between px-4 py-3">
-      <p class="opacity-75">Only members are allowed to post to this room.</p>
-      {#if !$room.isClosed}
-        {#if $membershipStatus === MembershipStatus.Pending}
-          <Button class="btn btn-neutral btn-sm" disabled={leaving} onclick={leave}>
-            <Icon icon={ClockCircle} />
-            Access Pending
-          </Button>
-        {:else}
-          <Button class="btn btn-neutral btn-sm" disabled={joining} onclick={join}>
-            {#if joining}
-              <span class="loading loading-spinner loading-sm"></span>
-            {:else}
-              <Icon icon={Login2} />
-            {/if}
-            Ask to Join
-          </Button>
+<div
+  class="chat__compose-zone flex flex-col gap-1 bg-base-200 md:flex-row md:gap-0"
+  bind:this={chatCompose}>
+  <div class="chat__compose-inner min-w-0 flex-1">
+    {#if $room.isPrivate && $membershipStatus !== MembershipStatus.Granted}
+      <!-- pass -->
+    {:else if $room.isRestricted && $membershipStatus !== MembershipStatus.Granted}
+      <div class="bg-alt card m-4 flex flex-row items-center justify-between px-4 py-3">
+        <p class="opacity-75">Only members are allowed to post to this room.</p>
+        {#if !$room.isClosed}
+          {#if $membershipStatus === MembershipStatus.Pending}
+            <Button class="btn btn-neutral btn-sm" disabled={leaving} onclick={leave}>
+              <Icon icon={ClockCircle} />
+              Access Pending
+            </Button>
+          {:else}
+            <Button class="btn btn-neutral btn-sm" disabled={joining} onclick={join}>
+              {#if joining}
+                <span class="loading loading-spinner loading-sm"></span>
+              {:else}
+                <Icon icon={Login2} />
+              {/if}
+              Ask to Join
+            </Button>
+          {/if}
         {/if}
-      {/if}
+      </div>
+    {:else}
+      <div>
+        {#if parent}
+          <RoomComposeParent event={parent} clear={clearParent} verb="Replying to" />
+        {/if}
+        {#if share}
+          <RoomComposeParent event={share} clear={clearShare} verb="Sharing" />
+        {/if}
+        {#if eventToEdit}
+          <RoomComposeEdit clear={clearEventToEdit} />
+        {/if}
+      </div>
+      {#key eventToEdit}
+        <RoomCompose
+          {url}
+          {h}
+          {onSubmit}
+          {onEscape}
+          {onEditPrevious}
+          content={eventToEdit?.content}
+          bind:this={compose} />
+      {/key}
+    {/if}
+  </div>
+  {#if isVoiceRoom || $voiceState === "joining" || $voiceState === "connected"}
+    <div class="hide-on-keyboard flex-shrink-0 p-2 md:hidden">
+      <VoiceWidget />
     </div>
-  {:else}
-    <div>
-      {#if parent}
-        <RoomComposeParent event={parent} clear={clearParent} verb="Replying to" />
-      {/if}
-      {#if share}
-        <RoomComposeParent event={share} clear={clearShare} verb="Sharing" />
-      {/if}
-      {#if eventToEdit}
-        <RoomComposeEdit clear={clearEventToEdit} />
-      {/if}
-    </div>
-    {#key eventToEdit}
-      <RoomCompose
-        {url}
-        {h}
-        {onSubmit}
-        {onEscape}
-        {onEditPrevious}
-        content={eventToEdit?.content}
-        bind:this={compose} />
-    {/key}
   {/if}
 </div>
 

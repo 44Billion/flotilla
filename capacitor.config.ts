@@ -4,6 +4,9 @@ const config: CapacitorConfig = {
   appId: "social.flotilla",
   appName: "Flotilla",
   webDir: "build",
+  ios: {
+    scheme: "Flotilla Chat",
+  },
   android: {
     adjustMarginsForEdgeToEdge: true,
   },
