@@ -363,10 +363,8 @@
 </script>
 
 <SpaceBar>
-  {#snippet icon()}
-    <RoomImage {url} {h} />
-  {/snippet}
   {#snippet title()}
+    <RoomImage {url} {h} />
     <RoomName {url} {h} />
   {/snippet}
   {#snippet action()}
