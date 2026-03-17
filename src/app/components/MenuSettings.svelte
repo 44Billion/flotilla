@@ -28,42 +28,42 @@
           <Profile inert pubkey={$pubkey} />
         </Link>
       {/if}
-      <div class="grid grid-cols-2 gap-3 w-full">
+      <div class="grid grid-cols-3 gap-3 w-full">
         <Link
           replaceState
           href="/settings/alerts"
-          class="aspect-square btn h-[unset] btn-neutral flex flex-col gap-4 text-center">
-          <Icon icon={Bell} size={7} />
+          class="aspect-square btn h-[unset] btn-neutral flex flex-col gap-2 text-center">
+          <Icon icon={Bell} size={5} />
           Alerts
         </Link>
         {#if Capacitor.getPlatform() !== "ios"}
           <Link
             replaceState
             href="/settings/wallet"
-            class="aspect-square btn h-[unset] btn-neutral flex flex-col gap-4 text-center">
-            <Icon icon={Wallet} size={7} />
+            class="aspect-square btn h-[unset] btn-neutral flex flex-col gap-2 text-center">
+            <Icon icon={Wallet} size={5} />
             Wallet
           </Link>
         {/if}
         <Link
           replaceState
           href="/settings/relays"
-          class="aspect-square btn h-[unset] btn-neutral flex flex-col gap-4 text-center">
-          <Icon icon={Server} size={7} />
+          class="aspect-square btn h-[unset] btn-neutral flex flex-col gap-2 text-center">
+          <Icon icon={Server} size={5} />
           Relays
         </Link>
         <Link
           replaceState
           href="/settings/content"
-          class="aspect-square btn h-[unset] btn-neutral flex flex-col gap-4 text-center">
-          <Icon icon={GalleryMinimalistic} size={7} />
+          class="aspect-square btn h-[unset] btn-neutral flex flex-col gap-2 text-center">
+          <Icon icon={GalleryMinimalistic} size={5} />
           Content
         </Link>
         <Link
           replaceState
           href="/settings/privacy"
-          class="aspect-square btn h-[unset] btn-neutral flex flex-col gap-4 text-center">
-          <Icon icon={Shield} size={7} />
+          class="aspect-square btn h-[unset] btn-neutral flex flex-col gap-2 text-center">
+          <Icon icon={Shield} size={5} />
           Privacy
         </Link>
       </div>

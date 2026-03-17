@@ -15,20 +15,7 @@
   const active = $derived($page.url?.pathname?.startsWith(prefix || href || "bogus"))
 </script>
 
-{#if href}
-  <a {href} class="relative z-nav-item flex h-14 w-14 items-center justify-center p-1">
-    <div
-      class="aspect-square flex-grow cursor-pointer rounded-full {restProps.class} flex items-center justify-center transition-colors hover:bg-base-300"
-      class:bg-base-300={active}
-      class:tooltip={title}
-      data-tip={title}>
-      {@render children?.()}
-      {#if !active && notification}
-        <div class="absolute right-1 top-1 h-2 w-2 rounded-full bg-primary"></div>
-      {/if}
-    </div>
-  </a>
-{:else}
+{#if onclick}
   <Button {onclick} class="relative z-nav-item flex h-14 w-14 items-center justify-center p-1">
     <div
       class="aspect-square flex-grow cursor-pointer rounded-full {restProps.class} flex items-center justify-center transition-colors hover:bg-base-300"
@@ -41,4 +28,17 @@
       {/if}
     </div>
   </Button>
+{:else}
+  <a {href} class="relative z-nav-item flex h-14 w-14 items-center justify-center p-1">
+    <div
+      class="aspect-square flex-grow cursor-pointer rounded-full {restProps.class} flex items-center justify-center transition-colors hover:bg-base-300"
+      class:bg-base-300={active}
+      class:tooltip={title}
+      data-tip={title}>
+      {@render children?.()}
+      {#if !active && notification}
+        <div class="absolute right-1 top-1 h-2 w-2 rounded-full bg-primary"></div>
+      {/if}
+    </div>
+  </a>
 {/if}

@@ -3,7 +3,6 @@
   import {userProfile} from "@welshman/app"
   import Letter from "@assets/icons/letter.svg?dataurl"
   import Magnifier from "@assets/icons/magnifier.svg?dataurl"
-  import HomeSmile from "@assets/icons/home-smile.svg?dataurl"
   import Planet from "@assets/icons/planet-3.svg?dataurl"
   import UserRounded from "@assets/icons/user-rounded.svg?dataurl"
   import Settings from "@assets/icons/settings.svg?dataurl"
@@ -71,11 +70,12 @@
   class="bottom-nav hide-on-keyboard border-top bottom-sai fixed left-0 right-0 z-nav h-14 border border-base-200 bg-base-100 md:hidden">
   <div class="content-padding-x content-sizing flex justify-between px-2">
     <div class="flex gap-2 sm:gap-6">
-      <PrimaryNavItem title="Home" href="/home">
-        <ImageIcon alt="Home" src={HomeSmile} size={8} />
+      <PrimaryNavItem title="Search" href="/people">
+        <ImageIcon alt="Search" src={Magnifier} size={8} />
       </PrimaryNavItem>
       <PrimaryNavItem
         title="Messages"
+        href="/chat"
         onclick={goToLastChat}
         notification={$notifications.has("/chat")}>
         <ImageIcon alt="Messages" src={Letter} size={8} />
