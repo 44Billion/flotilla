@@ -123,7 +123,7 @@ export const deriveVoiceParticipants = (url: string, h: string) =>
         if (!latestEvent) return []
         const participants = removeUndefined(
           map(
-            (tag: string[]) => (tag[1] ? participantFromLiveKitIdentity(tag[1]) : undefined),
+            (tag: string[]) => (tag[1] ? {pubkey: tag[1], identity: tag[1]} : undefined),
             getTags("participant", latestEvent.tags),
           ),
         )
@@ -133,8 +133,6 @@ export const deriveVoiceParticipants = (url: string, h: string) =>
   )
 
 const onRoomDisconnected = (reason?: DisconnectReason) => {
-  speakingParticipants.set([])
-  participantPubkeyMap.set(new Map())
   currentVoiceSession.set(undefined)
   if (reason !== undefined && reason !== DisconnectReason.CLIENT_INITIATED) {
     voiceState.set("disconnected")
@@ -144,6 +142,8 @@ const onRoomDisconnected = (reason?: DisconnectReason) => {
         : "Voice connection lost."
     pushToast({theme: "error", message})
   }
+  speakingParticipants.set([])
+  participantPubkeyMap.set(new Map())
 }
 
 const onTrackSubscribed = (track: Track) => {
@@ -257,11 +257,11 @@ export const leaveVoiceRoom = async () => {
   const audio = new Audio("/leave-voice-room.mp3")
   audio.play().catch(() => {})
 
+  voiceState.set("disconnected")
+  currentVoiceSession.set(undefined)
+  session.room.disconnect()
   speakingParticipants.set([])
   participantPubkeyMap.set(new Map())
-  voiceState.set("disconnected")
-  session.room.disconnect()
-  currentVoiceSession.set(undefined)
 }
 
 export const rejoinVoiceRoom = () => {
