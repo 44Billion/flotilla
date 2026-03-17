@@ -42,6 +42,7 @@
           target: element,
           props: {
             onClose: closeModal,
+            noEscape: options.noEscape,
             fullscreen: options.fullscreen,
             children: {component, props},
           },

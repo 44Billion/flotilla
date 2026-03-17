@@ -20,7 +20,7 @@
       {@render children?.()}
     </PrimaryNav>
   {:else if !$modal}
-    <Dialog children={{component: Landing, props: {}}} />
+    <Dialog noEscape children={{component: Landing, props: {}}} />
   {/if}
 </div>
 <Toast />

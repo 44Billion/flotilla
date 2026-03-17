@@ -10,6 +10,7 @@
 
   type Props = {
     onClose?: any
+    noEscape?: boolean
     fullscreen?: boolean
     children: {
       component: Component<any>
@@ -17,7 +18,7 @@
     }
   }
 
-  const {onClose = noop, fullscreen = false, children}: Props = $props()
+  const {onClose = noop, noEscape = false, fullscreen = false, children}: Props = $props()
 
   const wrapperClass = $derived(
     cx("absolute inset-0 flex sm:relative pointer-events-none", {
@@ -47,11 +48,13 @@
   </button>
   <div class={wrapperClass}>
     <div class={innerClass} transition:fly>
-      <Button
-        class="absolute -top-4 right-3 btn btn-circle btn-neutral btn-sm"
-        onclick={clearModals}>
-        <Icon icon={Close} size={6} />
-      </Button>
+      {#if !noEscape}
+        <Button
+          class="absolute -top-4 right-3 btn btn-circle btn-neutral btn-sm"
+          onclick={clearModals}>
+          <Icon icon={Close} size={6} />
+        </Button>
+      {/if}
       <children.component {...children.props} />
     </div>
   </div>
