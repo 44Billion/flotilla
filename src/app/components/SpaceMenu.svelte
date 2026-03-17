@@ -297,7 +297,7 @@
     </div>
   </SecondaryNavSection>
   <div
-    class="flex flex-shrink-0 flex-col gap-2 p-2 pt-0 -mt-4 pb-[calc(var(--saib)+3rem)] sm:pb-2 z-nav">
+    class="flex flex-shrink-0 flex-col gap-2 p-2 pt-0 -mt-4 pb-[calc(var(--saib)+3rem)] md:pb-2 z-nav">
     <VoiceWidget />
     <Button class="btn btn-neutral btn-sm h-10" onclick={showDetail}>
       <SocketStatusIndicator {url} />

@@ -27,23 +27,33 @@
   const handle = deriveHandleForPubkey(pubkey)
 
   const openProfile = () => {
-    if (!inert) {
-      pushModal(ProfileDetail, {pubkey, url})
-    }
+    pushModal(ProfileDetail, {pubkey, url})
   }
 
   const copyPubkey = () => clip(nip19.npubEncode(pubkey))
 </script>
 
 <div class="flex max-w-full items-start gap-3">
-  <Button onclick={openProfile} class="py-1">
-    <ProfileCircle {pubkey} size={avatarSize} />
-  </Button>
+  {#if inert}
+    <span class="py-1">
+      <ProfileCircle {pubkey} size={avatarSize} />
+    </span>
+  {:else}
+    <Button onclick={openProfile} class="py-1">
+      <ProfileCircle {pubkey} size={avatarSize} />
+    </Button>
+  {/if}
   <div class="flex min-w-0 flex-col">
     <div class="flex items-center gap-2">
-      <Button onclick={openProfile} class="text-bold overflow-hidden text-ellipsis">
-        {$profileDisplay}
-      </Button>
+      {#if inert}
+        <span class="text-bold overflow-hidden text-ellipsis">
+          {$profileDisplay}
+        </span>
+      {:else}
+        <Button onclick={openProfile} class="text-bold overflow-hidden text-ellipsis">
+          {$profileDisplay}
+        </Button>
+      {/if}
       <WotScore {pubkey} />
     </div>
     {#if $handle}
