@@ -39,7 +39,8 @@
     class:bg-base-100={active}>
     {@render children?.()}
     {#if notification}
-      <div class="absolute right-2 top-5 h-2 w-2 rounded-full bg-primary" transition:fade></div>
+      <div class="absolute right-[1.15rem] top-5 h-2 w-2 rounded-full bg-primary" transition:fade>
+      </div>
     {/if}
   </a>
 {:else}
@@ -49,7 +50,8 @@
     class:text-base-content={active}
     class:bg-base-100={active}>
     {#if notification}
-      <div class="absolute right-2 top-5 h-2 w-2 rounded-full bg-primary" transition:fade></div>
+      <div class="absolute right-[1.15rem] top-5 h-2 w-2 rounded-full bg-primary" transition:fade>
+      </div>
     {/if}
     {@render children?.()}
   </button>

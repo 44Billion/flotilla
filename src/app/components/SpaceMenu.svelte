@@ -258,7 +258,7 @@
           <SecondaryNavHeader>Your Rooms</SecondaryNavHeader>
         {/if}
         {#each $userRooms as h (h)}
-          <SpaceMenuRoomItem notify {replaceState} {url} {h} />
+          <SpaceMenuRoomItem {replaceState} {url} {h} />
         {/each}
         {#if $otherRooms.length > 0}
           <div class="h-2 flex-shrink-0"></div>

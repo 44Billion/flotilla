@@ -12,11 +12,10 @@
   interface Props {
     url: any
     h: any
-    notify?: boolean
     replaceState?: boolean
   }
 
-  const {url, h, notify = false, replaceState = false}: Props = $props()
+  const {url, h, replaceState = false}: Props = $props()
 
   const room = deriveRoom(url, h)
   const roomType = $derived(getRoomType($room))
@@ -32,7 +31,7 @@
   <SecondaryNavItem
     href={path}
     {replaceState}
-    notification={notify ? $notifications.has(path) : false}>
+    notification={$shouldNotifyForRoom ? $notifications.has(path) : false}>
     <RoomNameWithImage {url} {h} />
     {#if showDifferenceIcon}
       <Icon icon={$shouldNotifyForRoom ? Bell : BellOff} size={4} class="opacity-50" />
