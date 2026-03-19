@@ -24,17 +24,19 @@
         clearBadges()
       }
 
-      if (settings.push) {
-        const permissions = await Push.request()
+      let permission = "granted"
 
-        if (permissions !== "granted") {
+      if (settings.push) {
+        permission = await Push.request()
+
+        if (!permission.startsWith("granted")) {
           await sleep(300)
 
           settings.push = false
 
           return pushToast({
             theme: "error",
-            message: `Failed to request notification permissions (${permissions}).`,
+            message: `Failed to request notification permissions (${permission}).`,
           })
         }
       }

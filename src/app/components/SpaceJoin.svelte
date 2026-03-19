@@ -48,7 +48,7 @@
         } else {
           const permissions = await Push.request()
 
-          if (permissions === "granted") {
+          if (permissions.startsWith("granted")) {
             await setSpaceNotifications(url, true)
           }
         }

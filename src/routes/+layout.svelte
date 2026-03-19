@@ -28,12 +28,7 @@
   import {setupAnalytics} from "@app/util/analytics"
   import {authPolicy, blockPolicy, trustPolicy, mostlyRestrictedPolicy} from "@app/util/policies"
   import {kv, db} from "@app/core/storage"
-  import {
-    device,
-    userSettingsValues,
-    notificationSettings,
-    notificationState,
-  } from "@app/core/state"
+  import {device, userSettingsValues, notificationSettings, pushState} from "@app/core/state"
   import {syncApplicationData} from "@app/core/sync"
   import * as commands from "@app/core/commands"
   import * as requests from "@app/core/requests"
@@ -41,6 +36,7 @@
   import {theme} from "@app/util/theme"
   import {toast, pushToast} from "@app/util/toast"
   import * as notifications from "@app/util/notifications"
+  import {onPushNotificationAction} from "@app/util/push/adapters/common"
   import * as storage from "@app/util/storage"
   import {syncKeyboard} from "@app/util/keyboard"
   import {getPageTitle} from "@app/util/title"
@@ -71,8 +67,16 @@
   })
 
   // Listen for deep link events
-  App.addListener("appUrlOpen", (event: URLOpenListenerEvent) => {
+  App.addListener("appUrlOpen", async (event: URLOpenListenerEvent) => {
     const url = new URL(event.url)
+    const relay = url.searchParams.get("relay")
+    const id = url.searchParams.get("id")
+
+    if (relay && id) {
+      onPushNotificationAction({notification: {data: {relay, id}}} as any)
+      return
+    }
+
     const target = `${url.pathname}${url.search}${url.hash}`
     goto(target, {replaceState: false, noScroll: false})
   })
@@ -121,7 +125,7 @@
       }),
       sync({
         key: "notificationState",
-        store: notificationState,
+        store: pushState,
         storage: kv,
       }),
     ])

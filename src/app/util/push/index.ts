@@ -1,0 +1,62 @@
+import {Capacitor} from "@capacitor/core"
+import {notificationSettings, pushState} from "@app/core/state"
+import {WebNotifications} from "@app/util/push/adapters/web"
+import {CapacitorNotifications} from "@app/util/push/adapters/capacitor"
+import {AndroidFallbackNotifications} from "@app/util/push/adapters/android"
+import type {IPushAdapter} from "@app/util/push/adapters/common"
+
+export {onNotification} from "@app/util/push/adapters/common"
+
+export class Push {
+  static _adapter: IPushAdapter | undefined
+
+  static _getAdapter() {
+    if (!Push._adapter) {
+      const {useFallback} = pushState.get()
+
+      if (Capacitor.getPlatform() === "android" && useFallback) {
+        Push._adapter = new AndroidFallbackNotifications()
+      } else if (Capacitor.isNativePlatform()) {
+        Push._adapter = new CapacitorNotifications()
+      } else {
+        Push._adapter = new WebNotifications()
+      }
+    }
+
+    return Push._adapter
+  }
+
+  static async request() {
+    const adapter = Push._getAdapter()
+
+    let permission = await adapter.request()
+    if (permission !== "granted" && adapter instanceof CapacitorNotifications) {
+      Push._adapter = new AndroidFallbackNotifications()
+      permission = await Push._adapter.request()
+
+      if (permission === "granted") {
+        pushState.set({useFallback: true})
+      }
+    }
+
+    return permission
+  }
+
+  static disable() {
+    return Push._getAdapter().disable()
+  }
+
+  static enable() {
+    return Push._getAdapter().enable()
+  }
+
+  static sync() {
+    return notificationSettings.subscribe(({push}) => {
+      if (push) {
+        Push.enable()
+      } else {
+        Push.disable()
+      }
+    })
+  }
+}

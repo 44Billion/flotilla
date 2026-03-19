@@ -428,10 +428,11 @@ export type PushSubscription = {
 
 export type PushState = {
   token?: string
+  useFallback?: boolean
   subscription?: PushSubscription
 }
 
-export const notificationState = withGetter(writable<PushState>({}))
+export const pushState = withGetter(writable<PushState>({}))
 
 // Chats
 
