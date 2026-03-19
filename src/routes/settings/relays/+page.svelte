@@ -23,7 +23,7 @@
   import ForbiddenCircle from "@assets/icons/forbidden-circle.svg?dataurl"
   import Icon from "@lib/components/Icon.svelte"
   import RelaySettingsItem from "@app/components/RelaySettingsItem.svelte"
-  import RelaySettingsActionItems from "@app/components/RelaySettingsActionItems.svelte"
+  import RelaySettingsHealthChecks from "@app/components/RelaySettingsHealthChecks.svelte"
   import {hasNip50} from "@app/core/state"
   import {discoverRelays} from "@app/core/requests"
 
@@ -44,7 +44,7 @@
 </script>
 
 <div class="content flex flex-col gap-4">
-  <RelaySettingsActionItems />
+  <RelaySettingsHealthChecks />
   <div class="card2 bg-alt flex flex-col gap-4 shadow-md">
     <strong class="flex items-center gap-3 text-lg">
       <Icon icon={Server} />
