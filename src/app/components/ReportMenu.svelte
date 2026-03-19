@@ -20,10 +20,10 @@
   type Props = {
     url: string
     event: TrustedEvent
-    onDelete?: () => void
+    onResolved?: () => void
   }
 
-  const {url, event, onDelete}: Props = $props()
+  const {url, event, onResolved}: Props = $props()
 
   const shouldProtect = canEnforceNip70(url)
   const userIsAdmin = deriveUserIsSpaceAdmin(url)
@@ -40,7 +40,7 @@
 
   const deleteReport = async () => {
     publishDelete({event, relays: [url], protect: await shouldProtect})
-    onDelete?.()
+    onResolved?.()
   }
 
   const dismissReport = async () => {
@@ -54,7 +54,7 @@
     } else {
       pushToast({message: "Content has successfully been deleted!"})
       repository.removeEvent(event.id)
-      onDelete?.()
+      onResolved?.()
     }
   }
 
@@ -77,7 +77,7 @@
           repository.removeEvent(event.id)
           repository.removeEvent(id)
           history.back()
-          setTimeout(() => onDelete?.())
+          setTimeout(() => onResolved?.())
         }
       },
     })
@@ -101,7 +101,7 @@
           pushToast({message: "User has successfully been banned!"})
           repository.removeEvent(event.id)
           history.back()
-          setTimeout(() => onDelete?.())
+          setTimeout(() => onResolved?.())
         }
       },
     })

@@ -917,7 +917,8 @@ export const deriveSpaceActionItems = (url: string) =>
       },
     ]),
     $events => {
-      const getRoomId = (e: TrustedEvent) => getTagValue(e.kind === ROOM_MEMBERS ? "d" : "h", e.tags)
+      const getRoomId = (e: TrustedEvent) =>
+        getTagValue(e.kind === ROOM_MEMBERS ? "d" : "h", e.tags)
       const reports = $events.filter(e => e.kind === REPORT)
       const pendingJoins: TrustedEvent[] = []
 
@@ -938,8 +939,7 @@ export const deriveSpaceActionItems = (url: string) =>
           ).filter(({pubkey, created_at}) => {
             if (roomMembers.includes(pubkey)) return false
             if (gt(roomMembersEvent?.created_at, created_at)) return false
-            if (roomLeaves.some(e => e.pubkey === pubkey && e.created_at > created_at))
-              return false
+            if (roomLeaves.some(e => e.pubkey === pubkey && e.created_at > created_at)) return false
 
             return true
           }),

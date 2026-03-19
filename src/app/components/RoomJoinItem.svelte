@@ -1,7 +1,7 @@
 <script lang="ts">
-  import {getTagValue} from "@welshman/util"
+  import {getTagValue, ManagementMethod} from "@welshman/util"
   import type {TrustedEvent, PublishedRoomMeta} from "@welshman/util"
-  import {repository} from "@welshman/app"
+  import {repository, manageRelay} from "@welshman/app"
   import Button from "@lib/components/Button.svelte"
   import ProfileName from "@app/components/ProfileName.svelte"
   import ProfileDetail from "@app/components/ProfileDetail.svelte"
@@ -30,7 +30,7 @@
     try {
       const {error} = await manageRelay(url, {
         method: ManagementMethod.BanEvent,
-        params: [event.id, "Join request dismissed"]
+        params: [event.id, "Join request dismissed"],
       })
 
       if (error) {

@@ -26,7 +26,7 @@
 
   const back = () => history.back()
 
-  const onDelete = () => {
+  const onResolved = () => {
     if ($reports.size === 0) {
       back()
     }
@@ -40,7 +40,7 @@
       <ModalSubtitle>All reports for this event are shown below.</ModalSubtitle>
     </ModalHeader>
     {#each $reports.values() as report (report.id)}
-      <ReportItem {url} event={report} {onDelete} />
+      <ReportItem {url} event={report} {onResolved} />
     {/each}
   </ModalBody>
   <ModalFooter>

@@ -23,7 +23,7 @@
 
   const back = () => history.back()
 
-  const onDelete = () => {
+  const onResolved = () => {
     if ($reports.length === 0) {
       back()
     }
@@ -38,7 +38,7 @@
     </ModalHeader>
     <div class="flex flex-col gap-2">
       {#each $reports as event (event.id)}
-        <ReportItem {url} {event} {onDelete} />
+        <ReportItem {url} {event} {onResolved} />
       {:else}
         <p class="py-12 text-center">No reports found.</p>
       {/each}
