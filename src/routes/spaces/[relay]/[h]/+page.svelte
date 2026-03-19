@@ -381,22 +381,20 @@
     <div class="py-20">
       <div class="card2 col-8 m-auto max-w-md items-center text-center">
         <p class="opacity-75">You aren't currently a member of this room.</p>
-        {#if !$room.isClosed}
-          {#if $membershipStatus === MembershipStatus.Pending}
-            <Button class="btn btn-neutral btn-sm" disabled={leaving} onclick={leave}>
-              <Icon icon={ClockCircle} />
-              Access Pending
-            </Button>
-          {:else}
-            <Button class="btn btn-neutral btn-sm" disabled={joining} onclick={join}>
-              {#if joining}
-                <span class="loading loading-spinner loading-sm"></span>
-              {:else}
-                <Icon icon={Login2} />
-              {/if}
-              Join Room
-            </Button>
-          {/if}
+        {#if $membershipStatus === MembershipStatus.Pending}
+          <Button class="btn btn-neutral btn-sm" disabled={leaving} onclick={leave}>
+            <Icon icon={ClockCircle} />
+            Access Pending
+          </Button>
+        {:else}
+          <Button class="btn btn-neutral btn-sm" disabled={joining} onclick={join}>
+            {#if joining}
+              <span class="loading loading-spinner loading-sm"></span>
+            {:else}
+              <Icon icon={Login2} />
+            {/if}
+            Join Room
+          </Button>
         {/if}
       </div>
     </div>
@@ -456,22 +454,20 @@
     {:else if $room.isRestricted && $membershipStatus !== MembershipStatus.Granted}
       <div class="bg-alt card m-4 flex flex-row items-center justify-between px-4 py-3">
         <p class="opacity-75">Only members are allowed to post to this room.</p>
-        {#if !$room.isClosed}
-          {#if $membershipStatus === MembershipStatus.Pending}
-            <Button class="btn btn-neutral btn-sm" disabled={leaving} onclick={leave}>
-              <Icon icon={ClockCircle} />
-              Access Pending
-            </Button>
-          {:else}
-            <Button class="btn btn-neutral btn-sm" disabled={joining} onclick={join}>
-              {#if joining}
-                <span class="loading loading-spinner loading-sm"></span>
-              {:else}
-                <Icon icon={Login2} />
-              {/if}
-              Ask to Join
-            </Button>
-          {/if}
+        {#if $membershipStatus === MembershipStatus.Pending}
+          <Button class="btn btn-neutral btn-sm" disabled={leaving} onclick={leave}>
+            <Icon icon={ClockCircle} />
+            Access Pending
+          </Button>
+        {:else}
+          <Button class="btn btn-neutral btn-sm" disabled={joining} onclick={join}>
+            {#if joining}
+              <span class="loading loading-spinner loading-sm"></span>
+            {:else}
+              <Icon icon={Login2} />
+            {/if}
+            Ask to Join
+          </Button>
         {/if}
       </div>
     {:else}

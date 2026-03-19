@@ -1,7 +1,7 @@
 <script lang="ts">
   import {onMount} from "svelte"
   import {derived} from "svelte/store"
-  import {displayRelayUrl, EVENT_TIME, ZAP_GOAL, THREAD, CLASSIFIED, REPORT} from "@welshman/util"
+  import {displayRelayUrl, EVENT_TIME, ZAP_GOAL, THREAD, CLASSIFIED} from "@welshman/util"
   import {deriveRelay, createSearch, pubkey} from "@welshman/app"
   import {fly} from "@lib/transition"
   import Magnifier from "@assets/icons/magnifier.svg?dataurl"
@@ -35,7 +35,7 @@
   import SpaceJoin from "@app/components/SpaceJoin.svelte"
   import RelayName from "@app/components/RelayName.svelte"
   import SpaceMembers from "@app/components/SpaceMembers.svelte"
-  import SpaceReports from "@app/components/SpaceReports.svelte"
+  import SpaceActionItems from "@app/components/SpaceActionItems.svelte"
   import RoomCreate from "@app/components/RoomCreate.svelte"
   import SpaceMenuRoomItem from "@app/components/SpaceMenuRoomItem.svelte"
   import VoiceWidget from "@app/components/VoiceWidget.svelte"
@@ -52,6 +52,7 @@
     deriveUserCanCreateRoom,
     deriveUserIsSpaceAdmin,
     deriveEventsForUrl,
+    deriveSpaceActionItems,
     notificationSettings,
     deriveShouldNotify,
     displayRoom,
@@ -73,7 +74,7 @@
   const otherVoiceRooms = deriveOtherVoiceRooms(url)
   const members = deriveSpaceMembers(url)
   const userIsAdmin = deriveUserIsSpaceAdmin(url)
-  const reports = deriveEventsForUrl(url, [{kinds: [REPORT]}])
+  const actionItems = deriveSpaceActionItems(url)
 
   const spaceKinds = derived(
     deriveEventsForUrl(url, [{kinds: CONTENT_KINDS}]),
@@ -102,7 +103,7 @@
 
   const showMembers = () => pushModal(SpaceMembers, {url}, {replaceState})
 
-  const showReports = () => pushModal(SpaceReports, {url}, {replaceState})
+  const showActionItems = () => pushModal(SpaceActionItems, {url}, {replaceState})
 
   const canCreateRoom = deriveUserCanCreateRoom(url)
 
@@ -140,11 +141,15 @@
   <SecondaryNavSection class="min-h-0 flex-1 flex flex-col overflow-hidden pb-0">
     <div class="flex-shrink-0">
       <Button
-        class="flex w-full flex-col rounded-xl p-3 transition-all hover:bg-base-100"
+        class="relative flex w-full flex-col rounded-xl p-3 transition-all hover:bg-base-100"
         onclick={openMenu}>
         <div class="flex items-center justify-between">
-          <strong class="ellipsize flex items-center gap-1">
-            <RelayName {url} />
+          <strong class="flex items-center gap-1 relative">
+            <RelayName {url} class="ellipsize" />
+            <div
+              class="absolute -right-3 top-0 h-2 w-2 rounded-full bg-primary transition-all opacity-0"
+              class:opacity-100={$userIsAdmin && $actionItems.length > 0}>
+            </div>
             {#if $notificationSettings.push && !$shouldNotify}
               <Icon icon={BellOff} size={3} class="opacity-50" />
             {/if}
@@ -178,9 +183,12 @@
             </li>
             {#if $userIsAdmin}
               <li>
-                <Button onclick={showReports}>
+                <Button onclick={showActionItems}>
                   <Icon icon={Danger} />
-                  View Reports ({$reports.length})
+                  Action Items ({$actionItems.length})
+                  {#if $actionItems.length > 0}
+                    <div class="h-2 w-2 rounded-full bg-primary"></div>
+                  {/if}
                 </Button>
               </li>
             {/if}

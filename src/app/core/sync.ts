@@ -13,6 +13,7 @@ import {
   ROOM_ADD_MEMBER,
   ROOM_REMOVE_MEMBER,
   ROOM_CREATE_PERMISSION,
+  ROOM_JOIN,
   RELAY_MEMBERS,
   RELAY_ADD_MEMBER,
   RELAY_REMOVE_MEMBER,
@@ -268,7 +269,7 @@ const syncSpace = (url: string, rooms: string[]) => {
   pullAndListen({
     url,
     signal: controller.signal,
-    filters: [{kinds: [ROOM_META, ROOM_ADMINS, ROOM_MEMBERS]}],
+    filters: [{kinds: [ROOM_META, ROOM_ADMINS, ROOM_MEMBERS, LIVEKIT_PARTICIPANTS, ROOM_JOIN]}],
   })
 
   // Room-scoped kinds: add #h tags when we know which rooms the user is in.
@@ -316,12 +317,6 @@ const syncSpace = (url: string, rooms: string[]) => {
       filters: [{kinds: REACTION_KINDS}],
     })
   }
-
-  pullAndListen({
-    url,
-    signal: controller.signal,
-    filters: [{kinds: [LIVEKIT_PARTICIPANTS]}],
-  })
 
   return () => controller.abort()
 }

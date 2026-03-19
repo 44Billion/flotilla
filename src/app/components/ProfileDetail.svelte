@@ -30,6 +30,7 @@
   import EventInfo from "@app/components/EventInfo.svelte"
   import ProfileBadges from "@app/components/ProfileBadges.svelte"
   import {pubkeyLink, deriveUserIsSpaceAdmin, deriveSpaceBannedPubkeyItems} from "@app/core/state"
+  import {addSpaceMembers} from "@app/core/commands"
   import {pushModal} from "@app/util/modal"
   import {pushToast} from "@app/util/toast"
   import {makeChatPath} from "@app/util/routes"
@@ -85,10 +86,7 @@
     })
 
   const restoreMember = async () => {
-    const {error} = await manageRelay(url!, {
-      method: ManagementMethod.AllowPubkey,
-      params: [pubkey],
-    })
+    const error = await addSpaceMembers(url!, [pubkey])
 
     if (error) {
       pushToast({theme: "error", message: error})

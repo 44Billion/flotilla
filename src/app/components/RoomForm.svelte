@@ -208,7 +208,7 @@
     </div>
     <div class="flex items-center gap-2">
       <input type="checkbox" class="checkbox" bind:checked={values.isClosed} />
-      <span class="text-sm opacity-75">Ignore requests to join</span>
+      <span class="text-sm opacity-75">Membership requires approval</span>
     </div>
   </ModalBody>
   {@render footer({loading})}

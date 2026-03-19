@@ -1,6 +1,5 @@
 <script lang="ts">
-  import {displayRelayUrl, ManagementMethod} from "@welshman/util"
-  import {manageRelay} from "@welshman/app"
+  import {displayRelayUrl} from "@welshman/util"
   import AltArrowLeft from "@assets/icons/alt-arrow-left.svg?dataurl"
   import Spinner from "@lib/components/Spinner.svelte"
   import Button from "@lib/components/Button.svelte"
@@ -13,6 +12,7 @@
   import ModalSubtitle from "@lib/components/ModalSubtitle.svelte"
   import ModalFooter from "@lib/components/ModalFooter.svelte"
   import ProfileMultiSelect from "@app/components/ProfileMultiSelect.svelte"
+  import {addSpaceMembers} from "@app/core/commands"
   import {pushToast} from "@app/util/toast"
 
   interface Props {
@@ -27,23 +27,14 @@
     loading = true
 
     try {
-      const results = await Promise.all(
-        pubkeys.map(pubkey =>
-          manageRelay(url, {
-            method: ManagementMethod.AllowPubkey,
-            params: [pubkey],
-          }),
-        ),
-      )
+      const error = await addSpaceMembers(url, pubkeys)
 
-      for (const {error} of results) {
-        if (error) {
-          return pushToast({theme: "error", message: error})
-        }
+      if (error) {
+        pushToast({theme: "error", message: error})
+      } else {
+        pushToast({message: "Members have successfully been added!"})
+        back()
       }
-
-      pushToast({message: "Members have successfully been added!"})
-      back()
     } finally {
       loading = false
     }

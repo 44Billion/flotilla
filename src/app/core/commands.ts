@@ -17,7 +17,7 @@ import {
 } from "@welshman/lib"
 import {Nip01Signer} from "@welshman/signer"
 import type {UploadTask} from "@welshman/editor"
-import type {TrustedEvent, EventContent, Profile} from "@welshman/util"
+import type {TrustedEvent, EventContent, Profile, PublishedRoomMeta} from "@welshman/util"
 import {
   DELETE,
   REPORT,
@@ -52,6 +52,7 @@ import {
   editProfile,
   createProfile,
   uniqTags,
+  ManagementMethod,
 } from "@welshman/util"
 import {Pool, AuthStatus, SocketStatus} from "@welshman/net"
 import {Router} from "@welshman/router"
@@ -72,6 +73,8 @@ import {
   getPubkeyRelays,
   userBlossomServerList,
   getThunkError,
+  addRoomMember,
+  manageRelay,
 } from "@welshman/app"
 import {compressFile} from "@lib/html"
 import type {SettingsValues, SpaceNotificationSettings} from "@app/core/state"
@@ -89,6 +92,7 @@ import {
   stripPrefix,
   relaysMostlyRestricted,
   deriveSocket,
+  deriveSpaceMembers,
 } from "@app/core/state"
 
 // Utils
@@ -220,8 +224,7 @@ export const attemptRelayAccess = async (url: string, claim = "") => {
     }
   }
 
-  const thunk = publishJoinRequest({url, claim})
-  const error = await waitForThunkError(thunk)
+  const error = await waitForThunkError(publishJoinRequest({url, claim}))
 
   if (shouldIgnoreError(error)) return
   if (!claim && error.includes("invite code size")) return
@@ -698,4 +701,51 @@ export const updateProfile = ({
   const relays = router.merge(scenarios).getUrls()
 
   return publishThunk({event, relays})
+}
+
+// Admin actions
+
+export const addSpaceMembers = async (
+  url: string,
+  pubkeys: string[],
+): Promise<string | undefined> => {
+  const spaceMembers = get(deriveSpaceMembers(url))
+  const results = await Promise.all(
+    pubkeys
+      .filter(pubkey => !spaceMembers.includes(pubkey))
+      .map(pubkey =>
+        manageRelay(url, {
+          method: ManagementMethod.AllowPubkey,
+          params: [pubkey],
+        }),
+      ),
+  )
+
+  for (const {error} of results) {
+    if (error) {
+      return error
+    }
+  }
+}
+
+export const addRoomMembers = async (
+  url: string,
+  room: PublishedRoomMeta,
+  pubkeys: string[],
+): Promise<string | undefined> => {
+  const error = await addSpaceMembers(url, pubkeys)
+
+  if (error) {
+    return error
+  }
+
+  const errors = await Promise.all(
+    pubkeys.map(pubkey => waitForThunkError(addRoomMember(url, room, pubkey))),
+  )
+
+  for (const error of errors) {
+    if (error) {
+      return error
+    }
+  }
 }

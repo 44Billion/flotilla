@@ -2,9 +2,8 @@
   import {onMount} from "svelte"
   import {setKey, popKey} from "@lib/implicit"
   import {sleep} from "@welshman/lib"
-  import {ManagementMethod} from "@welshman/util"
-  import {manageRelay} from "@welshman/app"
-  import {addRoomMember, displayProfileByPubkey, waitForThunkError} from "@welshman/app"
+  import {displayProfileByPubkey} from "@welshman/app"
+  import type {PublishedRoomMeta} from "@welshman/util"
   import AltArrowLeft from "@assets/icons/alt-arrow-left.svg?dataurl"
   import Spinner from "@lib/components/Spinner.svelte"
   import Button from "@lib/components/Button.svelte"
@@ -22,6 +21,7 @@
   import {pushToast} from "@app/util/toast"
   import {pushModal} from "@app/util/modal"
   import {deriveRoom, deriveSpaceMembers} from "@app/core/state"
+  import {addRoomMembers} from "@app/core/commands"
 
   interface Props {
     url: string
@@ -42,35 +42,14 @@
       // Show loading for auto submit callback
       await sleep(500)
 
-      const results = await Promise.all(
-        pubkeys
-          .filter(pubkey => !$spaceMembers.includes(pubkey))
-          .map(pubkey =>
-            manageRelay(url, {
-              method: ManagementMethod.AllowPubkey,
-              params: [pubkey],
-            }),
-          ),
-      )
+      const error = await addRoomMembers(url, $room as PublishedRoomMeta, pubkeys)
 
-      for (const {error} of results) {
-        if (error) {
-          return pushToast({theme: "error", message: error})
-        }
+      if (error) {
+        pushToast({theme: "error", message: error})
+      } else {
+        pushToast({message: "Members have successfully been added!"})
+        back()
       }
-
-      const errors = await Promise.all(
-        pubkeys.map(pubkey => waitForThunkError(addRoomMember(url, $room, pubkey))),
-      )
-
-      for (const error of errors) {
-        if (error) {
-          return pushToast({theme: "error", message: errors[0]})
-        }
-      }
-
-      pushToast({message: "Members have successfully been added!"})
-      back()
     } finally {
       loading = false
     }

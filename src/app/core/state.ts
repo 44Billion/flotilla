@@ -31,6 +31,7 @@ import {
   groupBy,
   remove,
   simpleCache,
+  removeUndefined,
 } from "@welshman/lib"
 import type {Override} from "@welshman/lib"
 import type {RepositoryUpdate} from "@welshman/net"
@@ -99,6 +100,7 @@ import {
   REPOST,
   GENERIC_REPOST,
   asDecryptedEvent,
+  getTagValue,
   getGroupTags,
   getListTags,
   getPubkeyTagValues,
@@ -111,6 +113,7 @@ import {
   readRoomMeta,
   makeRoomMeta,
   ManagementMethod,
+  sortEventsAsc,
   sortEventsDesc,
   getAddress,
   Address,
@@ -287,7 +290,7 @@ export const deriveRelaySignedEvents = (url: string, filters: Filter[] = [{}]) =
   derived(
     [deriveRelay(url), deriveEventsForUrl(url, filters)],
     ([relay, events]) => events,
-    // khatru doesn't support relay.self, uncomment when it's ready
+    // TODO: khatru doesn't support relay.self, uncomment when it's ready
     // filter(spec({pubkey: relay.self}), events)
   )
 
@@ -869,7 +872,7 @@ export const deriveRoomMembers = (url: string, h: string) => {
 
     const members = new Set<string>()
 
-    for (const event of sortBy(e => -e.created_at, $events)) {
+    for (const event of sortEventsAsc($events)) {
       const pubkeys = getPubkeyTagValues(event.tags)
 
       if (event.kind === ROOM_ADD_MEMBER) {
@@ -902,6 +905,50 @@ export const deriveRoomAdmins = (url: string, h: string) => {
     return []
   })
 }
+
+// Action items (admin review queue)
+// const pendingJoins: TrustedEvent[] = []
+
+export const deriveSpaceActionItems = (url: string) =>
+  derived(
+    deriveEventsForUrl(url, [
+      {
+        kinds: [REPORT, ROOM_JOIN, ROOM_LEAVE, ROOM_MEMBERS],
+      },
+    ]),
+    $events => {
+      const getRoomId = (e: TrustedEvent) => getTagValue(e.kind === ROOM_MEMBERS ? "d" : "h", e.tags)
+      const reports = $events.filter(e => e.kind === REPORT)
+      const pendingJoins: TrustedEvent[] = []
+
+      // Room-level join requests — most recent per pubkey+h
+      for (const [h, roomEvents] of groupBy(getRoomId, $events)) {
+        if (!h) continue
+
+        const roomJoins = roomEvents.filter(spec({kind: ROOM_JOIN}))
+        const roomLeaves = roomEvents.filter(spec({kind: ROOM_LEAVE}))
+        const roomMembersEvent = roomEvents.find(spec({kind: ROOM_MEMBERS}))
+        const roomMembers = getTagValues("p", roomMembersEvent?.tags ?? [])
+
+        pendingJoins.push(
+          ...removeUndefined(
+            Array.from(groupBy(e => e.pubkey, roomJoins).values())
+              .map(sortEventsDesc)
+              .map(first),
+          ).filter(({pubkey, created_at}) => {
+            if (roomMembers.includes(pubkey)) return false
+            if (gt(roomMembersEvent?.created_at, created_at)) return false
+            if (roomLeaves.some(e => e.pubkey === pubkey && e.created_at > created_at))
+              return false
+
+            return true
+          }),
+        )
+      }
+
+      return sortEventsDesc([...reports, ...pendingJoins])
+    },
+  )
 
 // User membership status
 

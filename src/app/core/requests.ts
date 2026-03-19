@@ -47,10 +47,10 @@ export const makeFeed = ({
   onForwardExhausted?: () => void
   at?: number
 }) => {
-  const interval = int(WEEK)
   const controller = new AbortController()
   const events = writable<TrustedEvent[]>([])
 
+  let interval = int(WEEK)
   let buffer: TrustedEvent[] = []
   let backwardWindow = [at - interval, at]
   let forwardWindow = [at, at + interval]
@@ -111,13 +111,20 @@ export const makeFeed = ({
     }),
   ]
 
-  const loadTimeframe = (since: number, until: number) => {
-    request({
+  const loadTimeframe = async (since: number, until: number) => {
+    const events = await request({
       relays: [url],
       autoClose: true,
       signal: controller.signal,
       filters: filters.map(filter => ({...filter, since, until})),
     })
+
+    // If we found nothing, accelerate
+    if (events.length === 0) {
+      interval = Math.round(interval * 1.1)
+    } else {
+      interval = int(WEEK)
+    }
   }
 
   const backwardScroller = createScroller({

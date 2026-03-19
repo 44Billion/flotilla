@@ -169,6 +169,7 @@ src/
 - When creating forms, use `FieldInline` or `Field` instead of custom elements/tailwindcss
 - Do not define svelte event handlers inline, instead name them and put them in the script section of templates
 - Avoid using `as`, except where necessary. Instead, annotate function parameters, and ensure upstream values are typed correctly.
+- Instead of `getTag(tagName, event.tags)?.[1] || ""`, use `getTagValue(tagName, event.tags)`
 
 **Human-First Simplicity (Jon Staab Style):**
 

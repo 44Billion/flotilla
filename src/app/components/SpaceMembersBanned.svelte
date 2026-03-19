@@ -17,6 +17,7 @@
   import ModalFooter from "@lib/components/ModalFooter.svelte"
   import Profile from "@app/components/Profile.svelte"
   import {deriveSpaceBannedPubkeyItems, deriveSupportedMethods} from "@app/core/state"
+  import {addSpaceMembers} from "@app/core/commands"
   import {pushToast} from "@app/util/toast"
 
   interface Props {
@@ -55,10 +56,7 @@
   }
 
   const restoreMember = async (pubkey: string) => {
-    const {error} = await manageRelay(url, {
-      method: ManagementMethod.AllowPubkey,
-      params: [pubkey],
-    })
+    const error = await addSpaceMembers(url, [pubkey])
 
     if (error) {
       pushToast({theme: "error", message: error})

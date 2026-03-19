@@ -15,10 +15,10 @@
   type Props = {
     url: string
     event: TrustedEvent
-    onDelete?: () => void
+    onResolved?: () => void
   }
 
-  const {url, event, onDelete}: Props = $props()
+  const {url, event, onResolved}: Props = $props()
 
   const etag = getTag("e", event.tags)
   const ptag = getTag("p", event.tags)
@@ -45,7 +45,7 @@
         {/if}
       </span>
     </div>
-    <ReportMenu {url} {event} {onDelete} />
+    <ReportMenu {url} {event} {onResolved} />
   </div>
   {#if event.content}
     <div class="border-l-2 border-primary pl-3">
