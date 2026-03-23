@@ -35,13 +35,13 @@
   } from "@welshman/app"
   import Danger from "@assets/icons/danger-triangle.svg?dataurl"
   import Icon from "@lib/components/Icon.svelte"
-  import Link from "@lib/components/Link.svelte"
   import Spinner from "@lib/components/Spinner.svelte"
   import PageBar from "@lib/components/PageBar.svelte"
   import PageContent from "@lib/components/PageContent.svelte"
   import Divider from "@lib/components/Divider.svelte"
   import Button from "@lib/components/Button.svelte"
   import ProfileName from "@app/components/ProfileName.svelte"
+  import ProfileLink from "@app/components/ProfileLink.svelte"
   import ProfileCircle from "@app/components/ProfileCircle.svelte"
   import ProfileCircles from "@app/components/ProfileCircles.svelte"
   import ProfileDetail from "@app/components/ProfileDetail.svelte"
@@ -51,7 +51,7 @@
   import ChatComposeEdit from "@app/components/ChatComposeEdit.svelte"
   import ChatComposeParent from "@app/components/ChatComposeParent.svelte"
   import ThunkToast from "@app/components/ThunkToast.svelte"
-  import {userSettingsValues, PLATFORM_NAME, deriveChat} from "@app/core/state"
+  import {userSettingsValues, deriveChat} from "@app/core/state"
   import {pushModal} from "@app/util/modal"
   import {makeDelete, prependParent} from "@app/core/commands"
   import {pushToast} from "@app/util/toast"
@@ -289,12 +289,14 @@
       <div class="card2 col-2 m-auto max-w-md items-center text-center">
         <p class="row-2 text-lg text-error">
           <Icon icon={Danger} />
-          {missingRelayLists.length} messaging
-          {missingRelayLists.length > 1 ? "lists are" : "list is"} not configured.
+          Direct messages are not enabled
         </p>
         <p>
-          In order to deliver messages, {PLATFORM_NAME} needs to know where to send them. Please make
-          sure everyone in this conversation has set up their messaging relays.
+          Ask
+          {#each missingRelayLists as pubkey (pubkey)}
+            <ProfileLink {pubkey} />
+          {/each}
+          to enable direct messaging by opening this conversation in their app.
         </p>
       </div>
     </div>
@@ -339,6 +341,7 @@
       {onSubmit}
       {onEscape}
       {onEditPrevious}
-      content={eventToEdit?.content} />
+      content={eventToEdit?.content}
+      disabled={Boolean(missingRelayLists.length)} />
   {/key}
 </div>

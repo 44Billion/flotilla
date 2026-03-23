@@ -1,7 +1,6 @@
 <script lang="ts">
   import type {Snippet} from "svelte"
   import {Capacitor} from "@capacitor/core"
-  import {fly} from "@lib/transition"
   import UserCircle from "@assets/icons/user-circle.svg?dataurl"
   import Wallet from "@assets/icons/wallet.svg?dataurl"
   import Server from "@assets/icons/server.svg?dataurl"
@@ -36,51 +35,35 @@
     <SecondaryNavItem class="w-full !justify-between">
       <strong class="ellipsize flex items-center gap-3"> Your Settings </strong>
     </SecondaryNavItem>
-    <div in:fly|local>
-      <SecondaryNavItem href="/settings/profile">
-        <Icon icon={UserCircle} /> Profile
-      </SecondaryNavItem>
-    </div>
-    <div in:fly|local={{delay: 50}}>
-      <SecondaryNavItem href="/settings/alerts">
-        <Icon icon={Bell} /> Alerts
-      </SecondaryNavItem>
-    </div>
-    <div in:fly|local={{delay: 100}} class:hidden={Capacitor.getPlatform() === "ios"}>
+    <SecondaryNavItem href="/settings/profile">
+      <Icon icon={UserCircle} /> Profile
+    </SecondaryNavItem>
+    <SecondaryNavItem href="/settings/alerts">
+      <Icon icon={Bell} /> Alerts
+    </SecondaryNavItem>
+    {#if Capacitor.getPlatform() !== "ios"}
       <SecondaryNavItem href="/settings/wallet">
         <Icon icon={Wallet} /> Wallet
       </SecondaryNavItem>
-    </div>
-    <div in:fly|local={{delay: 150}}>
-      <SecondaryNavItem href="/settings/relays">
-        <Icon icon={Server} /> Relays
-      </SecondaryNavItem>
-    </div>
-    <div in:fly|local={{delay: 200}}>
-      <SecondaryNavItem href="/settings/content">
-        <Icon icon={GalleryMinimalistic} /> Content
-      </SecondaryNavItem>
-    </div>
-    <div in:fly|local={{delay: 250}}>
-      <SecondaryNavItem href="/settings/privacy">
-        <Icon icon={Shield} /> Privacy
-      </SecondaryNavItem>
-    </div>
-    <div in:fly|local={{delay: 300}}>
-      <SecondaryNavItem onclick={toggleTheme}>
-        <Icon icon={Moon} /> Theme
-      </SecondaryNavItem>
-    </div>
-    <div in:fly|local={{delay: 350}}>
-      <SecondaryNavItem href="/settings/about">
-        <Icon icon={Code2} /> About
-      </SecondaryNavItem>
-    </div>
-    <div in:fly|local={{delay: 400}}>
-      <SecondaryNavItem class="text-error hover:text-error" onclick={logout}>
-        <Icon icon={Exit} /> Log Out
-      </SecondaryNavItem>
-    </div>
+    {/if}
+    <SecondaryNavItem href="/settings/relays">
+      <Icon icon={Server} /> Relays
+    </SecondaryNavItem>
+    <SecondaryNavItem href="/settings/content">
+      <Icon icon={GalleryMinimalistic} /> Content
+    </SecondaryNavItem>
+    <SecondaryNavItem href="/settings/privacy">
+      <Icon icon={Shield} /> Privacy
+    </SecondaryNavItem>
+    <SecondaryNavItem onclick={toggleTheme}>
+      <Icon icon={Moon} /> Theme
+    </SecondaryNavItem>
+    <SecondaryNavItem href="/settings/about">
+      <Icon icon={Code2} /> About
+    </SecondaryNavItem>
+    <SecondaryNavItem class="text-error hover:text-error" onclick={logout}>
+      <Icon icon={Exit} /> Log Out
+    </SecondaryNavItem>
   </SecondaryNavSection>
 </SecondaryNav>
 

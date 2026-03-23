@@ -59,7 +59,7 @@
   } from "@app/core/state"
   import {setSpaceNotifications} from "@app/core/commands"
   import {pushModal} from "@app/util/modal"
-  import {makeSpacePath, makeChatPath} from "@app/util/routes"
+  import {makeSpacePath, goToChat} from "@app/util/routes"
 
   const {url} = $props()
 
@@ -114,6 +114,8 @@
   const joinSpace = () => pushModal(SpaceJoin, {url}, {replaceState})
 
   const addRoom = () => pushModal(RoomCreate, {url}, {replaceState})
+
+  const contactOwner = () => goToChat([$relay!.pubkey!])
 
   const shouldNotify = deriveShouldNotify(url)
 
@@ -194,10 +196,10 @@
             {/if}
             {#if $relay?.pubkey && $relay.pubkey !== $pubkey}
               <li>
-                <Link href={makeChatPath([$relay.pubkey])}>
+                <Button onclick={contactOwner}>
                   <Icon icon={Letter} />
                   Contact Owner
-                </Link>
+                </Button>
               </li>
             {/if}
             <li>

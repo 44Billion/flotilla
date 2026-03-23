@@ -1,4 +1,3 @@
-import type {Page} from "@sveltejs/kit"
 import theme from "tailwindcss/defaultTheme"
 import {get} from "svelte/store"
 import * as nip19 from "nostr-tools/nip19"
@@ -7,7 +6,7 @@ import {page} from "$app/stores"
 import {nthEq} from "@welshman/lib"
 import type {TrustedEvent} from "@welshman/util"
 import {getAddress} from "@welshman/util"
-import {tracker} from "@welshman/app"
+import {tracker, userMessagingRelayList} from "@welshman/app"
 import {identity} from "@welshman/lib"
 import {
   getTagValue,
@@ -17,17 +16,32 @@ import {
   ZAP_GOAL,
   EVENT_TIME,
   getPubkeyTagValues,
+  getRelaysFromList,
 } from "@welshman/util"
-import {
-  makeChatId,
-  entityLink,
-  decodeRelay,
-  encodeRelay,
-  userSpaceUrls,
-  DM_KINDS,
-  ROOM,
-} from "@app/core/state"
+import {makeChatId, entityLink, encodeRelay, DM_KINDS, ROOM} from "@app/core/state"
+import {pushModal} from "@app/util/modal"
 import {lastPageBySpaceUrl, lastChatUrl} from "@app/util/history"
+import ChatEnable from "@app/components/ChatEnable.svelte"
+
+// Chat
+
+export const makeChatPath = (pubkeys: string[]) => `/chat/${makeChatId(pubkeys)}`
+
+export const makeRoomPath = (url: string, h: string) => `/spaces/${encodeRelay(url)}/${h}`
+
+export const makeSpaceChatPath = (url: string) => makeRoomPath(url, "chat")
+
+export const goToChat = (pubkeys: string[] = []) => {
+  if (getRelaysFromList(get(userMessagingRelayList)).length === 0) {
+    pushModal(ChatEnable, {next: () => goToChat(pubkeys)})
+  } else if (pubkeys.length === 0) {
+    goto(lastChatUrl ?? "/chat")
+  } else {
+    goto(makeChatPath(pubkeys))
+  }
+}
+
+// Spaces
 
 export const makeSpacePath = (url: string, ...extra: (string | undefined)[]) => {
   let path = `/spaces/${encodeRelay(url)}`
@@ -56,15 +70,7 @@ export const goToSpace = async (url: string) => {
   }
 }
 
-export const goToLastChat = () => {
-  goto(lastChatUrl ?? "/chat")
-}
-
-export const makeChatPath = (pubkeys: string[]) => `/chat/${makeChatId(pubkeys)}`
-
-export const makeRoomPath = (url: string, h: string) => `/spaces/${encodeRelay(url)}/${h}`
-
-export const makeSpaceChatPath = (url: string) => makeRoomPath(url, "chat")
+// Content types, events
 
 export const makeMessagePath = (url: string, event: TrustedEvent) => {
   const h = getTagValue(ROOM, event.tags)
@@ -83,26 +89,6 @@ export const makeClassifiedPath = (url: string, address?: string) =>
 
 export const makeCalendarPath = (url: string, address?: string) =>
   makeSpacePath(url, "calendar", address)
-
-export const getPrimaryNavItem = ($page: Page) => $page.route?.id?.split("/")[1]
-
-export const getPrimaryNavItemIndex = ($page: Page) => {
-  const urls = get(userSpaceUrls)
-
-  switch (getPrimaryNavItem($page)) {
-    case "discover":
-      return urls.length + 2
-    case "spaces": {
-      const routeUrl = decodeRelay($page.params.relay || "")
-
-      return urls.findIndex(url => url === routeUrl) + 1
-    }
-    case "settings":
-      return urls.length + 3
-    default:
-      return 0
-  }
-}
 
 export const scrollToEvent = (id: string) => {
   const element = document.querySelector(`[data-event="${id}"]`) as any

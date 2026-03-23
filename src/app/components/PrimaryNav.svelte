@@ -14,13 +14,15 @@
   import {userSpaceUrls, PLATFORM_RELAYS} from "@app/core/state"
   import {pushModal} from "@app/util/modal"
   import {notifications} from "@app/util/notifications"
-  import {goToLastChat} from "@app/util/routes"
+  import {goToChat} from "@app/util/routes"
 
   type Props = {
     children?: Snippet
   }
 
   const {children}: Props = $props()
+
+  const chatHandler = () => goToChat()
 
   const showSettingsMenu = () => pushModal(MenuSettings)
 
@@ -48,7 +50,7 @@
       </PrimaryNavItem>
       <PrimaryNavItem
         title="Messages"
-        onclick={goToLastChat}
+        onclick={chatHandler}
         class="tooltip-right"
         notification={$notifications.has("/chat")}>
         <ImageIcon alt="Messages" src={Letter} size={8} />
@@ -76,7 +78,7 @@
       <PrimaryNavItem
         title="Messages"
         href="/chat"
-        onclick={goToLastChat}
+        onclick={chatHandler}
         notification={$notifications.has("/chat")}>
         <ImageIcon alt="Messages" src={Letter} size={8} />
       </PrimaryNavItem>

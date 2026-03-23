@@ -1,6 +1,5 @@
 <script lang="ts">
   import {onMount} from "svelte"
-  import {goto} from "$app/navigation"
   import {removeUndefined} from "@welshman/lib"
   import {ManagementMethod} from "@welshman/util"
   import {
@@ -33,7 +32,7 @@
   import {addSpaceMembers} from "@app/core/commands"
   import {pushModal} from "@app/util/modal"
   import {pushToast} from "@app/util/toast"
-  import {makeChatPath} from "@app/util/routes"
+  import {goToChat} from "@app/util/routes"
 
   export type Props = {
     pubkey: string
@@ -52,11 +51,9 @@
 
   const back = () => history.back()
 
-  const chatPath = makeChatPath([pubkey])
-
   const showInfo = () => pushModal(EventInfo, {url, event: $profile!.event})
 
-  const openChat = () => goto(chatPath)
+  const openChat = () => goToChat([pubkey])
 
   const toggleMenu = (pubkey: string) => {
     showMenu = !showMenu

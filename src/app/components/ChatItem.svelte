@@ -5,11 +5,11 @@
   import type {TrustedEvent} from "@welshman/util"
   import {pubkey, loadMessagingRelayList} from "@welshman/app"
   import {fade} from "@lib/transition"
-  import Link from "@lib/components/Link.svelte"
+  import Button from "@lib/components/Button.svelte"
   import ProfileName from "@app/components/ProfileName.svelte"
   import ProfileCircle from "@app/components/ProfileCircle.svelte"
   import ProfileCircles from "@app/components/ProfileCircles.svelte"
-  import {makeChatPath} from "@app/util/routes"
+  import {makeChatPath, goToChat} from "@app/util/routes"
   import {notifications} from "@app/util/notifications"
 
   interface Props {
@@ -24,6 +24,7 @@
   const others = uniq(remove($pubkey!, props.pubkeys))
   const active = $derived($page.params.chat === props.id)
   const path = makeChatPath(props.pubkeys)
+  const openChat = () => goToChat(props.pubkeys)
 
   onMount(() => {
     for (const pk of others) {
@@ -32,7 +33,7 @@
   })
 </script>
 
-<Link class="flex flex-col justify-start gap-1" href={makeChatPath(props.pubkeys)}>
+<Button class="flex flex-col justify-start gap-1" onclick={openChat}>
   <div
     class="cursor-pointer border-t border-solid border-base-100 px-6 py-2 transition-colors hover:bg-base-100 {props.class}"
     class:bg-base-100={active}>
@@ -71,4 +72,4 @@
       </p>
     </div>
   </div>
-</Link>
+</Button>

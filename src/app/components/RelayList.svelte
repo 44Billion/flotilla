@@ -6,6 +6,7 @@
   import CloseCircle from "@assets/icons/close-circle.svg?dataurl"
   import AltArrowLeft from "@assets/icons/alt-arrow-left.svg?dataurl"
   import AltArrowRight from "@assets/icons/alt-arrow-right.svg?dataurl"
+  import DangerTriangle from "@assets/icons/danger-triangle.svg?dataurl"
   import {errorMessage} from "@lib/util"
   import Icon from "@lib/components/Icon.svelte"
   import Button from "@lib/components/Button.svelte"
@@ -70,6 +71,11 @@
           Remove
         </Button>
       </RelayItem>
+    {:else}
+      <p class="text-center py-12 flex justify-center items-center gap-2">
+        <Icon icon={DangerTriangle} />
+        No relay selections found.
+      </p>
     {/each}
   </ModalBody>
   <ModalFooter>

@@ -2,7 +2,6 @@
   import * as nip19 from "nostr-tools/nip19"
   import {onMount} from "svelte"
   import {writable} from "svelte/store"
-  import {goto} from "$app/navigation"
   import {tryCatch, uniq} from "@welshman/lib"
   import {fromNostrURI} from "@welshman/util"
   import {loadMessagingRelayList} from "@welshman/app"
@@ -19,11 +18,11 @@
   import ModalSubtitle from "@lib/components/ModalSubtitle.svelte"
   import ModalFooter from "@lib/components/ModalFooter.svelte"
   import ProfileMultiSelect from "@app/components/ProfileMultiSelect.svelte"
-  import {makeChatPath} from "@app/util/routes"
+  import {goToChat} from "@app/util/routes"
 
   const back = () => history.back()
 
-  const onSubmit = () => goto(makeChatPath(pubkeys))
+  const onSubmit = () => goToChat(pubkeys)
 
   const addPubkey = (pubkey: string) => {
     pubkeys = uniq([...pubkeys, pubkey])
