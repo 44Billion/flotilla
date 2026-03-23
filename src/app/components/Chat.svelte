@@ -65,7 +65,7 @@
 
   const chat = deriveChat(pubkeys)
   const others = remove($pubkey!, pubkeys)
-  const missingRelayLists = $derived(pubkeys.filter(pk => !$messagingRelayListsByPubkey.has(pk)))
+  const missingRelayLists = $derived(others.filter(pk => !$messagingRelayListsByPubkey.has(pk)))
 
   const showMembers = () =>
     others.length === 1
@@ -279,35 +279,12 @@
         {/if}
       </Button>
     </div>
-    {#if remove($pubkey, missingRelayLists).length > 0}
-      {@const count = remove($pubkey, missingRelayLists).length}
-      {@const label = count > 1 ? "lists are" : "list is"}
-      <div
-        class="row-2 badge badge-error badge-lg tooltip tooltip-left cursor-pointer"
-        data-tip="{count} messaging {label} not configured.">
-        <Icon icon={Danger} />
-        {count}
-      </div>
-    {/if}
   </div>
 </PageBar>
 
 <PageContent class="flex flex-col-reverse gap-2 pt-4">
   <div bind:this={dynamicPadding}></div>
-  {#if missingRelayLists.includes($pubkey!)}
-    <div class="py-12">
-      <div class="card2 col-2 m-auto max-w-md items-center text-center">
-        <p class="row-2 text-lg text-error">
-          <Icon icon={Danger} />
-          Your messaging relays are not configured.
-        </p>
-        <p>
-          In order to deliver messages, {PLATFORM_NAME} needs to know where to send them. Please visit
-          your <Link class="link" href="/settings/relays">relay settings page</Link> to receive messages.
-        </p>
-      </div>
-    </div>
-  {:else if missingRelayLists.length > 0}
+  {#if missingRelayLists.length > 0}
     <div class="py-12">
       <div class="card2 col-2 m-auto max-w-md items-center text-center">
         <p class="row-2 text-lg text-error">
