@@ -642,13 +642,19 @@ export const uploadFile = async (file: File, options: UploadFileOptions = {}) =>
     const res = await uploadBlob(server, file, {authEvent})
     const text = await res.text()
 
-    let {uploaded, url, ...task} = parseJson(text) || {}
+    let task
+    try {
+      task = parseJson(text)
+    } catch (e) {
+      return {error: text}
+    }
 
-    if (!uploaded) {
+    if (!task?.uploaded) {
       return {error: text || `Failed to upload file (HTTP ${res.status})`}
     }
 
     // Always append correct file extension if we encrypted the file, or if it's missing
+    let url = task.url
     if (options.encrypt) {
       url = url.replace(/\.\w+$/, "") + ext
     } else if (new URL(url).pathname.split(".").length === 1) {
