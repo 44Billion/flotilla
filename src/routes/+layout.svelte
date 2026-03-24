@@ -27,7 +27,7 @@
   import {setupHistory} from "@app/util/history"
   import {setupAnalytics} from "@app/util/analytics"
   import {authPolicy, blockPolicy, trustPolicy, mostlyRestrictedPolicy} from "@app/util/policies"
-  import {kv, db} from "@app/core/storage"
+  import {db, kv, ss} from "@app/core/storage"
   import {device, userSettingsValues, notificationSettings, pushState} from "@app/core/state"
   import {syncApplicationData} from "@app/core/sync"
   import * as commands from "@app/core/commands"
@@ -96,7 +96,7 @@
   const unsubscribe = call(async () => {
     const unsubscribers: Unsubscriber[] = []
 
-    // Sync stuff to localstorage
+    // Sync stuff to storage
     await Promise.all([
       sync({
         key: "device",
@@ -111,7 +111,7 @@
       sync({
         key: "sessions",
         store: sessions,
-        storage: kv,
+        storage: ss,
       }),
       sync({
         key: "shouldUnwrap",

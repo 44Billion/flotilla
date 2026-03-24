@@ -1,4 +1,5 @@
 import {call} from "@welshman/lib"
+import {SecureStorage} from "@aparajita/capacitor-secure-storage"
 import {Preferences} from "@capacitor/preferences"
 import {IDB} from "@lib/indexeddb"
 
@@ -23,6 +24,46 @@ export const kv = call(() => {
 
   const clear = async () => {
     p = p.then(() => Preferences.clear())
+
+    await p
+  }
+
+  return {get, set, clear}
+})
+
+export const ss = call(() => {
+  let p = Promise.resolve()
+
+  const get = async <T>(key: string): Promise<T | undefined> => {
+    let value = await SecureStorage.getItem(key)
+
+    if (!value) {
+      const legacy = await Preferences.get({key})
+
+      if (legacy.value) {
+        value = legacy.value
+        await SecureStorage.setItem(key, legacy.value)
+        await Preferences.remove({key})
+      }
+    }
+
+    if (!value) return undefined
+
+    try {
+      return JSON.parse(value)
+    } catch (e) {
+      return undefined
+    }
+  }
+
+  const set = async <T>(key: string, value: T): Promise<void> => {
+    p = p.then(() => SecureStorage.setItem(key, JSON.stringify(value)))
+
+    await p
+  }
+
+  const clear = async () => {
+    p = p.then(() => SecureStorage.clear())
 
     await p
   }
