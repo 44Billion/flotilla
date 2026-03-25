@@ -25,9 +25,10 @@
     url: string
     h: string
     replaceState?: boolean
+    notification?: boolean
   }
 
-  const {url, h, replaceState = false}: Props = $props()
+  const {url, h, replaceState = false, notification = false}: Props = $props()
 
   const participants = deriveVoiceParticipants(url, h)
   const isActive = $derived(
@@ -61,6 +62,7 @@
 <SecondaryNavItem
   href={makeRoomPath(url, h)}
   {replaceState}
+  {notification}
   onclick={handleClick}
   class={cx("!items-start", isActive && "!bg-base-100 !text-base-content")}>
   <div class="flex w-full min-w-0 flex-col gap-2">
