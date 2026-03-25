@@ -2,10 +2,10 @@ import {derived} from "svelte/store"
 import {Badge} from "@capawesome/capacitor-badge"
 import {synced, throttled, withGetter} from "@welshman/store"
 import {pubkey, tracker, repository, relaysByUrl} from "@welshman/app"
-import {assoc, prop, spec, first, identity, now} from "@welshman/lib"
+import {assoc, prop, first, identity, groupBy, now} from "@welshman/lib"
 import type {TrustedEvent} from "@welshman/util"
 import {deriveEventsByIdByUrl} from "@welshman/store"
-import {sortEventsDesc} from "@welshman/util"
+import {sortEventsDesc, getTagValue} from "@welshman/util"
 import {makeSpacePath, makeRoomPath, makeSpaceChatPath, makeChatPath} from "@app/util/routes"
 import {
   MESSAGE_KINDS,
@@ -13,7 +13,6 @@ import {
   chatsById,
   userGroupList,
   getSpaceUrlsFromGroupList,
-  getSpaceRoomsFromGroupList,
   makeCommentFilter,
   hasNip29,
 } from "@app/core/state"
@@ -121,13 +120,14 @@ export const allNotifications = derived(
       const events = sortEventsDesc((eventsByIdByUrl.get(url) || new Map()).values())
 
       if (hasNip29($relaysByUrl.get(url))) {
-        for (const h of getSpaceRoomsFromGroupList(url, $userGroupList)) {
-          const roomPath = makeRoomPath(url, h)
-          const latestEvent = events.find(e => e.tags.some(spec(["h", h])))
+        for (const [h, [latestEvent]] of groupBy(e => getTagValue("h", e.tags), events)) {
+          if (h) {
+            const roomPath = makeRoomPath(url, h)
 
-          if (hasNotification(roomPath, latestEvent)) {
-            paths.add(spacePath)
-            paths.add(roomPath)
+            if (hasNotification(roomPath, latestEvent)) {
+              paths.add(spacePath)
+              paths.add(roomPath)
+            }
           }
         }
       } else {
