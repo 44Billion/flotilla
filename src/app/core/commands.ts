@@ -75,6 +75,7 @@ import {
   getThunkError,
   addRoomMember,
   manageRelay,
+  getRelay,
 } from "@welshman/app"
 import {compressFile} from "@lib/html"
 import type {SettingsValues, SpaceNotificationSettings} from "@app/core/state"
@@ -553,6 +554,12 @@ export const createInvoice = async ({
 export const normalizeBlossomUrl = (url: string) => normalizeUrl(url.replace(/^ws/, "http"))
 
 export const fetchHasBlossomSupport = async (url: string) => {
+  const relay = getRelay(url)
+
+  if (relay?.supported_nips?.map(String).includes("BUD-02")) {
+    return true
+  }
+
   const server = normalizeBlossomUrl(url)
   const $signer = signer.get() || Nip01Signer.ephemeral()
   const headers: Record<string, string> = {
