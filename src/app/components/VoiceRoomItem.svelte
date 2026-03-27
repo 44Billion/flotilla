@@ -5,7 +5,7 @@
   import ProfileCircle from "@app/components/ProfileCircle.svelte"
   import RoomImage from "@app/components/RoomImage.svelte"
   import RoomName from "@app/components/RoomName.svelte"
-  import {pushToast} from "@app/util/toast"
+  import {handleJoinError} from "@app/components/VoiceWidget.svelte"
   import {makeRoomPath} from "@app/util/routes"
   import {
     deriveVoiceParticipants,
@@ -42,12 +42,7 @@
       return
     }
 
-    try {
-      await joinVoiceRoom(url, h)
-    } catch (e) {
-      console.error("Failed to join voice room", e)
-      pushToast({theme: "error", message: "Failed to join voice room"})
-    }
+    await joinVoiceRoom(url, h).catch(handleJoinError)
   }
 
   $effect(() => {

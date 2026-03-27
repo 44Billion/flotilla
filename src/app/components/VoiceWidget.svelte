@@ -1,3 +1,20 @@
+<script module lang="ts">
+  import {AbortError, TimeoutError} from "$lib/util"
+  import {VoiceJoinMembershipError} from "@app/voice"
+  import {pushToast} from "@app/util/toast"
+
+  export function handleJoinError(e: unknown) {
+    if (e instanceof AbortError) return
+    console.error("Failed to join voice room", e)
+    let message = "Failed to join voice room"
+    if (e instanceof VoiceJoinMembershipError) message = e.message
+    else if (e instanceof TimeoutError)
+      message = "Connection timed out. Please check your network and try again."
+    else if (e instanceof Error && e.message === "No signer available") message = e.message
+    pushToast({theme: "error", message})
+  }
+</script>
+
 <script lang="ts">
   import {fly} from "svelte/transition"
   import {displayRelayUrl} from "@welshman/util"
@@ -23,6 +40,10 @@
     $currentVoiceRoom ? displayRoom($currentVoiceRoom.url, $currentVoiceRoom.h) : "",
   )
   const spaceName = $derived($currentVoiceRoom ? displayRelayUrl($currentVoiceRoom.url) : "")
+
+  const handleRejoin = () => {
+    void rejoinVoiceRoom().catch(handleJoinError)
+  }
 </script>
 
 {#if $currentVoiceRoom}
@@ -70,7 +91,7 @@
         <Button
           data-tip="Join Voice"
           class="center tooltip tooltip-top btn btn-sm btn-square btn-success"
-          onclick={rejoinVoiceRoom}>
+          onclick={handleRejoin}>
           <Icon icon={PhoneCallingRounded} size={4} />
         </Button>
       {/if}

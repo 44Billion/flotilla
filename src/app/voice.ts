@@ -17,6 +17,13 @@ export const LIVEKIT_PARTICIPANTS = 39004
 
 export {checkRelayHasLivekit} from "$lib/livekit"
 
+export class VoiceJoinMembershipError extends Error {
+  constructor() {
+    super("Failed to join voice room: you must be a member.")
+    this.name = "VoiceJoinMembershipError"
+  }
+}
+
 export type VoiceSession = {
   url: string
   h: string
@@ -95,6 +102,7 @@ const fetchLivekitToken = async (
 
   if (!response.ok) {
     const text = await response.text()
+    if (response.status === 403) throw new VoiceJoinMembershipError()
     throw new Error(`Token request failed (${response.status}): ${text}`)
   }
 
@@ -243,7 +251,6 @@ export const joinVoiceRoom = async (url: string, h: string): Promise<void> => {
     playJoinSound()
   } catch (e) {
     if (isActive()) voiceState.set("disconnected")
-    if (e instanceof AbortError) return
     throw e
   } finally {
     if (isActive()) joinAbortController = undefined
@@ -264,9 +271,10 @@ export const leaveVoiceRoom = async () => {
   participantPubkeyMap.set(new Map())
 }
 
-export const rejoinVoiceRoom = () => {
+export const rejoinVoiceRoom = async (): Promise<void> => {
   const target = get(currentVoiceRoom)
-  if (target) joinVoiceRoom(target.url, target.h)
+  if (!target) return
+  return joinVoiceRoom(target.url, target.h)
 }
 
 export const toggleMute = async () => {
