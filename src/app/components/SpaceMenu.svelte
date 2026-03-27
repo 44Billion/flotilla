@@ -1,5 +1,4 @@
 <script lang="ts">
-  import {onMount} from "svelte"
   import {derived} from "svelte/store"
   import {displayRelayUrl, EVENT_TIME, ZAP_GOAL, THREAD, CLASSIFIED} from "@welshman/util"
   import {deriveRelay, createSearch, pubkey} from "@welshman/app"
@@ -99,21 +98,21 @@
     showMenu = !showMenu
   }
 
-  const showDetail = () => pushModal(SpaceDetail, {url}, {replaceState})
+  const showDetail = () => pushModal(SpaceDetail, {url})
 
-  const showMembers = () => pushModal(SpaceMembers, {url}, {replaceState})
+  const showMembers = () => pushModal(SpaceMembers, {url})
 
-  const showActionItems = () => pushModal(SpaceActionItems, {url}, {replaceState})
+  const showActionItems = () => pushModal(SpaceActionItems, {url})
 
   const canCreateRoom = deriveUserCanCreateRoom(url)
 
-  const createInvite = () => pushModal(SpaceInvite, {url}, {replaceState})
+  const createInvite = () => pushModal(SpaceInvite, {url})
 
-  const leaveSpace = () => pushModal(SpaceExit, {url}, {replaceState})
+  const leaveSpace = () => pushModal(SpaceExit, {url})
 
-  const joinSpace = () => pushModal(SpaceJoin, {url}, {replaceState})
+  const joinSpace = () => pushModal(SpaceJoin, {url})
 
-  const addRoom = () => pushModal(RoomCreate, {url}, {replaceState})
+  const addRoom = () => pushModal(RoomCreate, {url})
 
   const contactOwner = () => goToChat([$relay!.pubkey!])
 
@@ -131,12 +130,7 @@
 
   let term = $state("")
   let showMenu = $state(false)
-  let replaceState = $state(false)
   let element: Element | undefined = $state()
-
-  onMount(() => {
-    replaceState = Boolean(element?.closest(".drawer"))
-  })
 </script>
 
 <div bind:this={element} class="flex min-h-0 flex-1 flex-col">
@@ -234,31 +228,31 @@
     </div>
     <div class="flex min-h-0 flex-1 flex-col gap-1 overflow-auto overflow-x-hidden">
       {#if hasNip29($relay)}
-        <SecondaryNavItem {replaceState} href={makeSpacePath(url, "recent")}>
+        <SecondaryNavItem href={makeSpacePath(url, "recent")}>
           <Icon icon={History} /> Recent Activity
         </SecondaryNavItem>
       {:else}
-        <SecondaryNavItem {replaceState} href={chatPath}>
+        <SecondaryNavItem href={chatPath}>
           <Icon icon={ChatRound} /> Chat
         </SecondaryNavItem>
       {/if}
       {#if ENABLE_ZAPS && $spaceKinds.has(ZAP_GOAL)}
-        <SecondaryNavItem {replaceState} href={goalsPath}>
+        <SecondaryNavItem href={goalsPath}>
           <Icon icon={StarFallMinimalistic} /> Goals
         </SecondaryNavItem>
       {/if}
       {#if $spaceKinds.has(THREAD)}
-        <SecondaryNavItem {replaceState} href={threadsPath}>
+        <SecondaryNavItem href={threadsPath}>
           <Icon icon={NotesMinimalistic} /> Threads
         </SecondaryNavItem>
       {/if}
       {#if $spaceKinds.has(CLASSIFIED)}
-        <SecondaryNavItem {replaceState} href={classifiedsPath}>
+        <SecondaryNavItem href={classifiedsPath}>
           <Icon icon={CaseMinimalistic} /> Classifieds
         </SecondaryNavItem>
       {/if}
       {#if $spaceKinds.has(EVENT_TIME)}
-        <SecondaryNavItem {replaceState} href={calendarPath}>
+        <SecondaryNavItem href={calendarPath}>
           <Icon icon={CalendarMinimalistic} /> Calendar
         </SecondaryNavItem>
       {/if}
@@ -268,7 +262,7 @@
           <SecondaryNavHeader>Your Rooms</SecondaryNavHeader>
         {/if}
         {#each $userRooms as h (h)}
-          <SpaceMenuRoomItem {replaceState} {url} {h} />
+          <SpaceMenuRoomItem {url} {h} />
         {/each}
         {#if $otherRooms.length > 0}
           <div class="h-2 flex-shrink-0"></div>
@@ -287,17 +281,17 @@
           </label>
         {/if}
         {#each $roomSearch.searchValues(term) as h (h)}
-          <SpaceMenuRoomItem {replaceState} {url} {h} />
+          <SpaceMenuRoomItem {url} {h} />
         {/each}
         {#if $otherVoiceRooms.length > 0}
           <div class="h-2 flex-shrink-0"></div>
           <SecondaryNavHeader>Voice Rooms</SecondaryNavHeader>
           {#each $otherVoiceRooms as h (h)}
-            <SpaceMenuRoomItem {replaceState} {url} {h} />
+            <SpaceMenuRoomItem {url} {h} />
           {/each}
         {/if}
         {#if $canCreateRoom}
-          <SecondaryNavItem {replaceState} onclick={addRoom}>
+          <SecondaryNavItem onclick={addRoom}>
             <Icon icon={AddCircle} />
             Create room
           </SecondaryNavItem>
