@@ -1,22 +1,8 @@
-<script module lang="ts">
-  import {AbortError, TimeoutError} from "$lib/util"
-  import {VoiceJoinMembershipError} from "@app/voice"
-  import {pushToast} from "@app/util/toast"
-
-  export function handleJoinError(e: unknown) {
-    if (e instanceof AbortError) return
-    console.error("Failed to join voice room", e)
-    let message = "Failed to join voice room"
-    if (e instanceof VoiceJoinMembershipError) message = e.message
-    else if (e instanceof TimeoutError)
-      message = "Connection timed out. Please check your network and try again."
-    else if (e instanceof Error && e.message === "No signer available") message = e.message
-    pushToast({theme: "error", message})
-  }
-</script>
-
 <script lang="ts">
+  import {readable} from "svelte/store"
   import {fly} from "svelte/transition"
+  import {goto} from "$app/navigation"
+  import {page} from "$app/stores"
   import {displayRelayUrl} from "@welshman/util"
   import Microphone from "@assets/icons/microphone.svg?dataurl"
   import MicrophoneOff from "@assets/icons/microphone-off.svg?dataurl"
@@ -25,36 +11,69 @@
   import CloseCircle from "@assets/icons/close-circle.svg?dataurl"
   import Icon from "@lib/components/Icon.svelte"
   import Button from "@lib/components/Button.svelte"
-  import {displayRoom} from "@app/core/state"
+  import VoiceRoomJoinDialog from "@app/components/VoiceRoomJoinDialog.svelte"
   import {
+    decodeRelay,
+    deriveRoom,
+    displayRoom,
+    getRoomType,
+    RoomType,
+    type Room,
+  } from "@app/core/state"
+  import {pushModal} from "@app/util/modal"
+  import {makeRoomPath} from "@app/util/routes"
+  import {
+    VoiceState,
     currentVoiceSession,
     currentVoiceRoom,
     voiceState,
     leaveVoiceRoom,
     toggleMute,
-    rejoinVoiceRoom,
     cancelJoinVoiceRoom,
   } from "@app/voice"
 
-  const roomName = $derived(
-    $currentVoiceRoom ? displayRoom($currentVoiceRoom.url, $currentVoiceRoom.h) : "",
+  const {relay, h} = $derived($page.params)
+  const url = $derived(relay ? decodeRelay(relay) : undefined)
+  const displayedRoomStore = $derived(
+    url && h && typeof h === "string" ? deriveRoom(url, h) : readable(undefined),
   )
-  const spaceName = $derived($currentVoiceRoom ? displayRelayUrl($currentVoiceRoom.url) : "")
+  const routeDisplayedRoom = $derived($displayedRoomStore)
 
-  const handleRejoin = () => {
-    void rejoinVoiceRoom().catch(handleJoinError)
+  const targetRoom = $derived.by((): Room | undefined => {
+    if ($voiceState === VoiceState.Joining || $voiceState === VoiceState.Connected) {
+      return $currentVoiceRoom
+    }
+    if ($voiceState === VoiceState.Disconnected) {
+      if (routeDisplayedRoom) {
+        if (getRoomType(routeDisplayedRoom) === RoomType.Voice) {
+          return routeDisplayedRoom
+        }
+        return undefined
+      }
+      return $currentVoiceRoom
+    }
+    return $currentVoiceRoom
+  })
+
+  const roomName = $derived(targetRoom ? displayRoom(targetRoom.url, targetRoom.h) : "")
+  const spaceName = $derived(targetRoom ? displayRelayUrl(targetRoom.url) : "")
+
+  const openJoinDialog = async () => {
+    if (!targetRoom) return
+    await goto(makeRoomPath(targetRoom.url, targetRoom.h))
+    pushModal(VoiceRoomJoinDialog, {url: targetRoom.url, h: targetRoom.h})
   }
 </script>
 
-{#if $currentVoiceRoom}
+{#if targetRoom}
   <div
     in:fly={{y: 60, duration: 350}}
     out:fly={{y: 60, duration: 250}}
     class="flex flex-col gap-2 rounded-box bg-base-100 p-3">
     <div class="flex flex-col gap-0.5">
-      {#if $voiceState === "joining"}
+      {#if $voiceState === VoiceState.Joining}
         <span class="text-sm font-semibold text-warning">Joining...</span>
-      {:else if $voiceState === "connected"}
+      {:else if $voiceState === VoiceState.Connected}
         <span class="text-sm font-semibold text-success">Voice Connected</span>
       {:else}
         <span class="text-sm font-semibold text-neutral-content">Disconnected</span>
@@ -64,7 +83,7 @@
       </span>
     </div>
     <div class="flex items-center gap-1">
-      {#if $voiceState === "joining"}
+      {#if $voiceState === VoiceState.Joining}
         <span class="loading loading-spinner loading-sm"></span>
         <Button
           data-tip="Cancel"
@@ -72,7 +91,7 @@
           onclick={cancelJoinVoiceRoom}>
           <Icon icon={CloseCircle} size={4} />
         </Button>
-      {:else if $voiceState === "connected" && $currentVoiceSession}
+      {:else if $voiceState === VoiceState.Connected && $currentVoiceSession}
         <Button
           data-tip={$currentVoiceSession.muted ? "Unmute" : "Mute"}
           class="center tooltip tooltip-top btn btn-sm btn-square {$currentVoiceSession.muted
@@ -91,7 +110,7 @@
         <Button
           data-tip="Join Voice"
           class="center tooltip tooltip-top btn btn-sm btn-square btn-success"
-          onclick={handleRejoin}>
+          onclick={openJoinDialog}>
           <Icon icon={PhoneCallingRounded} size={4} />
         </Button>
       {/if}

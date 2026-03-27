@@ -1,15 +1,18 @@
 <script lang="ts">
   import cx from "classnames"
+  import {goto} from "$app/navigation"
   import {loadProfile, displayProfileByPubkey} from "@welshman/app"
   import SecondaryNavItem from "@lib/components/SecondaryNavItem.svelte"
   import ProfileCircle from "@app/components/ProfileCircle.svelte"
   import RoomImage from "@app/components/RoomImage.svelte"
   import RoomName from "@app/components/RoomName.svelte"
-  import {handleJoinError} from "@app/components/VoiceWidget.svelte"
   import {makeRoomPath} from "@app/util/routes"
+  import {pushModal} from "@app/util/modal"
+  import VoiceRoomJoinDialog from "@app/components/VoiceRoomJoinDialog.svelte"
+  import {makeRoomId} from "@app/core/state"
   import {
+    VoiceState,
     deriveVoiceParticipants,
-    joinVoiceRoom,
     cancelJoinVoiceRoom,
     currentVoiceRoom,
     voiceState,
@@ -28,21 +31,24 @@
 
   const participants = deriveVoiceParticipants(url, h)
   const isActive = $derived(
-    $voiceState === "connected" && $currentVoiceRoom?.url === url && $currentVoiceRoom?.h === h,
+    $voiceState === VoiceState.Connected && $currentVoiceRoom?.id === makeRoomId(url, h),
   )
   const isJoining = $derived(
-    $voiceState === "joining" && $currentVoiceRoom?.url === url && $currentVoiceRoom?.h === h,
+    $voiceState === VoiceState.Joining && $currentVoiceRoom?.id === makeRoomId(url, h),
   )
 
-  const handleClick = async () => {
+  const handleClick = async (e: MouseEvent) => {
     if (isActive) return
 
     if (isJoining) {
+      e.preventDefault()
       cancelJoinVoiceRoom()
       return
     }
 
-    await joinVoiceRoom(url, h).catch(handleJoinError)
+    e.preventDefault()
+    await goto(makeRoomPath(url, h), {replaceState})
+    pushModal(VoiceRoomJoinDialog, {url, h})
   }
 
   $effect(() => {

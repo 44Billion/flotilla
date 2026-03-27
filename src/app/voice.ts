@@ -2,7 +2,14 @@
  * Voice rooms via LiveKit. Note: Voice does not work on localhost in Firefox
  * (ICE candidate gathering fails). Use Chrome or test from deployed HTTPS.
  */
-import {DisconnectReason, Room, RoomEvent, Track} from "livekit-client"
+import {
+  DisconnectReason,
+  Room as LiveKitRoom,
+  RoomEvent,
+  Track,
+  type AudioCaptureOptions,
+  type LocalParticipant,
+} from "livekit-client"
 import {derived, get, writable} from "svelte/store"
 import {map, removeUndefined, uniqBy} from "@welshman/lib"
 import type {TrustedEvent} from "@welshman/util"
@@ -10,24 +17,17 @@ import {makeHttpAuth, makeHttpAuthHeader, getTags} from "@welshman/util"
 import {signer} from "@welshman/app"
 import {getLivekitEndpoint} from "$lib/livekit"
 import {AbortError, whenAborted, whenTimeout} from "$lib/util"
-import {deriveLatestEventForUrl} from "@app/core/state"
+import {deriveLatestEventForUrl, deriveRoom, makeRoomId, type Room} from "@app/core/state"
 import {pushToast} from "@app/util/toast"
 
 export const LIVEKIT_PARTICIPANTS = 39004
 
 export {checkRelayHasLivekit} from "$lib/livekit"
 
-export class VoiceJoinMembershipError extends Error {
-  constructor() {
-    super("Failed to join voice room: you must be a member.")
-    this.name = "VoiceJoinMembershipError"
-  }
-}
-
 export type VoiceSession = {
   url: string
   h: string
-  room: Room
+  room: LiveKitRoom
   muted: boolean
 }
 
@@ -35,13 +35,17 @@ export type Pubkey = string
 
 export type VoiceParticipant = {pubkey?: Pubkey; identity: string}
 
-export type VoiceState = "joining" | "connected" | "disconnected"
+export enum VoiceState {
+  Joining = "joining",
+  Connected = "connected",
+  Disconnected = "disconnected",
+}
 
 export const currentVoiceSession = writable<VoiceSession | undefined>(undefined)
 
-export const voiceState = writable<VoiceState>("disconnected")
+export const voiceState = writable<VoiceState>(VoiceState.Disconnected)
 
-export const currentVoiceRoom = writable<{url: string; h: string} | undefined>(undefined)
+export const currentVoiceRoom = writable<Room | undefined>(undefined)
 
 export const participantPubkeyMap = writable<Map<string, Pubkey>>(new Map())
 
@@ -102,7 +106,6 @@ const fetchLivekitToken = async (
 
   if (!response.ok) {
     const text = await response.text()
-    if (response.status === 403) throw new VoiceJoinMembershipError()
     throw new Error(`Token request failed (${response.status}): ${text}`)
   }
 
@@ -118,10 +121,7 @@ export const deriveVoiceParticipants = (url: string, h: string) =>
       deriveLatestEventForUrl(url, [{kinds: [LIVEKIT_PARTICIPANTS], "#d": [h]}]),
     ],
     ([$participantPubkeyMap, $currentVoiceRoom, $publishedParticipantList]) => {
-      const inCall =
-        $participantPubkeyMap.size > 0 &&
-        $currentVoiceRoom?.url === url &&
-        $currentVoiceRoom?.h === h
+      const inCall = $participantPubkeyMap.size > 0 && $currentVoiceRoom?.id === makeRoomId(url, h)
 
       if (inCall) {
         const participants = [...$participantPubkeyMap.keys()].map(participantFromLiveKitIdentity)
@@ -140,10 +140,33 @@ export const deriveVoiceParticipants = (url: string, h: string) =>
     },
   )
 
+const setUpMicrophone = async (
+  startMuted: boolean,
+  preferredMicId: string | undefined,
+  participant: LocalParticipant,
+): Promise<boolean> => {
+  if (startMuted) {
+    return true
+  }
+
+  let muted = true
+  let capture: AudioCaptureOptions | undefined = undefined
+  if (preferredMicId) {
+    capture = {deviceId: preferredMicId}
+  }
+  try {
+    await participant.setMicrophoneEnabled(true, capture)
+    muted = false
+  } catch (e) {
+    pushToast({theme: "error", message: "Could not access microphone"})
+  }
+  return muted
+}
+
 const onRoomDisconnected = (reason?: DisconnectReason) => {
   currentVoiceSession.set(undefined)
   if (reason !== undefined && reason !== DisconnectReason.CLIENT_INITIATED) {
-    voiceState.set("disconnected")
+    voiceState.set(VoiceState.Disconnected)
     const message =
       reason === DisconnectReason.JOIN_FAILURE
         ? "Could not connect to voice room. Please try again."
@@ -191,14 +214,19 @@ export const cancelJoinVoiceRoom = () => {
   joinAbortController?.abort()
 }
 
-export const joinVoiceRoom = async (url: string, h: string): Promise<void> => {
+export const joinVoiceRoom = async (
+  url: string,
+  h: string,
+  startMuted = true,
+  preferredMicId?: string,
+): Promise<void> => {
   cancelJoinVoiceRoom()
 
   const session = get(currentVoiceSession)
   if (session) await leaveVoiceRoom()
 
-  currentVoiceRoom.set({url, h})
-  voiceState.set("joining")
+  currentVoiceRoom.set(get(deriveRoom(url, h)))
+  voiceState.set(VoiceState.Joining)
 
   const controller = new AbortController()
   joinAbortController = controller
@@ -210,47 +238,42 @@ export const joinVoiceRoom = async (url: string, h: string): Promise<void> => {
 
     if (signal.aborted) throw new AbortError()
 
-    const room = new Room({adaptiveStream: true, dynacast: true})
+    const liveKitRoom = new LiveKitRoom({adaptiveStream: true, dynacast: true})
 
-    room.on(RoomEvent.Disconnected, onRoomDisconnected)
-    room.on(RoomEvent.ParticipantConnected, onParticipantConnected)
-    room.on(RoomEvent.ParticipantDisconnected, onParticipantDisconnected)
-    room.on(RoomEvent.TrackSubscribed, onTrackSubscribed)
-    room.on(RoomEvent.TrackUnsubscribed, onTrackUnsubscribed)
-    room.on(RoomEvent.ActiveSpeakersChanged, onActiveSpeakersChanged)
+    liveKitRoom.on(RoomEvent.Disconnected, onRoomDisconnected)
+    liveKitRoom.on(RoomEvent.ParticipantConnected, onParticipantConnected)
+    liveKitRoom.on(RoomEvent.ParticipantDisconnected, onParticipantDisconnected)
+    liveKitRoom.on(RoomEvent.TrackSubscribed, onTrackSubscribed)
+    liveKitRoom.on(RoomEvent.TrackUnsubscribed, onTrackUnsubscribed)
+    liveKitRoom.on(RoomEvent.ActiveSpeakersChanged, onActiveSpeakersChanged)
 
     try {
       await Promise.race([
-        room.connect(server_url, participant_token, {maxRetries: 0}),
+        liveKitRoom.connect(server_url, participant_token, {maxRetries: 0}),
         whenTimeout(5_000, {
           message: "Connection timed out. Please check your network and try again.",
         }),
         whenAborted(signal),
       ])
     } catch (e) {
-      room.disconnect()
+      liveKitRoom.disconnect()
       throw e
     }
 
     participantPubkeyMap.set(new Map())
-    addParticipant(room.localParticipant.identity)
-    for (const p of room.remoteParticipants.values()) {
+    addParticipant(liveKitRoom.localParticipant.identity)
+    for (const p of liveKitRoom.remoteParticipants.values()) {
       addParticipant(p.identity)
     }
 
-    let muted = false
-    try {
-      await room.localParticipant.setMicrophoneEnabled(true)
-    } catch (e) {
-      muted = true
-      pushToast({theme: "error", message: "Could not access microphone"})
-    }
+    const muted = await setUpMicrophone(startMuted, preferredMicId, liveKitRoom.localParticipant)
 
-    currentVoiceSession.set({url, h, room, muted})
-    voiceState.set("connected")
+    currentVoiceSession.set({url, h, room: liveKitRoom, muted})
+    voiceState.set(VoiceState.Connected)
     playJoinSound()
   } catch (e) {
-    if (isActive()) voiceState.set("disconnected")
+    if (isActive()) voiceState.set(VoiceState.Disconnected)
+    if (e instanceof AbortError) return
     throw e
   } finally {
     if (isActive()) joinAbortController = undefined
@@ -264,7 +287,7 @@ export const leaveVoiceRoom = async () => {
   const audio = new Audio("/leave-voice-room.mp3")
   audio.play().catch(() => {})
 
-  voiceState.set("disconnected")
+  voiceState.set(VoiceState.Disconnected)
   currentVoiceSession.set(undefined)
   session.room.disconnect()
   speakingParticipants.set([])

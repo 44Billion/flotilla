@@ -669,7 +669,7 @@ export const deriveRoom = call(() => {
   return (url: string, h: string) =>
     derived(
       _deriveRoom(makeRoomId(url, h)),
-      room => room || {url, id: makeRoomId(url, h), ...makeRoomMeta({h})},
+      room => (room || {url, id: makeRoomId(url, h), ...makeRoomMeta({h})}) as Room,
     )
 })
 

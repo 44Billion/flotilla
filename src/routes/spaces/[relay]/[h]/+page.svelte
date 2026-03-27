@@ -50,7 +50,7 @@
     userSettingsValues,
   } from "@app/core/state"
   import VoiceWidget from "@app/components/VoiceWidget.svelte"
-  import {voiceState} from "@app/voice"
+  import {VoiceState, voiceState} from "@app/voice"
   import {makeFeed} from "@app/core/requests"
   import {popKey} from "@lib/implicit"
   import {checked} from "@app/util/notifications"
@@ -494,7 +494,7 @@
       {/key}
     {/if}
   </div>
-  {#if isVoiceRoom || $voiceState === "joining" || $voiceState === "connected"}
+  {#if isVoiceRoom || $voiceState === VoiceState.Joining || $voiceState === VoiceState.Connected}
     <div class="hide-on-keyboard flex-shrink-0 p-2 md:hidden">
       <VoiceWidget />
     </div>
