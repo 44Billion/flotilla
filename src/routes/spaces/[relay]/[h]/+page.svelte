@@ -512,7 +512,7 @@
 
 {#if showFixedNewMessages}
   <div class="relative z-popover flex justify-center">
-    <div transition:fly={{duration: 200}} class="fixed top-12">
+    <div transition:fly={{duration: 200}} class="fixed top-12 pt-sai">
       <Button class="btn btn-primary btn-xs rounded-full" onclick={scrollToNewMessages}>
         New Messages
       </Button>
