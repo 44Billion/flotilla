@@ -20,7 +20,7 @@
 
   const title = getTagValue("title", event.tags)
   const h = getTagValue("h", event.tags)
-  const images = getTagValues("image", event.tags)
+  const images = new Set(getTagValues("image", event.tags))
   const [_, price = 0, currency = "SAT"] = getTag("price", event.tags) || []
 </script>
 

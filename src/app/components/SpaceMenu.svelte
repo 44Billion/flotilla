@@ -59,6 +59,7 @@
   import {setSpaceNotifications} from "@app/core/commands"
   import {pushModal} from "@app/util/modal"
   import {makeSpacePath, goToChat} from "@app/util/routes"
+  import {notifications} from "@app/util/notifications"
 
   const {url} = $props()
 
@@ -232,7 +233,7 @@
           <Icon icon={History} /> Recent Activity
         </SecondaryNavItem>
       {:else}
-        <SecondaryNavItem href={chatPath}>
+        <SecondaryNavItem href={chatPath} notification={$notifications.has(chatPath)}>
           <Icon icon={ChatRound} /> Chat
         </SecondaryNavItem>
       {/if}
