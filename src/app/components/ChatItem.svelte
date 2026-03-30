@@ -33,7 +33,7 @@
   })
 </script>
 
-<Button class="flex flex-col justify-start gap-1" onclick={openChat}>
+<Button class="flex flex-col justify-start gap-1 w-full" onclick={openChat}>
   <div
     class="cursor-pointer border-t border-solid border-base-100 px-6 py-2 transition-colors hover:bg-base-100 {props.class}"
     class:bg-base-100={active}>

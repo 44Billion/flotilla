@@ -9,7 +9,7 @@ config({path: ".env.template"})
 export default {
   content: ["./src/**/*.{html,js,svelte,ts}"],
   darkMode: ["selector", '[data-theme="dark"]'],
-  safelist: ["bg-success", "bg-warning"],
+  safelist: ["bg-success", "bg-warning", 'w-4 h-4'],
   theme: {
     extend: {},
     zIndex: {
