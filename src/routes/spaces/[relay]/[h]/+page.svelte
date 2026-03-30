@@ -1,5 +1,5 @@
 <script lang="ts">
-  import {onMount, tick} from "svelte"
+  import {onMount} from "svelte"
   import {readable} from "svelte/store"
   import {page} from "$app/stores"
   import {goto} from "$app/navigation"
@@ -301,7 +301,7 @@
 
     elements.reverse()
 
-    tick().then(manageScrollPosition)
+    requestAnimationFrame(manageScrollPosition)
 
     return elements
   })

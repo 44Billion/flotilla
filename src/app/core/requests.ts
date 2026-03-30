@@ -22,6 +22,7 @@ import {
   getAddress,
   isShareableRelayUrl,
   getRelaysFromList,
+  sortEventsDesc,
 } from "@welshman/util"
 import type {TrustedEvent, Filter, List} from "@welshman/util"
 import {load, request} from "@welshman/net"
@@ -51,7 +52,7 @@ export const makeFeed = ({
   const events = writable<TrustedEvent[]>([])
 
   let interval = int(WEEK)
-  let buffer: TrustedEvent[] = []
+  let buffer = sortEventsDesc(getEventsForUrl(url, filters))
   let backwardWindow = [at - interval, at]
   let forwardWindow = [at, at + interval]
 
@@ -136,7 +137,7 @@ export const makeFeed = ({
 
       backwardWindow = [since - interval, since]
 
-      for (const event of buffer.splice(0)) {
+      for (const event of buffer.splice(0, 30)) {
         insertEvent(event)
       }
 
@@ -159,7 +160,7 @@ export const makeFeed = ({
 
       forwardWindow = [until, until + interval]
 
-      for (const event of buffer.splice(0)) {
+      for (const event of buffer.splice(0, 30)) {
         insertEvent(event)
       }
 
@@ -171,10 +172,6 @@ export const makeFeed = ({
       }
     },
   })
-
-  for (const event of getEventsForUrl(url, filters)) {
-    insertEvent(event)
-  }
 
   return {
     events,
