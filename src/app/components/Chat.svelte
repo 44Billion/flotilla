@@ -34,6 +34,7 @@
     messagingRelayListsByPubkey,
   } from "@welshman/app"
   import Danger from "@assets/icons/danger-triangle.svg?dataurl"
+  import ArrowLeft from "@assets/icons/arrow-left.svg?dataurl"
   import Icon from "@lib/components/Icon.svelte"
   import Spinner from "@lib/components/Spinner.svelte"
   import PageBar from "@lib/components/PageBar.svelte"
@@ -71,6 +72,8 @@
     others.length === 1
       ? pushModal(ProfileDetail, {pubkey: others[0]})
       : pushModal(ChatMembers, {pubkeys: others})
+
+  const back = () => history.back()
 
   const replyTo = (event: TrustedEvent) => {
     parent = event
@@ -251,35 +254,40 @@
 </script>
 
 <PageBar>
-  <div class="flex items-center justify-between gap-4">
-    <div class="ellipsize flex items-center gap-4 whitespace-nowrap">
-      <Button class="flex flex-col gap-1 sm:flex-row sm:gap-2" onclick={showMembers}>
-        {#if others.length === 0}
-          <div class="row-2">
-            <ProfileCircle pubkey={$pubkey!} size={5} />
-            <ProfileName pubkey={$pubkey!} />
-          </div>
-        {:else if others.length === 1}
-          <div class="row-2">
-            <ProfileCircle pubkey={others[0]} size={5} />
-            <ProfileName pubkey={others[0]} />
-          </div>
-        {:else}
-          <div class="flex items-center gap-2">
-            <ProfileCircles pubkeys={others} size={5} />
-            <p class="overflow-hidden text-ellipsis whitespace-nowrap">
+  <div class="flex">
+    <Button onclick={back} class="place-self-start pr-3 md:hidden flex items-center">
+      <Icon icon={ArrowLeft} size={7} />
+    </Button>
+    <div class="flex items-center justify-between gap-4">
+      <div class="ellipsize flex items-center gap-4 whitespace-nowrap">
+        <Button class="flex flex-col gap-1 sm:flex-row sm:gap-2" onclick={showMembers}>
+          {#if others.length === 0}
+            <div class="row-2">
+              <ProfileCircle pubkey={$pubkey!} size={5} />
+              <ProfileName pubkey={$pubkey!} />
+            </div>
+          {:else if others.length === 1}
+            <div class="row-2">
+              <ProfileCircle pubkey={others[0]} size={5} />
               <ProfileName pubkey={others[0]} />
-              and
-              {#if others.length === 2}
-                <ProfileName pubkey={others[1]} />
-              {:else}
-                {others.length - 1}
-                {others.length > 2 ? "others" : "other"}
-              {/if}
-            </p>
-          </div>
-        {/if}
-      </Button>
+            </div>
+          {:else}
+            <div class="flex items-center gap-2">
+              <ProfileCircles pubkeys={others} size={5} />
+              <p class="overflow-hidden text-ellipsis whitespace-nowrap">
+                <ProfileName pubkey={others[0]} />
+                and
+                {#if others.length === 2}
+                  <ProfileName pubkey={others[1]} />
+                {:else}
+                  {others.length - 1}
+                  {others.length > 2 ? "others" : "other"}
+                {/if}
+              </p>
+            </div>
+          {/if}
+        </Button>
+      </div>
     </div>
   </div>
 </PageBar>
