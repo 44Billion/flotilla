@@ -1,9 +1,19 @@
 # Changelog
 
-# Current
+# 1.7.0
 
 * Enable email/password login
 * Add up/edit to direct messages
+* Fix a number of UI bugs
+* Improve navigation on mobile
+* Improve performance and syncing reliability
+* Add proof of work to DMs
+* Detect blossom support using supported_nips
+* Improve notification badges
+* Add voice rooms (@mplorentz)
+* Re-design relay onboarding and settings
+* Add android fallback for push notifications
+* Fix file uploads on android
 
 # 1.6.5
 
