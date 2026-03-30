@@ -45,19 +45,26 @@ export const syncChecked = () => {
       .map((_, i, segments) => segments.slice(0, i + 1).join("/"))
       .slice(1)
 
-  // Set checked when we enter and when we leave a given page
   return page.subscribe($page => {
+    // Set checked when we leave a given page
     checked.update($checked => {
-      for (const path of getPaths($page.url.pathname)) {
-        $checked[path] = now()
-      }
-
       for (const path of getPaths(prev)) {
         $checked[path] = now()
       }
 
       return $checked
     })
+
+    // Set checked when we visit a given page - but delay it a tad
+    setTimeout(() => {
+      checked.update($checked => {
+        for (const path of getPaths($page.url.pathname)) {
+          $checked[path] = now()
+        }
+
+        return $checked
+      })
+    }, 300)
 
     prev = $page.url.pathname
   })
@@ -67,7 +74,7 @@ export const syncChecked = () => {
 
 export const allNotifications = derived(
   throttled(
-    2000,
+    1000,
     derived(
       [
         pubkey,

@@ -109,13 +109,14 @@
 
     const newMessages = document.getElementById("new-messages")
 
-    if (!newMessages || newMessagesSeen) {
+    if (newMessagesSeen) {
       showFixedNewMessages = false
-    } else {
+    } else if (newMessages) {
       const {y} = newMessages.getBoundingClientRect()
 
-      if (y > 300) {
+      if (y > 0 && y < 300) {
         newMessagesSeen = true
+        showFixedNewMessages = false
       } else {
         showFixedNewMessages = y < 0
       }
