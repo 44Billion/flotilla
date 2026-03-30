@@ -103,6 +103,7 @@
         await sendWrapped({
           event: makeDelete({event: eventToEdit, protect: false}),
           recipients: pubkeys,
+          pow: 16,
         })
       }
 
@@ -152,6 +153,7 @@
             event,
             recipients: pubkeys,
             delay: $userSettingsValues.send_delay + ms(i),
+            pow: 16,
           }),
         ),
       )

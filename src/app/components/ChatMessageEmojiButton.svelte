@@ -18,6 +18,7 @@
     sendWrapped({
       event: makeReaction({event, content: emoji.unicode, protect: false}),
       recipients: pubkeys,
+      pow: 16,
     })
 </script>
 

@@ -40,10 +40,10 @@
   const edit = canEdit?.(event) ? () => onEdit?.(event) : undefined
 
   const deleteReaction = (event: TrustedEvent) =>
-    sendWrapped({event: makeDelete({event, protect: false}), recipients: pubkeys})
+    sendWrapped({event: makeDelete({event, protect: false}), recipients: pubkeys, pow: 16})
 
   const createReaction = (template: EventContent) =>
-    sendWrapped({event: makeReaction({event, protect: false, ...template}), recipients: pubkeys})
+    sendWrapped({event: makeReaction({event, protect: false, ...template}), recipients: pubkeys, pow: 16})
 
   const openProfile = () => pushModal(ProfileDetail, {pubkey: event.pubkey})
 
