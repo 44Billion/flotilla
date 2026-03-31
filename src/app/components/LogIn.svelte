@@ -3,7 +3,7 @@
   import {Capacitor} from "@capacitor/core"
   import {getNip07, getNip55, Nip55Signer} from "@welshman/signer"
   import {addSession, type Session, makeNip07Session, makeNip55Session} from "@welshman/app"
-  import Widget from "@assets/icons/widget-2.svg?dataurl"
+  import Widget from "@assets/icons/widget-4.svg?dataurl"
   import Letter from "@assets/icons/letter.svg?dataurl"
   import Cpu from "@assets/icons/cpu-bolt.svg?dataurl"
   import Compass from "@assets/icons/compass-big.svg?dataurl"

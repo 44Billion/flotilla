@@ -1,7 +1,6 @@
 <script lang="ts">
   import Server from "@assets/icons/server.svg?dataurl"
   import ArrowRight from "@assets/icons/arrow-right.svg?dataurl"
-  import HandShake from "@assets/icons/hand-shake.svg?dataurl"
   import Link from "@lib/components/Link.svelte"
   import Icon from "@lib/components/Icon.svelte"
   import Page from "@lib/components/Page.svelte"
@@ -58,24 +57,6 @@
           </ul>
         </div>
         <Link external class="btn btn-neutral" href="https://hosting.coracle.social">
-          Get Started
-          <Icon icon={ArrowRight} />
-        </Link>
-      </div>
-      <div class="card2 bg-alt flex flex-col gap-4">
-        <div class="flex flex-col gap-4">
-          <div class="flex items-center gap-2">
-            <Icon icon={HandShake} />
-            <h3 class="text-lg font-bold">Holis Communities</h3>
-          </div>
-          <ul class="flex list-inside list-disc flex-col gap-1 text-sm opacity-70">
-            <li>Simple self-serve space creation</li>
-            <li>Built-in moderation tools</li>
-            <li>Room-level access controls</li>
-            <li>Membship lists and invite codes</li>
-          </ul>
-        </div>
-        <Link external class="btn btn-neutral" href="https://hol.is">
           Get Started
           <Icon icon={ArrowRight} />
         </Link>

@@ -1,6 +1,6 @@
 <script lang="ts">
   import {splitAt} from "@welshman/lib"
-  import Widget from "@assets/icons/widget.svg?dataurl"
+  import Widget from "@assets/icons/widget-4.svg?dataurl"
   import Compass from "@assets/icons/compass.svg?dataurl"
   import ImageIcon from "@lib/components/ImageIcon.svelte"
   import Divider from "@lib/components/Divider.svelte"
@@ -38,7 +38,7 @@
       notification={otherSpaceNotifications}>
       <ImageIcon alt="All Spaces" src={Widget} size={8} />
     </PrimaryNavItem>
-    <PrimaryNavItem title="Add a Space" href="/discover" class="tooltip-right">
+    <PrimaryNavItem title="Add a Space" href="/spaces" class="tooltip-right">
       <ImageIcon alt="Add a Space" src={Compass} size={8} />
     </PrimaryNavItem>
   {/each}

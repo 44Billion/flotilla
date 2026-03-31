@@ -3,7 +3,7 @@
   import {displayRelayUrl, ManagementMethod} from "@welshman/util"
   import {manageRelay, forceLoadRelay} from "@welshman/app"
   import StickerSmileSquare from "@assets/icons/sticker-smile-square.svg?dataurl"
-  import Planet from "@assets/icons/planet-3.svg?dataurl"
+  import Widget from "@assets/icons/widget-4.svg?dataurl"
   import AltArrowLeft from "@assets/icons/alt-arrow-left.svg?dataurl"
   import UploadMinimalistic from "@assets/icons/upload-minimalistic.svg?dataurl"
   import {preventDefault} from "@lib/html"
@@ -164,7 +164,7 @@
           {#if imagePreview}
             <ImageIcon src={imagePreview} alt="" />
           {:else}
-            <Icon icon={Planet} />
+            <Icon icon={Widget} />
           {/if}
           <input bind:value={values.name} class="grow" type="text" />
         </label>

@@ -9,9 +9,10 @@
 
   type Props = {
     url: string
+    hideFavorites?: boolean
   }
 
-  const {url}: Props = $props()
+  const {url, hideFavorites}: Props = $props()
   const rooms = deriveUserRooms(url)
   const favorited = deriveGroupListPubkeys(url)
 </script>
@@ -43,7 +44,7 @@
     </div>
     <RelayDescription {url} />
   </div>
-  {#if $favorited.size > 0}
+  {#if !hideFavorites && $favorited.size > 0}
     <div class="row-2 card2 card2-sm bg-alt">
       Favorited By:
       <ProfileCircles pubkeys={Array.from($favorited)} />

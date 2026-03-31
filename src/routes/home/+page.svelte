@@ -25,7 +25,7 @@
       <h1 class="text-center text-5xl">Welcome to</h1>
       <h1 class="mb-4 text-center text-5xl font-bold uppercase">{PLATFORM_NAME}</h1>
       <div class="col-3">
-        <Link href="/discover">
+        <Link href="/spaces">
           <CardButton class="btn-neutral">
             {#snippet icon()}
               <Icon icon={AddCircle} size={7} />

@@ -1,7 +1,6 @@
 <script lang="ts">
   import Login from "@assets/icons/login-3.svg?dataurl"
   import AddCircle from "@assets/icons/add-circle.svg?dataurl"
-  import Compass from "@assets/icons/compass.svg?dataurl"
   import Icon from "@lib/components/Icon.svelte"
   import Link from "@lib/components/Link.svelte"
   import Button from "@lib/components/Button.svelte"
@@ -14,12 +13,6 @@
   import SpaceInviteAccept from "@app/components/SpaceInviteAccept.svelte"
   import {pushModal} from "@app/util/modal"
 
-  type Props = {
-    hideDiscover?: boolean
-  }
-
-  const {hideDiscover}: Props = $props()
-
   const startJoin = () => pushModal(SpaceInviteAccept)
 </script>
 
@@ -30,23 +23,8 @@
       <ModalSubtitle
         >Spaces are places where communities come together to work, play, and hang out.</ModalSubtitle>
     </ModalHeader>
-    {#if !hideDiscover}
-      <Link href="/discover">
-        <CardButton class="btn-primary">
-          {#snippet icon()}
-            <div><Icon icon={Compass} size={7} /></div>
-          {/snippet}
-          {#snippet title()}
-            <div>Explore Spaces</div>
-          {/snippet}
-          {#snippet info()}
-            <div>Join create, or browse spaces</div>
-          {/snippet}
-        </CardButton>
-      </Link>
-    {/if}
     <Button onclick={startJoin}>
-      <CardButton class={hideDiscover ? "btn-primary" : "btn-neutral"}>
+      <CardButton class="btn-primary">
         {#snippet icon()}
           <div><Icon icon={Login} size={7} /></div>
         {/snippet}
