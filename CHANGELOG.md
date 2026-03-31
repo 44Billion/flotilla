@@ -1,5 +1,9 @@
 # Changelog
 
+# 1.7.1
+
+* Fix pomade registration fallback in case of offline signer
+
 # 1.7.0
 
 * Enable email/password login
