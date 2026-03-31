@@ -1,6 +1,7 @@
 <script lang="ts">
   import type {Snippet} from "svelte"
   import {onMount} from "svelte"
+  import {goto} from "$app/navigation"
   import {
     ago,
     int,
@@ -73,7 +74,7 @@
       ? pushModal(ProfileDetail, {pubkey: others[0]})
       : pushModal(ChatMembers, {pubkeys: others})
 
-  const back = () => history.back()
+  const back = () => goto("/chat")
 
   const replyTo = (event: TrustedEvent) => {
     parent = event

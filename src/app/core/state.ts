@@ -546,8 +546,11 @@ export const chatsById = call(() => {
 
     const unsubscribers = [
       on(repository, "update", ({added, removed}: RepositoryUpdate) => {
-        addEvents(added)
-        removeEvents(removed)
+        // Do this async so that profiles are populated
+        setTimeout(() => {
+          addEvents(added)
+          removeEvents(removed)
+        }, 50)
       }),
     ]
 
