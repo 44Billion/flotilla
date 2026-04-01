@@ -77,6 +77,7 @@
         controller.stop()
 
         loginWithNip46(pubkey, clientSecret, signerPubkey, relays)
+        setChecked("*")
       } else {
         return pushToast({
           theme: "error",

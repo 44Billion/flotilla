@@ -36,6 +36,13 @@
       },
     ),
   )
+
+  const buttonClass = $derived(
+    cx("absolute right-3 btn btn-circle btn-neutral btn-sm", {
+      "top-3": fullscreen,
+      "-top-4": !fullscreen,
+    }),
+  )
 </script>
 
 <div class="center fixed inset-0 z-modal">
@@ -49,9 +56,7 @@
   <div class={wrapperClass}>
     <div class={innerClass} transition:fly>
       {#if !noEscape}
-        <Button
-          class="absolute -top-4 right-3 btn btn-circle btn-neutral btn-sm"
-          onclick={clearModals}>
+        <Button class={buttonClass} onclick={clearModals}>
           <Icon icon={Close} size={6} />
         </Button>
       {/if}
