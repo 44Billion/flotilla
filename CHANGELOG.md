@@ -1,5 +1,12 @@
 # Changelog
 
+# 1.7.2
+
+* Fix race condition in nip 46
+* Remove duplicate spaces button
+* Combine discover and space list pages
+* Fix some chat related bugs
+
 # 1.7.1
 
 * Fix pomade registration fallback in case of offline signer

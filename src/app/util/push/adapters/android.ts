@@ -1,7 +1,7 @@
 import {throttle} from "throttle-debounce"
 import {App} from "@capacitor/app"
 import {registerPlugin} from "@capacitor/core"
-import {pubkey, getSession} from "@welshman/app"
+import {session} from "@welshman/app"
 import type {Session} from "@welshman/app"
 import {maybe, now} from "@welshman/lib"
 import type {Filter} from "@welshman/util"
@@ -44,7 +44,7 @@ export class AndroidFallbackNotifications implements IPushAdapter {
       const doSync = throttle(1000, () => {
         AndroidPushFallback.syncState({
           state: {
-            session: pubkey.get() ? getSession(pubkey.get()!) : undefined,
+            session: session.get(),
             activeSince: this._activeSince,
             subscriptions: Array.from(this._subscriptions.values()),
           },

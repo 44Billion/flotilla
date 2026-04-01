@@ -412,12 +412,9 @@ export const toggleRoomNotifications = async (url: string, h: string) => {
   let updated: typeof alerts
 
   if (!existing) {
-    // No space settings yet, create one with this room as an exception (default is notify: true)
     updated = [...alerts, {url, notify: true, exceptions: [h]}]
   } else {
-    // Toggle exception status
-    const hasException = existing.exceptions.includes(h)
-    const exceptions = hasException
+    const exceptions = existing.exceptions.includes(h)
       ? remove(h, existing.exceptions)
       : append(h, existing.exceptions)
 
