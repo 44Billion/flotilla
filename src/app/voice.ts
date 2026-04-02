@@ -7,6 +7,7 @@ import {
   Room as LiveKitRoom,
   RoomEvent,
   Track,
+  supportsAudioOutputSelection,
   type AudioCaptureOptions,
   type LocalParticipant,
 } from "livekit-client"
@@ -23,6 +24,8 @@ import {pushToast} from "@app/util/toast"
 export const LIVEKIT_PARTICIPANTS = 39004
 
 export {checkRelayHasLivekit} from "$lib/livekit"
+
+export {supportsAudioOutputSelection}
 
 export type VoiceSession = {
   url: string
@@ -42,6 +45,36 @@ export enum VoiceState {
 }
 
 export const currentVoiceSession = writable<VoiceSession | undefined>(undefined)
+
+const LIVEKIT_DEFAULT_DEVICE_ID = "default"
+
+export enum DeviceKind {
+  AudioInput = "audioinput",
+  AudioOutput = "audiooutput",
+}
+
+export const switchVoiceActiveDevice = async (
+  kind: DeviceKind,
+  targetDeviceId: string,
+): Promise<void> => {
+  const session = get(currentVoiceSession)
+  if (!session) return
+  const id = targetDeviceId === "" ? LIVEKIT_DEFAULT_DEVICE_ID : targetDeviceId
+  try {
+    await session.room.switchActiveDevice(kind, id)
+  } catch {
+    let label: string
+    switch (kind) {
+      case DeviceKind.AudioInput:
+        label = "microphone"
+        break
+      case DeviceKind.AudioOutput:
+        label = "speaker"
+        break
+    }
+    pushToast({theme: "error", message: `Error changing ${label}`})
+  }
+}
 
 export const voiceState = writable<VoiceState>(VoiceState.Disconnected)
 

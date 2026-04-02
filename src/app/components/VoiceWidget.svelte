@@ -9,8 +9,10 @@
   import PhoneRounded from "@assets/icons/phone-rounded.svg?dataurl"
   import PhoneCallingRounded from "@assets/icons/phone-calling-rounded.svg?dataurl"
   import CloseCircle from "@assets/icons/close-circle.svg?dataurl"
+  import Settings from "@assets/icons/settings.svg?dataurl"
   import Icon from "@lib/components/Icon.svelte"
   import Button from "@lib/components/Button.svelte"
+  import VoiceCallAudioSettingsDialog from "@app/components/VoiceCallAudioSettingsDialog.svelte"
   import VoiceRoomJoinDialog from "@app/components/VoiceRoomJoinDialog.svelte"
   import {
     decodeRelay,
@@ -63,6 +65,10 @@
     await goto(makeRoomPath(targetRoom.url, targetRoom.h))
     pushModal(VoiceRoomJoinDialog, {url: targetRoom.url, h: targetRoom.h})
   }
+
+  const openAudioSettings = () => {
+    pushModal(VoiceCallAudioSettingsDialog)
+  }
 </script>
 
 {#if targetRoom}
@@ -99,6 +105,12 @@
             : 'btn-ghost'}"
           onclick={toggleMute}>
           <Icon icon={$currentVoiceSession.muted ? MicrophoneOff : Microphone} size={4} />
+        </Button>
+        <Button
+          data-tip="Audio settings"
+          class="center tooltip tooltip-top btn btn-sm btn-square btn-ghost"
+          onclick={openAudioSettings}>
+          <Icon icon={Settings} size={4} />
         </Button>
         <Button
           data-tip="Leave room"
