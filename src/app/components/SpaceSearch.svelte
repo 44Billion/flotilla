@@ -1,15 +1,16 @@
 <script lang="ts">
   import {tick} from "svelte"
-  import {createSearch} from "@welshman/app"
+  import {debounce} from "throttle-debounce"
+  import {request} from "@welshman/net"
   import {formatTimestampAsDate, groupBy, now, MINUTE, HOUR, DAY, WEEK} from "@welshman/lib"
-  import type {TrustedEvent} from "@welshman/util"
-  import {MESSAGE} from "@welshman/util"
+  import type {TrustedEvent, Filter} from "@welshman/util"
+  import {sortEventsDesc} from "@welshman/util"
   import CloseCircle from "@assets/icons/close-circle.svg?dataurl"
   import Magnifier from "@assets/icons/magnifier.svg?dataurl"
   import {fly} from "@lib/transition"
   import Button from "@lib/components/Button.svelte"
   import Icon from "@lib/components/Icon.svelte"
-  import {deriveEventsForUrl} from "@app/core/state"
+  import {CONTENT_KINDS} from "@app/core/state"
   import {goToEvent} from "@app/util/routes"
 
   type Props = {
@@ -19,14 +20,16 @@
 
   const {url, h}: Props = $props()
 
-  const spaceMessages = deriveEventsForUrl(
-    url,
-    h ? [{kinds: [MESSAGE], "#h": [h]}] : [{kinds: [MESSAGE]}],
-  )
-
   let term = $state("")
   let show = $state(false)
+  let results = $state<TrustedEvent[]>([])
+  let loading = $state(false)
   let input: HTMLInputElement | undefined = $state()
+  let controller: AbortController | undefined
+
+  const relayStatus = $derived(
+    h ? `Searching this room on relay: ${url}.` : `Searching this space on relay: ${url}.`,
+  )
 
   const open = () => {
     show = true
@@ -40,20 +43,52 @@
   const clear = () => {
     term = ""
     show = false
+    loading = false
+    results = []
+    controller?.abort()
+    controller = undefined
   }
+
+  const getRelayUrls = () => [url]
+
+  const getFilter = (searchTerm: string): Filter =>
+    h
+      ? {kinds: CONTENT_KINDS, "#h": [h], search: searchTerm}
+      : {kinds: CONTENT_KINDS, search: searchTerm}
+
+  const search = debounce(300, async (searchTerm: string) => {
+    controller?.abort()
+
+    if (!searchTerm.trim()) {
+      loading = false
+      results = []
+      return
+    }
+
+    controller = new AbortController()
+    loading = true
+
+    try {
+      const events = await request({
+        relays: getRelayUrls(),
+        autoClose: true,
+        signal: controller.signal,
+        filters: [getFilter(searchTerm.trim())],
+      })
+
+      results = sortEventsDesc(events)
+    } catch (error) {
+      if (!(error instanceof DOMException && error.name === "AbortError")) {
+        results = []
+      }
+    } finally {
+      loading = false
+    }
+  })
 
   const onInput = () => {
-    show = true
+    void search(term)
   }
-
-  const searchIndex = $derived.by(() =>
-    createSearch($spaceMessages, {
-      getValue: event => event.id,
-      fuseOptions: {keys: ["content"]},
-    }),
-  )
-
-  const results = $derived(term ? searchIndex.searchOptions(term) : [])
 
   const eventsByAge = $derived(groupBy(e => getAgeSection(e.created_at), results))
 
@@ -122,10 +157,13 @@
             oninput={onInput} />
         </label>
         <div class="max-h-[65vh] overflow-y-auto">
+          <p class="mb-2 text-xs opacity-70">{relayStatus}</p>
           {#if !term}
             <p class="text-sm opacity-70">
-              {h ? "Search for messages in this room." : "Search for messages across this space."}
+              {h ? "Search for content in this room." : "Search for content in this space."}
             </p>
+          {:else if loading}
+            <p class="text-sm opacity-70">Searching...</p>
           {:else if eventsByAge.size === 0}
             <p class="text-sm opacity-70">No results found.</p>
           {:else}
