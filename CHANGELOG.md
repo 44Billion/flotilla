@@ -6,6 +6,7 @@
 * Remove duplicate spaces button
 * Combine discover and space list pages
 * Fix some chat related bugs
+* Fix bug with joining spaces
 
 # 1.7.1
 
