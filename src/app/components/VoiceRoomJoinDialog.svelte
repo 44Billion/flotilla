@@ -12,9 +12,11 @@
   import ModalHeader from "@lib/components/ModalHeader.svelte"
   import ModalSubtitle from "@lib/components/ModalSubtitle.svelte"
   import ModalTitle from "@lib/components/ModalTitle.svelte"
+  import {AbortError, TimeoutError} from "$lib/util"
   import {displayRoom} from "@app/core/state"
   import {joinVoiceRoom} from "@app/voice"
   import {popModal} from "@app/util/modal"
+  import {pushToast} from "@app/util/toast"
 
   type Props = {
     url: string
@@ -45,6 +47,16 @@
 
   const goBack = () => history.back()
 
+  const handleJoinError = (e: unknown) => {
+    if (e instanceof AbortError) return
+    console.error("Failed to join voice room", e)
+    let message = "Failed to join voice room"
+    if (e instanceof TimeoutError)
+      message = "Connection timed out. Please check your network and try again."
+    else if (e instanceof Error) message = e.message
+    pushToast({theme: "error", message})
+  }
+
   const joinVoice = async () => {
     popModal()
     await joinVoiceRoom(
@@ -52,7 +64,7 @@
       h,
       startWithoutMic,
       startWithoutMic ? undefined : selectedDeviceId || undefined,
-    )
+    ).catch(handleJoinError)
   }
 </script>
 
