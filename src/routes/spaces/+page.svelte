@@ -261,13 +261,7 @@
               </div>
             {/each}
           {:else if !term}
-            <div class="flex flex-col items-center gap-4 py-12 text-center">
-              <p class="text-base-content/60">You haven't joined any spaces yet.</p>
-              <Button class="btn btn-primary" onclick={addSpace}>
-                <Icon icon={AddCircle} />
-                Browse Spaces
-              </Button>
-            </div>
+            <p class="py-12 text-center">You haven't joined any spaces yet.</p>
           {/if}
           <Divider>{filteredUserUrls.length > 0 ? "More Spaces" : "Browse Spaces"}</Divider>
           {#each otherSpaces.slice(0, limit) as relay (relay.url)}
