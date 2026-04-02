@@ -298,10 +298,7 @@ const syncSpace = (url: string, rooms: string[]) => {
     url,
     signal: controller.signal,
     filters: [
-      {kinds: relayKinds},
-      {kinds: roomMetaKinds},
-      {kinds: roomMemberKinds},
-      {kinds: MESSAGE_KINDS, since},
+      {kinds: [...relayKinds, ...roomMetaKinds, ...roomMemberKinds, ...MESSAGE_KINDS]},
       makeCommentFilter(CONTENT_KINDS, {since}),
     ],
     onEvent: event => {
