@@ -14,7 +14,7 @@
   import {userSpaceUrls, PLATFORM_RELAYS} from "@app/core/state"
   import {pushModal} from "@app/util/modal"
   import {notifications} from "@app/util/notifications"
-  import {goToChat} from "@app/util/routes"
+  import {goToChat, makeSpacePath} from "@app/util/routes"
 
   type Props = {
     children?: Snippet
@@ -26,7 +26,9 @@
 
   const showSettingsMenu = () => pushModal(MenuSettings)
 
-  const anySpaceNotifications = $derived($userSpaceUrls.some(p => $notifications.has(p)))
+  const anySpaceNotifications = $derived(
+    $userSpaceUrls.some(p => $notifications.has(makeSpacePath(p))),
+  )
 </script>
 
 <div

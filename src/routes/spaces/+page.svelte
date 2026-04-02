@@ -31,7 +31,8 @@
   } from "@app/core/state"
   import {setSpaceMembershipOrder} from "@app/core/commands"
   import {pushModal} from "@app/util/modal"
-  import {goToSpace} from "@app/util/routes"
+  import {goToSpace, makeSpacePath} from "@app/util/routes"
+  import {notifications} from "@app/util/notifications"
 
   const addSpace = () => pushModal(SpaceAdd)
 
@@ -254,9 +255,12 @@
                 ondrop={e => onDrop(e, url)}
                 ondragend={onDragEnd}>
                 <Button
-                  class="card2 bg-alt shadow-md transition-all hover:shadow-lg hover:dark:brightness-[1.1] w-full"
+                  class="card2 bg-alt shadow-md transition-all hover:shadow-lg hover:dark:brightness-[1.1] w-full relative"
                   onclick={() => openSpace(url)}>
                   <RelaySummary hideFavorites {url} />
+                  {#if $notifications.has(makeSpacePath(url))}
+                    <div class="absolute right-3 top-3 h-2 w-2 rounded-full bg-primary"></div>
+                  {/if}
                 </Button>
               </div>
             {/each}

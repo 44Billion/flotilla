@@ -35,7 +35,7 @@
           </div>
         {/if}
       </div>
-      <div>
+      <div class="min-w-0">
         <h2 class="ellipsize whitespace-nowrap text-xl">
           <RelayName {url} />
         </h2>
