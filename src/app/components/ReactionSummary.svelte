@@ -23,7 +23,7 @@
   import Icon from "@lib/components/Icon.svelte"
   import Reaction from "@app/components/Reaction.svelte"
   import ReportDetails from "@app/components/ReportDetails.svelte"
-  import {REACTION_KINDS} from "@app/core/state"
+  import {REACTION_KINDS, deriveUserIsSpaceAdmin} from "@app/core/state"
   import {pushModal} from "@app/util/modal"
 
   interface Props {
@@ -78,6 +78,8 @@
     }
   }
 
+  const userIsAdmin = deriveUserIsSpaceAdmin(url)
+
   const onReportClick = () => pushModal(ReportDetails, {url, event})
 
   const reportReasons = $derived(uniq(map(e => getTag("e", e.tags)?.[2], $reports.values())))
@@ -118,7 +120,7 @@
 
 {#if $reactions.length > 0 || $zaps.length || $reports.length > 0 || children}
   <div class="flex min-w-0 flex-wrap gap-2">
-    {#if url && $reports.length > 0}
+    {#if url && $reports.length > 0 && $userIsAdmin}
       <button
         type="button"
         data-tip={`This content has been reported as "${displayList(reportReasons)}".`}
