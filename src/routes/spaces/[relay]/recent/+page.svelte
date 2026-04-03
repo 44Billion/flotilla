@@ -46,9 +46,11 @@
   import ClassifiedItem from "@app/components/ClassifiedItem.svelte"
   import GoalItem from "@app/components/GoalItem.svelte"
   import CalendarEventItem from "@app/components/CalendarEventItem.svelte"
+  import PollItem from "@app/components/PollItem.svelte"
   import RecentConversation from "@app/components/RecentConversation.svelte"
   import {decodeRelay, deriveEventsForUrl, CONTENT_KINDS} from "@app/core/state"
   import {goToEvent} from "@app/util/routes"
+  import {Poll} from "nostr-tools/kinds"
 
   const url = decodeRelay($page.params.relay!)
   const since = ago(3, MONTH)
@@ -306,6 +308,8 @@
           <GoalItem {url} {event} />
         {:else if event.kind === EVENT_TIME}
           <CalendarEventItem {url} {event} />
+        {:else if event.kind === Poll}
+          <PollItem {url} {event} />
         {:else}
           <NoteItem {url} {event} />
         {/if}

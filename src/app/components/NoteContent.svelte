@@ -1,10 +1,12 @@
 <script lang="ts">
   import type {ComponentProps} from "svelte"
   import {EVENT_TIME, ZAP_GOAL, THREAD, CLASSIFIED} from "@welshman/util"
+  import {Poll} from "nostr-tools/kinds"
   import NoteContentEventTime from "@app/components/NoteContentEventTime.svelte"
   import NoteContentThread from "@app/components/NoteContentThread.svelte"
   import NoteContentClassified from "@app/components/NoteContentClassified.svelte"
   import NoteContentGoal from "@app/components/NoteContentGoal.svelte"
+  import NoteContentPoll from "@app/components/NoteContentPoll.svelte"
   import Content from "@app/components/Content.svelte"
 
   const props: ComponentProps<typeof Content> = $props()
@@ -19,6 +21,8 @@
     <NoteContentClassified {...props} />
   {:else if props.event.kind === ZAP_GOAL}
     <NoteContentGoal {...props} />
+  {:else if props.event.kind === Poll}
+    <NoteContentPoll {...props} />
   {:else}
     <Content {...props} />
   {/if}

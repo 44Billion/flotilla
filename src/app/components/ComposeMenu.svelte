@@ -4,6 +4,7 @@
   import StarFallMinimalistic from "@assets/icons/star-fall-minimalistic.svg?dataurl"
   import NotesMinimalistic from "@assets/icons/notes-minimalistic.svg?dataurl"
   import CaseMinimalistic from "@assets/icons/case-minimalistic.svg?dataurl"
+  import Revote from "@assets/icons/revote.svg?dataurl"
   import Button from "@lib/components/Button.svelte"
   import Icon from "@lib/components/Icon.svelte"
   import {pushModal} from "@app/util/modal"
@@ -11,6 +12,7 @@
   import ThreadCreate from "@app/components/ThreadCreate.svelte"
   import ClassifiedCreate from "@app/components/ClassifiedCreate.svelte"
   import GoalCreate from "@app/components/GoalCreate.svelte"
+  import PollCreate from "@app/components/PollCreate.svelte"
 
   type Props = {
     url: string
@@ -27,6 +29,8 @@
   const createThread = () => pushModal(ThreadCreate, {url, h})
 
   const createClassified = () => pushModal(ClassifiedCreate, {url, h})
+
+  const createPoll = () => pushModal(PollCreate, {url, h})
 
   let ul: Element
 
@@ -58,6 +62,12 @@
     <Button onclick={createThread}>
       <Icon size={4} icon={NotesMinimalistic} />
       Create Thread
+    </Button>
+  </li>
+  <li>
+    <Button onclick={createPoll}>
+      <Icon size={4} icon={Revote} />
+      Ask a Question
     </Button>
   </li>
 </ul>

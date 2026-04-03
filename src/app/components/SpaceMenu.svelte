@@ -1,6 +1,7 @@
 <script lang="ts">
   import {derived} from "svelte/store"
   import {displayRelayUrl, EVENT_TIME, ZAP_GOAL, THREAD, CLASSIFIED} from "@welshman/util"
+  import {Poll} from "nostr-tools/kinds"
   import {deriveRelay, createSearch, pubkey} from "@welshman/app"
   import {fly} from "@lib/transition"
   import Magnifier from "@assets/icons/magnifier.svg?dataurl"
@@ -17,6 +18,7 @@
   import NotesMinimalistic from "@assets/icons/notes-minimalistic.svg?dataurl"
   import CalendarMinimalistic from "@assets/icons/calendar-minimalistic.svg?dataurl"
   import CaseMinimalistic from "@assets/icons/case-minimalistic.svg?dataurl"
+  import Revote from "@assets/icons/revote.svg?dataurl"
   import AddCircle from "@assets/icons/add-circle.svg?dataurl"
   import ChatRound from "@assets/icons/chat-round.svg?dataurl"
   import Bell from "@assets/icons/bell.svg?dataurl"
@@ -69,6 +71,7 @@
   const threadsPath = makeSpacePath(url, "threads")
   const classifiedsPath = makeSpacePath(url, "classifieds")
   const calendarPath = makeSpacePath(url, "calendar")
+  const pollsPath = makeSpacePath(url, "polls")
   const userRooms = deriveUserRooms(url)
   const otherRooms = deriveOtherRooms(url)
   const otherVoiceRooms = deriveOtherVoiceRooms(url)
@@ -255,6 +258,11 @@
       {#if $spaceKinds.has(EVENT_TIME)}
         <SecondaryNavItem href={calendarPath}>
           <Icon icon={CalendarMinimalistic} /> Calendar
+        </SecondaryNavItem>
+      {/if}
+      {#if $spaceKinds.has(Poll)}
+        <SecondaryNavItem href={pollsPath}>
+          <Icon icon={Revote} /> Polls
         </SecondaryNavItem>
       {/if}
       {#if hasNip29($relay)}

@@ -2,6 +2,7 @@ import {page} from "$app/stores"
 import type {Unsubscriber} from "svelte/store"
 import {derived, get} from "svelte/store"
 import {last, call, ifLet, assoc, chunk, sleep, identity, WEEK, ago} from "@welshman/lib"
+import {PollResponse} from "nostr-tools/kinds"
 import {
   getListTags,
   getRelayTagValues,
@@ -281,6 +282,7 @@ const syncSpace = (url: string, rooms: string[]) => {
         filters: [
           {kinds: MESSAGE_KINDS, since, "#h": [room]},
           makeCommentFilter(CONTENT_KINDS, {since, "#h": [room]}),
+          {kinds: [PollResponse], since},
         ],
       })
     }
@@ -300,6 +302,7 @@ const syncSpace = (url: string, rooms: string[]) => {
     filters: [
       {kinds: [...relayKinds, ...roomMetaKinds, ...roomMemberKinds, ...MESSAGE_KINDS]},
       makeCommentFilter(CONTENT_KINDS, {since}),
+      {kinds: [PollResponse], since},
     ],
     onEvent: event => {
       if (event.kind === ROOM_META) {
@@ -311,7 +314,7 @@ const syncSpace = (url: string, rooms: string[]) => {
   listen({
     url,
     signal: controller.signal,
-    filters: [{kinds: REACTION_KINDS}],
+    filters: [{kinds: REACTION_KINDS}, {kinds: [PollResponse]}],
   })
 
   return () => controller.abort()

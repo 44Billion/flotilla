@@ -1,10 +1,12 @@
 <script lang="ts">
   import type {ComponentProps} from "svelte"
   import {EVENT_TIME, ZAP_GOAL, THREAD, CLASSIFIED} from "@welshman/util"
+  import {Poll} from "nostr-tools/kinds"
   import NoteContentMinimalEventTime from "@app/components/NoteContentMinimalEventTime.svelte"
   import NoteContentMinimalThread from "@app/components/NoteContentMinimalThread.svelte"
   import NoteContentMinimalClassified from "@app/components/NoteContentMinimalClassified.svelte"
   import NoteContentMinimalGoal from "@app/components/NoteContentMinimalGoal.svelte"
+  import NoteContentMinimalPoll from "@app/components/NoteContentMinimalPoll.svelte"
   import ContentMinimal from "@app/components/ContentMinimal.svelte"
 
   const props: ComponentProps<typeof ContentMinimal> = $props()
@@ -19,6 +21,8 @@
     <NoteContentMinimalClassified {...props} />
   {:else if props.event.kind === ZAP_GOAL}
     <NoteContentMinimalGoal {...props} />
+  {:else if props.event.kind === Poll}
+    <NoteContentMinimalPoll {...props} />
   {:else}
     <ContentMinimal {...props} />
   {/if}

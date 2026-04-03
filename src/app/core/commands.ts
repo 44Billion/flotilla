@@ -18,6 +18,7 @@ import {
 import {Nip01Signer} from "@welshman/signer"
 import type {UploadTask} from "@welshman/editor"
 import type {TrustedEvent, EventContent, Profile, PublishedRoomMeta} from "@welshman/util"
+import {PollResponse} from "nostr-tools/kinds"
 import {
   DELETE,
   REPORT,
@@ -350,6 +351,22 @@ export const makeReaction = ({
 export const publishReaction = ({relays, ...params}: ReactionParams & {relays: string[]}) => {
   publishThunk({event: makeReaction({url: relays[0], ...params}), relays})
 }
+
+// Polls
+
+export type PollResponseParams = {
+  event: TrustedEvent
+  selectedIds: string[]
+}
+
+export const makePollResponse = ({event, selectedIds}: PollResponseParams) =>
+  makeEvent(PollResponse, {
+    content: "",
+    tags: [["e", event.id], ...selectedIds.map(selectedId => ["response", selectedId])],
+  })
+
+export const publishPollResponse = ({relays, ...params}: PollResponseParams & {relays: string[]}) =>
+  publishThunk({event: makePollResponse(params), relays})
 
 // Comments
 

@@ -6,6 +6,7 @@ import {page} from "$app/stores"
 import {nthEq} from "@welshman/lib"
 import type {TrustedEvent} from "@welshman/util"
 import {getAddress} from "@welshman/util"
+import {Poll} from "nostr-tools/kinds"
 import {tracker, userMessagingRelayList} from "@welshman/app"
 import {identity} from "@welshman/lib"
 import {
@@ -90,6 +91,8 @@ export const makeClassifiedPath = (url: string, address?: string) =>
 export const makeCalendarPath = (url: string, address?: string) =>
   makeSpacePath(url, "calendar", address)
 
+export const makePollPath = (url: string, id?: string) => makeSpacePath(url, "polls", id)
+
 export const scrollToEvent = (id: string) => {
   const element = document.querySelector(`[data-event="${id}"]`) as any
 
@@ -146,6 +149,10 @@ export const getEventPath = (event: TrustedEvent, urls: string[]) => {
       return makeCalendarPath(url, getAddress(event))
     }
 
+    if (event.kind === Poll) {
+      return makePollPath(url, event.id)
+    }
+
     if (event.kind === MESSAGE) {
       return makeMessagePath(url, event)
     }
@@ -192,5 +199,7 @@ export const getRoomItemPath = (url: string, event: TrustedEvent) => {
       return makeGoalPath(url, event.id)
     case EVENT_TIME:
       return makeCalendarPath(url, getAddress(event))
+    case Poll:
+      return makePollPath(url, event.id)
   }
 }

@@ -17,6 +17,7 @@ const staticTitles = new Map<string, string>([
   ["/spaces/[relay]/classifieds", "Classifieds"],
   ["/spaces/[relay]/calendar", "Calendar"],
   ["/spaces/[relay]/goals", "Goals"],
+  ["/spaces/[relay]/polls", "Polls"],
   ["/chat", "Messages"],
   ["/join", "Join Space"],
   ["/people", "Find People"],
@@ -35,6 +36,7 @@ const eventRoutes = new Set([
   "/spaces/[relay]/goals/[id]",
   "/spaces/[relay]/calendar/[address]",
   "/spaces/[relay]/classifieds/[address]",
+  "/spaces/[relay]/polls/[id]",
 ])
 
 type RouteParams = Record<string, string | undefined>

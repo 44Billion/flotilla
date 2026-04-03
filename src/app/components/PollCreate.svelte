@@ -1,0 +1,238 @@
+<script lang="ts">
+  import {insertAt, now, randomId, removeAt, removeUndefined} from "@welshman/lib"
+  import {makeEvent} from "@welshman/util"
+  import {publishThunk} from "@welshman/app"
+  import {Poll} from "nostr-tools/kinds"
+  import {isMobile, preventDefault} from "@lib/html"
+  import AltArrowLeft from "@assets/icons/alt-arrow-left.svg?dataurl"
+  import HamburgerMenu from "@assets/icons/hamburger-menu.svg?dataurl"
+  import PlusCircle from "@assets/icons/add-circle.svg?dataurl"
+  import MinusCircle from "@assets/icons/minus-circle.svg?dataurl"
+  import Icon from "@lib/components/Icon.svelte"
+  import Field from "@lib/components/Field.svelte"
+  import FieldInline from "@lib/components/FieldInline.svelte"
+  import DateTimeInput from "@lib/components/DateTimeInput.svelte"
+  import Button from "@lib/components/Button.svelte"
+  import ModalHeader from "@lib/components/ModalHeader.svelte"
+  import ModalTitle from "@lib/components/ModalTitle.svelte"
+  import ModalSubtitle from "@lib/components/ModalSubtitle.svelte"
+  import ModalFooter from "@lib/components/ModalFooter.svelte"
+  import Modal from "@lib/components/Modal.svelte"
+  import ModalBody from "@lib/components/ModalBody.svelte"
+  import {pushToast} from "@app/util/toast"
+  import {PROTECTED} from "@app/core/state"
+  import {canEnforceNip70} from "@app/core/commands"
+  import type {PollType} from "@app/util/polls"
+
+  type Props = {
+    url: string
+    h?: string
+  }
+
+  const {url, h}: Props = $props()
+
+  const shouldProtect = canEnforceNip70(url)
+
+  type DraftOption = {
+    id: string
+    value: string
+  }
+
+  const back = () => history.back()
+
+  const addOption = () => {
+    options = [...options, {id: randomId(), value: ""}]
+  }
+
+  const removeOption = (id: string) => {
+    options = options.filter(option => option.id !== id)
+  }
+
+  const updateOption = (id: string, value: string) => {
+    options = options.map(option => (option.id === id ? {...option, value} : option))
+  }
+
+  const reorderOptions = (targetId: string) => {
+    if (!draggedOptionId) {
+      return
+    }
+
+    const sourceIndex = options.findIndex(option => option.id === draggedOptionId)
+    const targetIndex = options.findIndex(option => option.id === targetId)
+
+    if (sourceIndex === -1 || targetIndex === -1 || sourceIndex === targetIndex) {
+      return
+    }
+
+    options = insertAt(targetIndex, options[sourceIndex], removeAt(sourceIndex, options))
+  }
+
+  const onDragStart = (e: DragEvent, id: string) => {
+    draggedOptionId = id
+
+    if (e.dataTransfer) {
+      e.dataTransfer.effectAllowed = "move"
+      e.dataTransfer.setData("text/plain", id)
+    }
+  }
+
+  const onDragOver = (e: DragEvent, targetId: string) => {
+    e.preventDefault()
+    reorderOptions(targetId)
+  }
+
+  const onDrop = (e: DragEvent, targetId: string) => {
+    e.preventDefault()
+    reorderOptions(targetId)
+    draggedOptionId = undefined
+  }
+
+  const onDragEnd = () => {
+    draggedOptionId = undefined
+  }
+
+  const submit = async () => {
+    if (!title.trim()) {
+      return pushToast({theme: "error", message: "Please provide a title for your poll."})
+    }
+
+    const nonEmptyOptions = removeUndefined(options.map(option => option.value.trim() || undefined))
+
+    if (nonEmptyOptions.length < 2) {
+      return pushToast({theme: "error", message: "Please provide at least two options."})
+    }
+
+    if (endsAt && endsAt <= now()) {
+      return pushToast({theme: "error", message: "End time must be in the future."})
+    }
+
+    const tags: string[][] = [
+      ...nonEmptyOptions.map(option => ["option", randomId(), option]),
+      ["polltype", pollType],
+      ["relay", url],
+    ]
+
+    if (endsAt) {
+      tags.push(["endsAt", String(endsAt)])
+    }
+
+    if (h) {
+      tags.push(["h", h])
+    }
+
+    if (await shouldProtect) {
+      tags.push(PROTECTED)
+    }
+
+    publishThunk({
+      relays: [url],
+      event: makeEvent(Poll, {content: title.trim(), tags}),
+    })
+
+    history.back()
+  }
+
+  let title = $state("")
+  let pollType = $state<PollType>("singlechoice")
+  let endsAt = $state<number | undefined>()
+  let options = $state<DraftOption[]>([
+    {id: randomId(), value: "Yes"},
+    {id: randomId(), value: "No"},
+  ])
+  let draggedOptionId = $state<string | undefined>()
+</script>
+
+<Modal tag="form" onsubmit={preventDefault(submit)}>
+  <ModalBody>
+    <ModalHeader>
+      <ModalTitle>Create a Poll</ModalTitle>
+      <ModalSubtitle>Ask a question and collect votes right in the feed.</ModalSubtitle>
+    </ModalHeader>
+    <div class="col-8 relative">
+      <Field>
+        {#snippet label()}
+          <p>Question*</p>
+        {/snippet}
+        {#snippet input()}
+          <label class="input input-bordered flex w-full items-center gap-2">
+            <!-- svelte-ignore a11y_autofocus -->
+            <input
+              autofocus={!isMobile}
+              bind:value={title}
+              class="grow"
+              type="text"
+              placeholder="What would you like to ask?" />
+          </label>
+        {/snippet}
+      </Field>
+
+      <Field>
+        {#snippet label()}
+          <p>Options*</p>
+        {/snippet}
+        {#snippet input()}
+          <div class="flex flex-col gap-2" role="list">
+            {#each options as option, index (option.id)}
+              <div
+                class="flex items-center gap-2"
+                draggable="true"
+                role="listitem"
+                ondragstart={e => onDragStart(e, option.id)}
+                ondragover={e => onDragOver(e, option.id)}
+                ondrop={e => onDrop(e, option.id)}
+                ondragend={onDragEnd}>
+                <div class="cursor-move opacity-70" aria-label="Drag handle">
+                  <Icon icon={HamburgerMenu} size={4} />
+                </div>
+                <label class="input input-bordered flex w-full items-center gap-2">
+                  <input
+                    value={option.value}
+                    class="grow"
+                    type="text"
+                    placeholder={`Option ${index + 1}`}
+                    oninput={e => updateOption(option.id, e.currentTarget.value)} />
+                </label>
+                <Button class="btn btn-ghost btn-sm" onclick={() => removeOption(option.id)}>
+                  <Icon icon={MinusCircle} size={4} />
+                </Button>
+              </div>
+            {/each}
+            <Button class="btn btn-outline btn-sm self-end" onclick={addOption}>
+              <Icon icon={PlusCircle} size={4} />
+              Add option
+            </Button>
+          </div>
+        {/snippet}
+      </Field>
+
+      <div class="flex flex-col gap-2">
+        <FieldInline>
+          {#snippet label()}
+            Poll type
+          {/snippet}
+          {#snippet input()}
+            <select class="select select-bordered w-full max-w-xs" bind:value={pollType}>
+              <option value="singlechoice">Single choice</option>
+              <option value="multiplechoice">Multiple choice</option>
+            </select>
+          {/snippet}
+        </FieldInline>
+        <FieldInline>
+          {#snippet label()}
+            Ends at
+          {/snippet}
+          {#snippet input()}
+            <DateTimeInput bind:value={endsAt} />
+          {/snippet}
+        </FieldInline>
+      </div>
+    </div>
+  </ModalBody>
+  <ModalFooter>
+    <Button class="btn btn-link" onclick={back}>
+      <Icon icon={AltArrowLeft} />
+      Go back
+    </Button>
+    <Button type="submit" class="btn btn-primary">Create Poll</Button>
+  </ModalFooter>
+</Modal>
