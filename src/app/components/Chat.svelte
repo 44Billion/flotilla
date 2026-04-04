@@ -196,8 +196,6 @@
   let compose: ChatCompose | undefined = $state()
   let parent: TrustedEvent | undefined = $state()
   let eventToEdit: TrustedEvent | undefined = $state()
-  let chatCompose: HTMLElement | undefined = $state()
-  let dynamicPadding: HTMLElement | undefined = $state()
 
   const elements = $derived.by(() => {
     const elements = []
@@ -232,20 +230,6 @@
   onMount(() => {
     for (const pubkey of others) {
       loadMessagingRelayList(pubkey)
-    }
-
-    const observer = new ResizeObserver(() => {
-      if (dynamicPadding && chatCompose) {
-        dynamicPadding.style.minHeight = `${chatCompose.offsetHeight}px`
-      }
-    })
-
-    observer.observe(chatCompose!)
-    observer.observe(dynamicPadding!)
-
-    return () => {
-      observer.unobserve(chatCompose!)
-      observer.unobserve(dynamicPadding!)
     }
   })
 
@@ -294,7 +278,6 @@
 </PageBar>
 
 <PageContent class="flex flex-col-reverse gap-2 pt-4">
-  <div bind:this={dynamicPadding}></div>
   {#if missingRelayLists.length > 0}
     <div class="py-12">
       <div class="card2 col-2 m-auto max-w-md items-center text-center">
@@ -335,9 +318,10 @@
     </Spinner>
     {@render info?.()}
   </p>
+  <div class="h-screen"></div>
 </PageContent>
 
-<div class="chat__compose bg-base-200" bind:this={chatCompose}>
+<div class="chat__compose bg-base-200">
   <div>
     {#if parent}
       <ChatComposeParent event={parent} clear={clearParent} verb="Replying to" />

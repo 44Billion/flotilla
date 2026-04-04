@@ -232,8 +232,6 @@
   let share = $state(popKey<TrustedEvent | undefined>("share"))
   let parent: TrustedEvent | undefined = $state()
   let element: HTMLElement | undefined = $state()
-  let chatCompose: HTMLElement | undefined = $state()
-  let dynamicPadding: HTMLElement | undefined = $state()
   let newMessagesSeen = false
   let showFixedNewMessages = $state(false)
   let showScrollButton = $state(false)
@@ -344,22 +342,9 @@
   const onEditPrevious = () => ifLet($events.toReversed().find(canEditEvent), onEditEvent)
 
   onMount(() => {
-    const observer = new ResizeObserver(() => {
-      if (dynamicPadding && chatCompose) {
-        dynamicPadding!.style.minHeight = `${chatCompose!.offsetHeight}px`
-      }
-    })
-
-    observer.observe(chatCompose!)
-    observer.observe(dynamicPadding!)
-
     start()
 
-    return () => {
-      cleanup()
-      observer.unobserve(chatCompose!)
-      observer.unobserve(dynamicPadding!)
-    }
+    return cleanup
   })
 </script>
 
@@ -377,7 +362,6 @@
 </SpaceBar>
 
 <PageContent bind:element onscroll={onScroll} class="flex flex-col-reverse pt-4">
-  <div bind:this={dynamicPadding}></div>
   {#if $room.isPrivate && $membershipStatus !== MembershipStatus.Granted}
     <div class="py-20">
       <div class="card2 col-8 m-auto max-w-md items-center text-center">
@@ -444,11 +428,10 @@
       {/if}
     </p>
   {/if}
+  <div class="h-screen"></div>
 </PageContent>
 
-<div
-  class="chat__compose-zone flex flex-col gap-1 bg-base-200 md:flex-row md:gap-0"
-  bind:this={chatCompose}>
+<div class="chat__compose flex flex-col gap-1 bg-base-200 md:flex-row md:gap-0">
   <div class="chat__compose-inner min-w-0 flex-1">
     {#if $room.isPrivate && $membershipStatus !== MembershipStatus.Granted}
       <!-- pass -->

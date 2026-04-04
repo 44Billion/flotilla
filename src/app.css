@@ -403,14 +403,10 @@ body.keyboard-open .hide-on-keyboard {
 /* chat view */
 
 .chat__compose {
-  @apply left-content bottom-sai right-sai fixed z-compose;
+  @apply relative z-compose mb-14 flex-grow md:mb-0;
 }
 
-.chat__compose-zone {
-  @apply left-content bottom-sai right-sai fixed z-compose;
-}
-
-.chat__compose-zone .chat__compose-inner {
+.chat__compose .chat__compose-inner {
   @apply min-w-0;
 }
 

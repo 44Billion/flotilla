@@ -163,8 +163,6 @@
   let share = $state(popKey<TrustedEvent | undefined>("share"))
   let parent: TrustedEvent | undefined = $state()
   let element: HTMLElement | undefined = $state()
-  let chatCompose: HTMLElement | undefined = $state()
-  let dynamicPadding: HTMLElement | undefined = $state()
   let newMessagesSeen = false
   let showFixedNewMessages = $state(false)
   let showScrollButton = $state(false)
@@ -275,24 +273,9 @@
   const onEditPrevious = () => ifLet($events.toReversed().find(canEditEvent), onEditEvent)
 
   onMount(() => {
-    const controller = new AbortController()
-
-    const observer = new ResizeObserver(() => {
-      if (dynamicPadding && chatCompose) {
-        dynamicPadding!.style.minHeight = `${chatCompose!.offsetHeight}px`
-      }
-    })
-
-    observer.observe(chatCompose!)
-    observer.observe(dynamicPadding!)
     start()
 
-    return () => {
-      cleanup()
-      controller.abort()
-      observer.unobserve(chatCompose!)
-      observer.unobserve(dynamicPadding!)
-    }
+    return cleanup
   })
 </script>
 
@@ -306,8 +289,7 @@
   {/snippet}
 </SpaceBar>
 
-<PageContent bind:element onscroll={onScroll} class="flex flex-col-reverse pt-4">
-  <div bind:this={dynamicPadding}></div>
+<PageContent bind:element onscroll={onScroll} class="flex flex-col-reverse pt-4 mb-14 md:mb-0">
   {#if loadingForward}
     <p class="py-20 flex justify-center">
       <Spinner loading={loadingForward}>Looking for messages...</Spinner>
@@ -351,9 +333,10 @@
       <Spinner>End of message history</Spinner>
     {/if}
   </p>
+  <div class="h-screen"></div>
 </PageContent>
 
-<div class="chat__compose bg-base-200" bind:this={chatCompose}>
+<div class="chat__compose bg-base-200">
   <div>
     {#if parent}
       <RoomComposeParent event={parent} clear={clearParent} verb="Replying to" />
