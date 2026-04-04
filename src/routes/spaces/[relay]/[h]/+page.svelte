@@ -8,13 +8,7 @@
   import {now, ifLet, int, formatTimestampAsDate, ago, MINUTE} from "@welshman/lib"
   import type {MakeNonOptional} from "@welshman/lib"
   import type {TrustedEvent, EventContent} from "@welshman/util"
-  import {
-    makeEvent,
-    makeRoomMeta,
-    MESSAGE,
-    ROOM_ADD_MEMBER,
-    ROOM_REMOVE_MEMBER,
-  } from "@welshman/util"
+  import {makeEvent, makeRoomMeta, MESSAGE, ROOM_ADD_MEMBER} from "@welshman/util"
   import AltArrowDown from "@assets/icons/alt-arrow-down.svg?dataurl"
   import ClockCircle from "@assets/icons/clock-circle.svg?dataurl"
   import InfoCircle from "@assets/icons/info-circle.svg?dataurl"
@@ -36,7 +30,6 @@
   import ThunkToast from "@app/components/ThunkToast.svelte"
   import RoomItemAddMember from "@src/app/components/RoomItemAddMember.svelte"
   import RoomComposeEdit from "@src/app/components/RoomComposeEdit.svelte"
-  import RoomItemRemoveMember from "@src/app/components/RoomItemRemoveMember.svelte"
   import {canEnforceNip70, prependParent, publishDelete} from "@app/core/commands"
   import {
     decodeRelay,
@@ -286,7 +279,7 @@
           showPubkey:
             previousPubkey !== event.pubkey ||
             event.created_at - previousCreatedAt > int(3, MINUTE) ||
-            [ROOM_ADD_MEMBER, ROOM_REMOVE_MEMBER].includes(previousKind!),
+            previousKind === ROOM_ADD_MEMBER,
         })
 
         previousDate = date
@@ -311,7 +304,7 @@
       url,
       at: at || now(),
       element: element!,
-      filters: [{kinds: [...MESSAGE_KINDS, ROOM_ADD_MEMBER, ROOM_REMOVE_MEMBER], "#h": [h]}],
+      filters: [{kinds: [...MESSAGE_KINDS, ROOM_ADD_MEMBER], "#h": [h]}],
       onBackwardExhausted: () => {
         loadingBackward = false
       },
@@ -405,8 +398,6 @@
         {@const event = $state.snapshot(value as TrustedEvent)}
         {#if event.kind === ROOM_ADD_MEMBER}
           <RoomItemAddMember {url} {event} />
-        {:else if event.kind === ROOM_REMOVE_MEMBER}
-          <RoomItemRemoveMember {url} {event} />
         {:else}
           <div in:slide class="cv" class:-mt-1={!showPubkey}>
             <RoomItem
