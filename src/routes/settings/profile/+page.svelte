@@ -84,7 +84,7 @@
           </div>
         </div>
       </div>
-      <Button class="center btn btn-circle btn-neutral -mr-4 -mt-4 h-12 w-12" onclick={startEdit}>
+      <Button class="center btn btn-circle btn-neutral -mr-2 -mt-2 h-12 w-12" onclick={startEdit}>
         <Icon icon={PenNewSquare} />
       </Button>
     </div>
