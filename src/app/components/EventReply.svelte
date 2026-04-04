@@ -64,7 +64,11 @@
 </script>
 
 <div bind:this={spacer}></div>
-<form in:fly bind:this={form} onsubmit={preventDefault(submit)} class="cb cw fixed z-feature pt-3">
+<form
+  in:fly
+  bind:this={form}
+  onsubmit={preventDefault(submit)}
+  class="left-content bottom-sai right-sai ml-2 pl-2 fixed z-feature">
   <div class="card2 mx-2 my-2 bg-alt shadow-md">
     <div class="relative">
       <div class="note-editor flex-grow overflow-hidden">

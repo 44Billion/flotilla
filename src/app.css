@@ -390,27 +390,11 @@ progress[value]::-webkit-progress-value {
 
 /* content width for fixed elements */
 
-.cw {
-  @apply w-full md:left-[18.5rem] md:w-[calc(100%-18.5rem-var(--sair))];
-}
-
-.cw-full {
-  @apply w-full md:left-[4rem] md:w-[calc(100%-4rem-var(--sair))];
-}
-
-.cb {
-  @apply md:bottom-sai bottom-[calc(var(--saib)+3.5rem)];
-}
-
-.ct {
-  @apply top-[calc(var(--sait)+5rem)] md:top-[calc(var(--sait)+3rem)];
+.left-content {
+  @apply md:left-[calc(18.5rem+var(--sail))];
 }
 
 /* Keyboard open state adjustments */
-
-body.keyboard-open .cb {
-  @apply bottom-sai;
-}
 
 body.keyboard-open .hide-on-keyboard {
   display: none;
@@ -419,11 +403,11 @@ body.keyboard-open .hide-on-keyboard {
 /* chat view */
 
 .chat__compose {
-  @apply cb cw fixed z-compose;
+  @apply left-content bottom-sai right-sai fixed z-compose;
 }
 
 .chat__compose-zone {
-  @apply cb cw fixed z-compose;
+  @apply left-content bottom-sai right-sai fixed z-compose;
 }
 
 .chat__compose-zone .chat__compose-inner {

@@ -22,10 +22,10 @@
 <svelte:window bind:innerWidth={width} />
 
 {#if width <= md}
-  <div class="ml-sai mt-sai mb-sai relative z-nav w-14 flex-shrink-0 bg-base-200 pt-4">
+  <div class="ml-sai mt-sai mb-sai relative z-nav w-14 flex-shrink-0 bg-base-200 pt-2">
     <PrimaryNavSpaces />
   </div>
-  <SecondaryNav class="!flex !min-h-0 !w-auto flex-grow pb-4">
+  <SecondaryNav class="!flex !w-auto flex-grow pb-16">
     <SpaceMenu {url} />
   </SecondaryNav>
 {/if}

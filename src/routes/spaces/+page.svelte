@@ -180,8 +180,8 @@
   })
 </script>
 
-<Page class="cw-full">
-  <PageBar class="cw-full">
+<Page>
+  <PageBar>
     {#if showSearch}
       <label class="input input-bordered input-sm flex flex-1 items-center gap-2" in:fly>
         <Icon icon={Magnifier} />
@@ -218,7 +218,7 @@
       </div>
     {/if}
   </PageBar>
-  <PageContent class="cw-full flex flex-col gap-2 p-2 pt-4">
+  <PageContent class="flex flex-col gap-2 p-2 pt-4">
     <div class="flex flex-col gap-2" bind:this={element}>
       {#each PLATFORM_RELAYS as url (url)}
         <Button

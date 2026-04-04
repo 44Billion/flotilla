@@ -32,7 +32,7 @@
 </script>
 
 <div
-  class="ml-sai mt-sai mb-sai relative z-nav hidden w-14 flex-shrink-0 bg-base-200 pt-4 md:block">
+  class="ml-sai mt-sai mb-sai relative z-nav hidden w-14 flex-shrink-0 bg-base-200 pt-2 md:block">
   <div class="flex h-full flex-col" class:justify-between={PLATFORM_RELAYS.length === 0}>
     <PrimaryNavSpaces />
     {#if PLATFORM_RELAYS.length > 0}

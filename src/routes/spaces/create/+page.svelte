@@ -8,8 +8,8 @@
   import PageContent from "@lib/components/PageContent.svelte"
 </script>
 
-<Page class="cw-full">
-  <PageContent class="cw-full flex flex-col items-center gap-2 p-2 pt-4">
+<Page>
+  <PageContent class="flex flex-col items-center gap-2 p-2 pt-4">
     <PageHeader>
       {#snippet title()}
         <div>Create your own Space</div>

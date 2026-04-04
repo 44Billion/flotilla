@@ -12,7 +12,7 @@
 
 <div
   class={cx(
-    "ml-sai mt-sai mb-sai max-h-screen w-60 sm:flex-shrink-0 flex-col gap-1 bg-base-300 z-nav hidden md:flex",
+    "mt-sai mb-sai max-h-screen w-60 min-h-0 flex-shrink-0 flex-col gap-1 bg-base-300 z-nav hidden md:flex",
     props.class,
   )}>
   {@render children?.()}

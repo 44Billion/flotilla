@@ -10,10 +10,7 @@
 
   let {children, element = $bindable(), ...props}: Props = $props()
 
-  const className = cx(
-    props.class,
-    "scroll-container cw cb ct fixed z-feature overflow-y-auto overflow-x-hidden",
-  )
+  const className = cx(props.class, "scroll-container z-feature overflow-y-auto overflow-x-hidden")
 </script>
 
 <div {...props} bind:this={element} data-component="PageContent" class={className}>
