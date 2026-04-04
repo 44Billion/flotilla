@@ -1,0 +1,59 @@
+<script lang="ts">
+  import {call, displayUrl} from "@welshman/lib"
+  import {displayRelayUrl, isRelayUrl, normalizeRelayUrl} from "@welshman/util"
+  import LinkRound from "@assets/icons/link-round.svg?dataurl"
+  import Icon from "@lib/components/Icon.svelte"
+  import Link from "@lib/components/Link.svelte"
+  import {PLATFORM_URL, displayRoom, isRoomId, splitRoomId} from "@app/core/state"
+  import {makeRoomPath, makeSpacePath} from "@app/util/routes"
+
+  const {
+    url,
+    class: className = "",
+  }: {
+    url: string
+    class?: string
+  } = $props()
+
+  const roomReference = call(() => {
+    if (!isRoomId(url)) {
+      return undefined
+    }
+
+    const [roomUrl, h] = splitRoomId(url)
+
+    if (!roomUrl || !h || !isRelayUrl(roomUrl)) {
+      return undefined
+    }
+
+    return {url: normalizeRelayUrl(roomUrl), h}
+  })
+
+  const relayReference = call(() => {
+    if (roomReference || !isRelayUrl(url)) {
+      return undefined
+    }
+
+    return normalizeRelayUrl(url)
+  })
+
+  const [href, external] = call(() => {
+    if (roomReference) return [makeRoomPath(roomReference.url, roomReference.h), false]
+    if (relayReference) return [makeSpacePath(relayReference), false]
+    if (url.startsWith(PLATFORM_URL)) return [url.replace(PLATFORM_URL, ""), false]
+
+    return [url, true]
+  })
+</script>
+
+<Link {external} {href} class={className}>
+  {#if roomReference}
+    ~<span class="text-primary">{displayRelayUrl(roomReference.url)}</span> /
+    {displayRoom(roomReference.url, roomReference.h)}
+  {:else if relayReference}
+    <span class="text-primary">{displayRelayUrl(relayReference)}</span>
+  {:else}
+    <Icon icon={LinkRound} size={3} class="inline-block" />
+    {displayUrl(url)}
+  {/if}
+</Link>

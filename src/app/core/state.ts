@@ -593,6 +593,8 @@ export const getRoomType = (room: RoomMeta): RoomType =>
 
 export const makeRoomId = (url: string, h: string) => `${url}'${h}`
 
+export const isRoomId = (id: string) => id.includes("'")
+
 export const splitRoomId = (id: string) => id.split("'")
 
 export const hasNip29 = (relay?: RelayProfile) =>

@@ -63,11 +63,11 @@ export const goToSpace = async (url: string) => {
   const prevPath = lastPageBySpaceUrl.get(encodeRelay(url))
 
   if (prevPath && prevPath !== makeSpacePath(url)) {
-    goto(prevPath)
+    goto(prevPath, {replaceState: true})
   } else if (window.matchMedia(`(min-width: ${theme.screens.md})`).matches) {
-    goto(makeSpacePath(url, "recent"))
+    goto(makeSpacePath(url, "recent"), {replaceState: true})
   } else {
-    goto(makeSpacePath(url))
+    goto(makeSpacePath(url), {replaceState: true})
   }
 }
 

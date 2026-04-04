@@ -12,7 +12,7 @@
 </script>
 
 <div class="flex grow items-center justify-between gap-4 {props.class}">
-  <div class="flex items-center gap-3">
+  <div class="flex items-center gap-2">
     <RoomImage {url} {h} />
     <div class="min-w-0 overflow-hidden text-ellipsis">
       <RoomName {url} {h} />

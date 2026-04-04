@@ -4,7 +4,7 @@ import {get, derived} from "svelte/store"
 import {Router} from "@welshman/router"
 import {dec, inc} from "@welshman/lib"
 import {throttled} from "@welshman/store"
-import type {PublishedProfile} from "@welshman/util"
+import type {PublishedProfile, RoomMeta} from "@welshman/util"
 import {
   createSearch,
   profiles,
@@ -14,13 +14,27 @@ import {
   getWotGraph,
 } from "@welshman/app"
 import type {FileAttributes} from "@welshman/editor"
-import {Editor, MentionSuggestion, WelshmanExtension, editorProps} from "@welshman/editor"
-import {NativeClipboardPasteExtension} from "@app/editor/clipboard"
+import {
+  Editor,
+  MentionSuggestion,
+  TippySuggestion,
+  WelshmanExtension,
+  editorProps,
+} from "@welshman/editor"
 import {escapeHtml} from "@lib/html"
 import {makeMentionNodeView} from "@app/editor/MentionNodeView"
 import ProfileSuggestion from "@app/editor/ProfileSuggestion.svelte"
+import {RoomReferenceExtension} from "@app/editor/RoomReferenceExtension"
+import RoomSuggestion from "@app/editor/RoomSuggestion.svelte"
+import {NativeClipboardPasteExtension} from "@app/editor/clipboard"
 import {uploadFile} from "@app/core/commands"
-import {deriveSpaceMembers} from "@app/core/state"
+import {
+  deriveSpaceMembers,
+  makeRoomId,
+  splitRoomId,
+  userSpaceUrls,
+  roomsByUrl,
+} from "@app/core/state"
 import {pushToast} from "@app/util/toast"
 
 export const makeEditor = async ({
@@ -83,11 +97,36 @@ export const makeEditor = async ({
     },
   )
 
+  const roomReferenceSearch = derived(
+    [throttled(800, userSpaceUrls), throttled(800, roomsByUrl)],
+    ([$userSpaceUrls, $roomsByUrl]) => {
+      const roomIdByMeta = new WeakMap<RoomMeta, string>()
+      const options: RoomMeta[] = []
+
+      for (const roomUrl of $userSpaceUrls) {
+        for (const room of $roomsByUrl.get(roomUrl) || []) {
+          roomIdByMeta.set(room, makeRoomId(roomUrl, room.h))
+          options.push(room)
+        }
+      }
+
+      return createSearch(options, {
+        getValue: item => roomIdByMeta.get(item) || item.h,
+        fuseOptions: {
+          keys: ["name", "h"],
+          threshold: 0.3,
+          shouldSort: false,
+        },
+      })
+    },
+  )
+
   const ed = new Editor({
     content: typeof content === "string" ? escapeHtml(content) : content,
     editorProps,
     element: document.createElement("div"),
     extensions: [
+      RoomReferenceExtension,
       WelshmanExtension.configure({
         submit,
         extensions: {
@@ -128,6 +167,29 @@ export const makeEditor = async ({
                       const target = document.createElement("div")
 
                       mount(ProfileSuggestion, {target, props: {value, url}})
+
+                      return target
+                    },
+                  }),
+                  TippySuggestion({
+                    char: "~",
+                    name: "roomref",
+                    editor: (this as any).editor,
+                    search: (term: string) => get(roomReferenceSearch).searchValues(term),
+                    updateSignal: roomReferenceSearch,
+                    select: (id: string, props) => {
+                      const [roomUrl, h] = splitRoomId(id)
+
+                      if (!roomUrl || !h) {
+                        return
+                      }
+
+                      return props.command({url: roomUrl, h})
+                    },
+                    createSuggestion: (value: string) => {
+                      const target = document.createElement("div")
+
+                      mount(RoomSuggestion, {target, props: {value}})
 
                       return target
                     },
