@@ -88,9 +88,9 @@
         class:text-base-content={theme === "info"}
         class:alert-error={theme === "error"}>
         <Button
-          class="absolute -top-2 -right-2 btn btn-circle btn-neutral btn-xs hidden md:inline-flex"
+          class="absolute -top-2 -right-2 btn btn-circle btn-neutral btn-xs hidden md:inline-flex flex justify-center items-center"
           onclick={onClose}>
-          <Icon icon={Close} size={3} />
+          <Icon icon={Close} size={4} />
         </Button>
         <p class="md:pr-6" class:welshman-content-error={theme === "error"}>
           {#if $toast.message}
