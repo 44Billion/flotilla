@@ -9,7 +9,7 @@ config({path: ".env"})
 export default {
   content: ["./src/**/*.{html,js,svelte,ts}"],
   darkMode: ["selector", '[data-theme="dark"]'],
-  safelist: ["bg-success", "bg-warning", 'w-4 h-4'],
+  safelist: ["bg-success", "bg-warning", "w-4 h-4"],
   theme: {
     extend: {},
     zIndex: {
@@ -21,7 +21,7 @@ export default {
       nav: 5,
       popover: 6,
       modal: 7,
-      "modal-feature": 8,
+      tooltip: 8,
       toast: 9,
     },
   },
