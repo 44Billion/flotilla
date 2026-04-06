@@ -45,16 +45,23 @@
 </script>
 
 {#if href}
-  <a {href} {...restProps} data-tip={title} data-sveltekit-replacestate={replaceState} class={wrapperClass}>
+  <a
+    {href}
+    {...restProps}
+    data-tip={title}
+    data-sveltekit-replacestate={replaceState}
+    class={wrapperClass}>
     {@render children?.()}
     {#if notification}
-      <div class="absolute right-[1.15rem] top-5 h-2 w-2 rounded-full bg-primary" transition:fade></div>
+      <div class="absolute right-[1.15rem] top-5 h-2 w-2 rounded-full bg-primary" transition:fade>
+      </div>
     {/if}
   </a>
 {:else}
   <button {...restProps} data-tip={title} class={wrapperClass}>
     {#if notification}
-      <div class="absolute right-[1.15rem] top-5 h-2 w-2 rounded-full bg-primary" transition:fade></div>
+      <div class="absolute right-[1.15rem] top-5 h-2 w-2 rounded-full bg-primary" transition:fade>
+      </div>
     {/if}
     {@render children?.()}
   </button>
