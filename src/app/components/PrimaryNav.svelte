@@ -32,18 +32,14 @@
 </script>
 
 <div
-  class="ml-sai mt-sai mb-sai relative z-nav hidden w-14 flex-shrink-0 bg-base-200 pt-2 md:block">
+  class="ml-sai mt-sai mb-sai relative z-popover isolate hidden w-14 flex-shrink-0 bg-base-200 pt-2 md:block">
   <div class="flex h-full flex-col" class:justify-between={PLATFORM_RELAYS.length === 0}>
     <PrimaryNavSpaces />
     {#if PLATFORM_RELAYS.length > 0}
       <Divider />
     {/if}
-    <div>
-      <PrimaryNavItem
-        title="Settings"
-        href="/settings/profile"
-        prefix="/settings"
-        class="tooltip-right">
+    <div class="flex flex-col">
+      <PrimaryNavItem title="Settings" href="/settings/profile" prefix="/settings">
         {#if $userProfile?.picture}
           <ImageIcon alt="Settings" src={$userProfile?.picture} class="rounded-full" size={10} />
         {:else}
@@ -53,11 +49,10 @@
       <PrimaryNavItem
         title="Messages"
         onclick={chatHandler}
-        class="tooltip-right"
         notification={$notifications.has("/chat")}>
         <ImageIcon alt="Messages" src={Letter} size={8} />
       </PrimaryNavItem>
-      <PrimaryNavItem title="Search" href="/people" class="tooltip-right">
+      <PrimaryNavItem title="Search" href="/people">
         <ImageIcon alt="Search" src={Magnifier} size={8} />
       </PrimaryNavItem>
     </div>

@@ -24,12 +24,13 @@
   const shouldNotifyForRoom = deriveShouldNotify(url, h)
   const showDifferenceIcon = $derived($shouldNotifyForRoom !== $shouldNotifyForSpace)
   const notification = $derived($shouldNotifyForRoom ? $notifications.has(path) : false)
+  const roomName = $derived($room?.name || h)
 </script>
 
 {#if roomType === RoomType.Voice}
   <VoiceRoomItem {url} {h} {replaceState} {notification} />
 {:else}
-  <SecondaryNavItem href={path} {replaceState} {notification}>
+  <SecondaryNavItem href={path} title={roomName} {replaceState} {notification}>
     <RoomNameWithImage {url} {h} />
     {#if showDifferenceIcon}
       <Icon icon={$shouldNotifyForRoom ? Bell : BellOff} size={4} class="opacity-50" />

@@ -2,7 +2,7 @@
   import {derived} from "svelte/store"
   import {displayRelayUrl, EVENT_TIME, ZAP_GOAL, THREAD, CLASSIFIED} from "@welshman/util"
   import {Poll} from "nostr-tools/kinds"
-  import {deriveRelay, createSearch, pubkey} from "@welshman/app"
+  import {deriveRelay, deriveRelayDisplay, createSearch, pubkey} from "@welshman/app"
   import {fly} from "@lib/transition"
   import Magnifier from "@assets/icons/magnifier.svg?dataurl"
   import AltArrowDown from "@assets/icons/alt-arrow-down.svg?dataurl"
@@ -66,6 +66,7 @@
   const {url} = $props()
 
   const relay = deriveRelay(url)
+  const display = deriveRelayDisplay(url)
   const chatPath = makeSpacePath(url, "chat")
   const goalsPath = makeSpacePath(url, "goals")
   const threadsPath = makeSpacePath(url, "threads")
@@ -144,7 +145,9 @@
         class="relative flex w-full flex-col rounded-xl p-3 transition-all hover:bg-base-100"
         onclick={openMenu}>
         <div class="flex items-center justify-between">
-          <strong class="flex items-center gap-1 relative">
+          <strong
+            class="flex items-center gap-1 relative tooltip tooltip-right"
+            data-tip={$display}>
             <RelayName {url} class="ellipsize" />
             <div
               class="absolute -right-3 top-0 h-2 w-2 rounded-full bg-primary transition-all opacity-0"

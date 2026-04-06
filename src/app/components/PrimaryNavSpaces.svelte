@@ -23,7 +23,7 @@
   {#each PLATFORM_RELAYS as url (url)}
     <PrimaryNavItemSpace {url} />
   {:else}
-    <PrimaryNavItem title="Home" href="/home" class="tooltip-right">
+    <PrimaryNavItem title="Home" href="/home">
       <ImageIcon alt="Home" src={PLATFORM_LOGO} class="rounded-full" size={10} />
     </PrimaryNavItem>
     <Divider />
@@ -33,7 +33,6 @@
     <PrimaryNavItem
       href="/spaces"
       title="All Spaces"
-      class="tooltip-right"
       prefix="no-highlight"
       notification={otherSpaceNotifications}>
       <ImageIcon alt="All Spaces" src={Widget} size={8} />

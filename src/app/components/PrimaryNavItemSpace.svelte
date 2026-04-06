@@ -1,5 +1,5 @@
 <script lang="ts">
-  import {displayRelayUrl} from "@welshman/util"
+  import {deriveRelayDisplay} from "@welshman/app"
   import PrimaryNavItem from "@lib/components/PrimaryNavItem.svelte"
   import RelayIcon from "@app/components/RelayIcon.svelte"
   import {makeSpacePath, goToSpace} from "@app/util/routes"
@@ -12,11 +12,13 @@
   const {url}: Props = $props()
 
   const onClick = () => goToSpace(url)
+
+  const display = $derived(deriveRelayDisplay(url))
 </script>
 
 <PrimaryNavItem
   onclick={onClick}
-  title={displayRelayUrl(url)}
+  title={$display}
   class="tooltip-right"
   notification={$notifications.has(makeSpacePath(url))}>
   <RelayIcon {url} size={10} class="rounded-full" />
