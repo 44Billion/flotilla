@@ -364,6 +364,17 @@
 
 /* tippy popover */
 
+.tippy-target {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  pointer-events: none;
+}
+
+.tippy-target > * {
+  pointer-events: auto;
+}
+
 .tippy-box {
   @apply rounded-box shadow-xl;
 }

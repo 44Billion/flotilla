@@ -22,6 +22,7 @@
   import Button from "@lib/components/Button.svelte"
   import Popover from "@lib/components/Popover.svelte"
   import Confirm from "@lib/components/Confirm.svelte"
+  import Tooltip from "@lib/components/Tooltip.svelte"
   import Modal from "@lib/components/Modal.svelte"
   import ModalBody from "@lib/components/ModalBody.svelte"
   import ModalFooter from "@lib/components/ModalFooter.svelte"
@@ -206,39 +207,39 @@
       <strong class="text-lg">Room Permissions</strong>
       <div class="flex gap-2 flex-wrap">
         {#if $room?.isRestricted}
-          <Button
-            class="btn btn-neutral btn-xs rounded-full tooltip flex gap-2 items-center"
-            data-tip="Only members can send messages.">
-            <Icon size={4} icon={Microphone} /> Restricted
-          </Button>
+          <Tooltip content="Only members can send messages.">
+            <Button class="btn btn-neutral btn-xs rounded-full flex gap-2 items-center">
+              <Icon size={4} icon={Microphone} /> Restricted
+            </Button>
+          </Tooltip>
         {/if}
         {#if $room?.isPrivate}
-          <Button
-            class="btn btn-neutral btn-xs rounded-full tooltip flex gap-2 items-center"
-            data-tip="Only members can view messages.">
-            <Icon size={4} icon={Lock} /> Private
-          </Button>
+          <Tooltip content="Only members can view messages.">
+            <Button class="btn btn-neutral btn-xs rounded-full flex gap-2 items-center">
+              <Icon size={4} icon={Lock} /> Private
+            </Button>
+          </Tooltip>
         {/if}
         {#if $room?.isHidden}
-          <Button
-            class="btn btn-neutral btn-xs rounded-full tooltip flex gap-2 items-center"
-            data-tip="This room is not visible to non-members.">
-            <Icon size={4} icon={EyeClosed} /> Hidden
-          </Button>
+          <Tooltip content="This room is not visible to non-members.">
+            <Button class="btn btn-neutral btn-xs rounded-full flex gap-2 items-center">
+              <Icon size={4} icon={EyeClosed} /> Hidden
+            </Button>
+          </Tooltip>
         {/if}
         {#if $room?.isClosed}
-          <Button
-            class="btn btn-neutral btn-xs rounded-full tooltip flex gap-2 items-center"
-            data-tip="Requests to join this room will be ignored.">
-            <Icon size={4} icon={MinusCircle} /> Closed
-          </Button>
+          <Tooltip content="Requests to join this room will be ignored.">
+            <Button class="btn btn-neutral btn-xs rounded-full flex gap-2 items-center">
+              <Icon size={4} icon={MinusCircle} /> Closed
+            </Button>
+          </Tooltip>
         {/if}
         {#if !$room?.isRestricted && !$room?.isPrivate && !$room?.isHidden && !$room?.isClosed}
-          <Button
-            class="btn btn-neutral btn-xs rounded-full tooltip flex gap-2 items-center"
-            data-tip="This room has no additional access controls.">
-            <Icon size={4} icon={Eye} /> Public
-          </Button>
+          <Tooltip content="This room has no additional access controls.">
+            <Button class="btn btn-neutral btn-xs rounded-full flex gap-2 items-center">
+              <Icon size={4} icon={Eye} /> Public
+            </Button>
+          </Tooltip>
         {/if}
       </div>
     </div>
