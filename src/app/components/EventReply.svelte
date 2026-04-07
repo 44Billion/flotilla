@@ -13,14 +13,16 @@
   import {DraftKey} from "@app/util/drafts"
   import {pushToast} from "@app/util/toast"
 
+  type Values = {
+    content?: string | object
+  }
+
   const {url, event, onClose, onSubmit} = $props()
-
-  const draftKey = new DraftKey<{content?: unknown}>(`reply:${event.id}`)
-  const draft = draftKey.get()
-
+  const draftKey = new DraftKey<Values>(`reply:${event.id}`)
+  const initialValues = draftKey.get()
   const shouldProtect = canEnforceNip70(url)
-
   const uploading = writable(false)
+  const autofocus = !isMobile
 
   const selectFiles = () => editor.then(ed => ed.commands.selectFiles())
 
@@ -46,19 +48,19 @@
     onSubmit(publishComment({event, content, tags, relays: [url]}))
   }
 
-  const onChange = (json: unknown) => draftKey.set({content: json})
-
-  const editor = makeEditor({
-    url,
-    submit,
-    uploading,
-    autofocus: !isMobile,
-    content: draft?.content as string | object | undefined,
-    onChange,
-  })
-
   let form: HTMLElement
   let spacer: HTMLElement
+  let content = $state(initialValues?.content ?? "")
+
+  const onChange = (json: object) => {
+    content = json
+  }
+
+  const editor = makeEditor({url, submit, uploading, content, onChange})
+
+  $effect(() => {
+    draftKey.set({content})
+  })
 
   onMount(() => {
     setTimeout(() => {
@@ -86,7 +88,7 @@
   <div class="card2 mx-2 my-2 bg-alt shadow-md">
     <div class="relative">
       <div class="note-editor flex-grow overflow-hidden">
-        <EditorContent {editor} />
+        <EditorContent {autofocus} {editor} />
       </div>
       <Button
         data-tip="Add an image"

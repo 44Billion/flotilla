@@ -15,21 +15,26 @@
   import {DraftKey} from "@app/util/drafts"
   import {onDestroy, onMount} from "svelte"
 
+  type Values = {
+    content?: string | object
+  }
+
   type Props = {
     url?: string
     h?: string
-    content?: string
     onEscape?: () => void
     onEditPrevious?: () => void
     onSubmit: (event: EventContent) => void
+    initialValues?: Values
   }
 
-  const {url, h, content, onEscape, onEditPrevious, onSubmit}: Props = $props()
+  let {url, h, initialValues, onEscape, onEditPrevious, onSubmit}: Props = $props()
 
-  type ComposeDraft = {content?: unknown}
+  const draftKey = url || h ? new DraftKey<Values>(`room:${url ?? ""}:${h ?? ""}`) : undefined
 
-  const draftKey = url || h ? new DraftKey<ComposeDraft>(`room:${url ?? ""}:${h ?? ""}`) : undefined
-  const draft = draftKey?.get()
+  if (!initialValues) {
+    initialValues = draftKey?.get()
+  }
 
   const autofocus = !isMobile
 
@@ -71,21 +76,25 @@
     ed.chain().clearContent().run()
   }
 
-  const onChange = (json: unknown) => {
-    draftKey?.set({content: json})
+  let popover: Instance | undefined = $state()
+  let content = $state(initialValues?.content ?? "")
+
+  const onChange = (json: object) => {
+    content = json
   }
 
   const editor = makeEditor({
     url,
-    content: content ?? (draft?.content as string | object | undefined),
-    autofocus,
+    content,
     submit,
     uploading,
     onChange,
     aggressive: true,
   })
 
-  let popover: Instance | undefined = $state()
+  $effect(() => {
+    draftKey?.set({content})
+  })
 
   onMount(async () => {
     const ed = await editor
@@ -124,7 +133,7 @@
     </Tippy>
   </div>
   <div class="chat-editor flex-grow overflow-hidden">
-    <EditorContent {editor} />
+    <EditorContent {autofocus} {editor} />
   </div>
   <Button
     data-tip="{window.navigator.platform.includes('Mac') ? 'cmd' : 'ctrl'}+enter to send"

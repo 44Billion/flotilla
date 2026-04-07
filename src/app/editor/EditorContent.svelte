@@ -4,9 +4,10 @@
 
   type Props = {
     editor: Promise<Editor>
+    autofocus?: boolean
   }
 
-  const {editor}: Props = $props()
+  const {editor, autofocus}: Props = $props()
 
   let element: HTMLElement
 
@@ -16,7 +17,7 @@
         element?.append(ed.options.element)
       }
 
-      if ((ed as any)._shouldAutofocus) {
+      if (autofocus) {
         const hasContent = ed.getText().trim().length > 0
 
         requestAnimationFrame(() => {

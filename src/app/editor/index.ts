@@ -25,7 +25,6 @@ import {pushToast} from "@app/util/toast"
 export const makeEditor = async ({
   encryptFiles = false,
   aggressive = false,
-  autofocus = false,
   charCount,
   content = "",
   onChange,
@@ -37,10 +36,9 @@ export const makeEditor = async ({
 }: {
   encryptFiles?: boolean
   aggressive?: boolean
-  autofocus?: boolean
   charCount?: Writable<number>
   content?: string | object
-  onChange?: (json: unknown) => void
+  onChange?: (json: object) => void
   placeholder?: string
   url?: string
   submit: () => void
@@ -86,7 +84,6 @@ export const makeEditor = async ({
 
   const ed = new Editor({
     content: typeof content === "string" ? escapeHtml(content) : content,
-    autofocus: false,
     editorProps,
     element: document.createElement("div"),
     extensions: [
@@ -147,8 +144,6 @@ export const makeEditor = async ({
       onChange?.(editor.getJSON())
     },
   })
-
-  ;(ed as any)._shouldAutofocus = autofocus
 
   return ed
 }

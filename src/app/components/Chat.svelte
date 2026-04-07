@@ -67,7 +67,7 @@
   const {pubkeys, info}: Props = $props()
 
   const chat = deriveChat(pubkeys)
-  const draftKey = new DraftKey<{content?: unknown}>(`dm:${$chat?.id}`)
+  const draftKey = new DraftKey<{content?: string | object}>(`dm:${$chat?.id}`)
   const others = remove($pubkey!, pubkeys)
   const missingRelayLists = $derived(others.filter(pk => !$messagingRelayListsByPubkey.has(pk)))
 
@@ -338,7 +338,7 @@
       {onSubmit}
       {onEscape}
       {onEditPrevious}
-      content={eventToEdit?.content}
+      initialValues={eventToEdit}
       draftKey={eventToEdit ? undefined : draftKey}
       disabled={Boolean(missingRelayLists.length)} />
   {/key}

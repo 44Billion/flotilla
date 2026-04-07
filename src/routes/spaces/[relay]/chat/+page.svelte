@@ -352,7 +352,7 @@
       {onSubmit}
       {onEscape}
       {onEditPrevious}
-      content={eventToEdit?.content}
+      initialValues={eventToEdit}
       bind:this={compose} />
   {/key}
 </div>

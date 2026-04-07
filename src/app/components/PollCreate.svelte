@@ -25,16 +25,16 @@
   import {DraftKey} from "@app/util/drafts"
   import type {PollType} from "@app/util/polls"
 
-  type DraftOption = {
+  type Option = {
     id: string
     value: string
   }
 
-  type PollDraft = {
-    title?: string
-    pollType?: PollType
+  type Values = {
+    title: string
+    pollType: PollType
     endsAt?: number
-    options?: DraftOption[]
+    options: Option[]
   }
 
   type Props = {
@@ -43,9 +43,8 @@
   }
 
   const {url, h}: Props = $props()
-
-  const draftKey = new DraftKey<PollDraft>(`poll:${url}:${h ?? ""}`)
-  const draft = draftKey.get()
+  const draftKey = new DraftKey<Values>(`poll:${url}:${h ?? ""}`)
+  const initialValues = draftKey.get()
 
   const shouldProtect = canEnforceNip70(url)
 
@@ -144,16 +143,16 @@
     history.back()
   }
 
-  let title = $state(draft?.title ?? "")
-  let pollType = $state<PollType>(draft?.pollType ?? "singlechoice")
-  let endsAt = $state<number | undefined>(draft?.endsAt)
-  let options = $state<DraftOption[]>(
-    draft?.options ?? [
+  let draggedOptionId = $state<string | undefined>()
+  let title = $state(initialValues?.title ?? "")
+  let pollType = $state<PollType>(initialValues?.pollType ?? "singlechoice")
+  let endsAt = $state<number | undefined>(initialValues?.endsAt)
+  let options = $state<Option[]>(
+    initialValues?.options ?? [
       {id: randomId(), value: "Yes"},
       {id: randomId(), value: "No"},
     ],
   )
-  let draggedOptionId = $state<string | undefined>()
 
   $effect(() => {
     draftKey.set({title, pollType, endsAt, options})

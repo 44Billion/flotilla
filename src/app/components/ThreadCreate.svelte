@@ -21,16 +21,19 @@
   import {DraftKey} from "@app/util/drafts"
   import {canEnforceNip70} from "@app/core/commands"
 
+  type Values = {
+    content?: string | object
+    title?: string
+  }
+
   type Props = {
     url: string
     h?: string
   }
 
   const {url, h}: Props = $props()
-
-  const draftKey = new DraftKey<{content?: unknown; title?: string}>(`thread:${url}:${h ?? ""}`)
-  const draft = draftKey.get()
-
+  const draftKey = new DraftKey<Values>(`thread:${url}:${h ?? ""}`)
+  const initialValues = draftKey.get()
   const shouldProtect = canEnforceNip70(url)
 
   const uploading = writable(false)
@@ -78,7 +81,12 @@
     history.back()
   }
 
-  const onChange = (json: unknown) => draftKey.update({content: json})
+  let title = $state(initialValues?.title ?? "")
+  let content = $state(initialValues?.content ?? "")
+
+  const onChange = (json: object) => {
+    content = json
+  }
 
   const editor = makeEditor({
     url,
@@ -86,13 +94,11 @@
     uploading,
     onChange,
     placeholder: "What's on your mind?",
-    content: draft?.content as string | object | undefined,
+    content,
   })
 
-  let title: string = $state(draft?.title ?? "")
-
   $effect(() => {
-    draftKey.update({title})
+    draftKey.update({title, content})
   })
 </script>
 

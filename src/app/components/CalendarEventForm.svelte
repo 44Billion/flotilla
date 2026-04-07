@@ -24,28 +24,28 @@
   import {pushToast} from "@app/util/toast"
   import {canEnforceNip70} from "@app/core/commands"
 
-  type CalendarValues = {
-    d?: string
+  type Values = {
+    d: string
     title: string
-    content: unknown
+    content: string | object
     location: string
-    start: number | undefined
-    end: number | undefined
+    start?: number
+    end?: number
   }
 
   type Props = {
     url: string
     h?: string
     header: Snippet
-    initialValues?: CalendarValues
+    initialValues?: Values
   }
 
   let {url, h, header, initialValues}: Props = $props()
 
-  const draftKey = new DraftKey<CalendarValues>(`calendar:${url}:${h ?? ""}`)
-  const draft = draftKey.get()
+  const draftKey = new DraftKey<Values>(`calendar:${url}:${h ?? ""}`)
+
   if (!initialValues) {
-    initialValues = draft
+    initialValues = draftKey.get()
   }
 
   const shouldProtect = canEnforceNip70(url)
@@ -83,9 +83,9 @@
     const ed = await editor
     const content = ed.getText({blockSeparator: "\n"}).trim()
     const tags = [
-      ["d", initialValues?.d || randomId()],
+      ["d", d],
       ["title", title],
-      ["location", location || ""],
+      ["location", location],
       ["start", start.toString()],
       ["end", end.toString()],
       ...daysBetween(start, end).map(D => ["D", D.toString()]),
@@ -108,28 +108,22 @@
     history.back()
   }
 
-  let editorContent = $state<unknown>(initialValues?.content ?? "")
-
-  const onChange = (json: unknown) => {
-    editorContent = json
-  }
-
-  const editor = makeEditor({
-    url,
-    submit,
-    uploading,
-    onChange,
-    content: initialValues?.content ?? "",
-  })
-
+  const d = $state(initialValues?.d ?? randomId())
   let title = $state(initialValues?.title ?? "")
   let location = $state(initialValues?.location ?? "")
   let start: number | undefined = $state(initialValues?.start)
   let end: number | undefined = $state(initialValues?.end)
   let endDirty = $state(Boolean(initialValues?.end))
+  let content = $state(initialValues?.content ?? "")
+
+  const onChange = (json: object) => {
+    content = json
+  }
+
+  const editor = makeEditor({url, submit, uploading, onChange, content})
 
   $effect(() => {
-    draftKey.set({d: initialValues?.d, title, location, start, end, content: editorContent})
+    draftKey.set({d, title, location, start, end, content})
   })
 
   $effect(() => {

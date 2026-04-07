@@ -23,40 +23,30 @@
   import {DraftKey} from "@app/util/drafts"
   import {canEnforceNip70, uploadFile} from "@app/core/commands"
 
+  type Values = {
+    d: string
+    title: string
+    content: string | object
+    price: number
+    currency: string
+    images: (string | File)[]
+    status: string
+    topics: string[]
+  }
+
   type Props = {
     url: string
     h?: string
     header: Snippet
-    initialValues?: {
-      d?: string
-      title?: string
-      content?: string
-      price?: number
-      currency?: string
-      images?: (string | File)[]
-      status?: string
-      topics?: string[]
-    }
+    initialValues?: Values
   }
 
   let {url, h, header, initialValues}: Props = $props()
 
-  type ClassifiedDraft = {
-    editorContent?: unknown
-    d?: string
-    title?: string
-    content?: string
-    price?: number
-    currency?: string
-    images?: (string | File)[]
-    status?: string
-    topics?: string[]
-  }
+  const draftKey = new DraftKey<Values>(`classified:${url}:${h ?? ""}`)
 
-  const draftKey = new DraftKey<ClassifiedDraft>(`classified:${url}:${h ?? ""}`)
-  const draft = draftKey.get()
   if (!initialValues) {
-    initialValues = draft
+    initialValues = draftKey.get()
   }
 
   const shouldProtect = canEnforceNip70(url)
@@ -85,7 +75,7 @@
       }
 
       const tags = [
-        ["d", initialValues?.d || randomId()],
+        ["d", d],
         ["title", title],
         ["summary", content],
         ["price", String(price), currency],
@@ -136,27 +126,24 @@
     }
   }
 
-  const initialContent = initialValues?.content || ""
-  const onChange = (json: unknown) => {
-    draftKey.set({editorContent: json, title, price, currency, topics, status, images})
-  }
-  const editor = makeEditor({
-    url,
-    submit,
-    onChange,
-    content: draft?.editorContent ?? initialContent,
-  })
-
   let loading = $state(false)
+  const d = $state(initialValues?.d ?? randomId())
   let title = $state(initialValues?.title ?? "")
   let status = $state(initialValues?.status ?? "active")
-  let price = $state(Number(initialValues?.price ?? 0))
+  let price = $state(initialValues?.price ?? 0)
   let currency = $state(initialValues?.currency ?? "SAT")
-  let images = $state<(string | File)[]>(initialValues?.images ?? [])
-  let topics = $state(uniq(removeUndefined((initialValues?.topics ?? []).map(normalizeTopic))))
+  let images = $state(initialValues?.images ?? [])
+  let topics = $state(uniq(removeUndefined(initialValues?.topics?.map(normalizeTopic) ?? [])))
+  let content = $state(initialValues?.content ?? "")
+
+  const onChange = (json: object) => {
+    content = json
+  }
+
+  const editor = makeEditor({url, submit, onChange, content})
 
   $effect(() => {
-    draftKey.set({...draftKey.get(), title, price, currency, topics, status, images})
+    draftKey.set({d, title, status, price, currency, images, topics, content})
   })
 </script>
 

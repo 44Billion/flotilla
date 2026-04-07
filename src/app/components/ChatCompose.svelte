@@ -12,18 +12,31 @@
   import {makeEditor} from "@app/editor"
   import {type DraftKey} from "@app/util/drafts"
 
+  type Values = {
+    content?: string | object
+  }
+
   type Props = {
-    content?: string
     disabled?: boolean
-    draftKey?: DraftKey<{content?: unknown}>
+    draftKey?: DraftKey<Values>
     onEscape?: () => void
     onEditPrevious?: () => void
     onSubmit: (event: EventContent) => void
+    initialValues?: Values
   }
 
-  const {content, disabled = false, draftKey, onEscape, onEditPrevious, onSubmit}: Props = $props()
+  let {
+    initialValues,
+    disabled = false,
+    draftKey,
+    onEscape,
+    onEditPrevious,
+    onSubmit,
+  }: Props = $props()
 
-  const draft = draftKey?.get()
+  if (!initialValues) {
+    initialValues = draftKey?.get()
+  }
 
   const autofocus = !isMobile && !disabled
 
@@ -67,18 +80,23 @@
     ed.chain().clearContent().run()
   }
 
-  const onChange = (json: unknown) => {
-    draftKey?.set({content: json})
+  let content = $state(initialValues?.content ?? "")
+
+  const onChange = (json: object) => {
+    content = json
   }
 
   const editor = makeEditor({
-    content: content ?? (draft?.content as string | object | undefined),
-    autofocus,
+    content,
     submit,
     uploading,
     onChange,
     aggressive: true,
     encryptFiles: true,
+  })
+
+  $effect(() => {
+    draftKey?.set({content})
   })
 
   onMount(async () => {
@@ -105,7 +123,7 @@
     {/if}
   </Button>
   <div class={editorClass} aria-disabled={disabled}>
-    <EditorContent {editor} />
+    <EditorContent {autofocus} {editor} />
   </div>
   <Button
     data-tip="{window.navigator.platform.includes('Mac') ? 'cmd' : 'ctrl'}+enter to send"

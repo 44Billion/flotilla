@@ -23,27 +23,24 @@
   import {DraftKey} from "@app/util/drafts"
   import {canEnforceNip70} from "@app/core/commands"
 
+  type Values = {
+    title: string
+    content: string | object
+    amount: number
+  }
+
   type Props = {
     url: string
     h?: string
-    initialValues?: {
-      content?: string
-      amount?: number
-    }
+    initialValues?: Values
   }
 
   let {url, h, initialValues}: Props = $props()
 
-  type GoalDraft = {
-    editorContent?: unknown
-    content?: string
-    amount?: number
-  }
+  const draftKey = new DraftKey<Values>(`goal:${url}:${h ?? ""}`)
 
-  const draftKey = new DraftKey<GoalDraft>(`goal:${url}:${h ?? ""}`)
-  const draft = draftKey.get()
   if (!initialValues) {
-    initialValues = draft
+    initialValues = draftKey.get()
   }
 
   const shouldProtect = canEnforceNip70(url)
@@ -57,7 +54,7 @@
   const submit = async () => {
     if ($uploading) return
 
-    if (!content) {
+    if (!title) {
       return pushToast({
         theme: "error",
         message: "Please provide a title for your funding goal.",
@@ -65,9 +62,9 @@
     }
 
     const ed = await editor
-    const summary = ed.getText({blockSeparator: "\n"}).trim()
+    const content = ed.getText({blockSeparator: "\n"}).trim()
 
-    if (!summary.trim()) {
+    if (!content.trim()) {
       return pushToast({
         theme: "error",
         message: "Please provide details about your funding goal.",
@@ -76,7 +73,7 @@
 
     const tags = [
       ...ed.storage.nostr.getEditorTags(),
-      ["summary", summary],
+      ["summary", content],
       ["amount", String(amount)],
       ["relays", url],
     ]
@@ -91,14 +88,20 @@
 
     publishThunk({
       relays: [url],
-      event: makeEvent(ZAP_GOAL, {content, tags}),
+      event: makeEvent(ZAP_GOAL, {content: title, tags}),
     })
 
     draftKey.clear()
     history.back()
   }
 
-  const onChange = (json: unknown) => draftKey.update({editorContent: json})
+  let title = $state(initialValues?.title ?? "")
+  let amount = $state(initialValues?.amount ?? 1000)
+  let content = $state(initialValues?.content ?? "")
+
+  const onChange = (json: object) => {
+    content = json
+  }
 
   const editor = makeEditor({
     url,
@@ -106,14 +109,11 @@
     uploading,
     onChange,
     placeholder: "What's on your mind?",
-    content: draft?.editorContent as string | object | undefined,
+    content,
   })
 
-  let content = $state(initialValues?.content ?? "")
-  let amount = $state(initialValues?.amount ?? 1000)
-
   $effect(() => {
-    draftKey.update({content, amount})
+    draftKey.update({title, content, amount})
   })
 </script>
 
@@ -133,7 +133,7 @@
             <!-- svelte-ignore a11y_autofocus -->
             <input
               autofocus={!isMobile}
-              bind:value={content}
+              bind:value={title}
               class="grow"
               type="text"
               placeholder="What do funds go towards?" />
