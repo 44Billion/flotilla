@@ -1,6 +1,5 @@
 <script lang="ts">
   import {assoc} from "@welshman/lib"
-  import ChatSquare from "@assets/icons/chat-square.svg?dataurl"
   import Check from "@assets/icons/check.svg?dataurl"
   import Bell from "@assets/icons/bell.svg?dataurl"
   import BellOff from "@assets/icons/bell-off.svg?dataurl"
@@ -8,12 +7,8 @@
   import Button from "@lib/components/Button.svelte"
   import Modal from "@lib/components/Modal.svelte"
   import ModalBody from "@lib/components/ModalBody.svelte"
-  import ChatStart from "@app/components/ChatStart.svelte"
   import {setChecked} from "@app/util/notifications"
-  import {pushModal} from "@app/util/modal"
   import {notificationSettings} from "@app/core/state"
-
-  const startChat = () => pushModal(ChatStart, {}, {replaceState: true})
 
   const markAsRead = () => {
     setChecked("/chat/*")
@@ -28,10 +23,6 @@
 <Modal>
   <ModalBody>
     <div class="flex flex-col gap-2">
-      <Button class="btn btn-primary" onclick={startChat}>
-        <Icon size={5} icon={ChatSquare} />
-        Start chat
-      </Button>
       <Button class="btn btn-neutral" onclick={markAsRead}>
         <Icon size={5} icon={Check} />
         Mark all read
