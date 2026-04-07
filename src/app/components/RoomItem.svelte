@@ -145,7 +145,7 @@
   </div>
   {#if !isMobile}
     <button
-      class="join absolute right-1 top-1 border border-solid border-neutral text-xs opacity-0 transition-all"
+      class="join absolute right-2 top-0.5 border border-solid border-neutral text-xs opacity-0 transition-all pr-2"
       class:group-hover:opacity-100={!isMobile}>
       {#if ENABLE_ZAPS}
         <RoomItemZapButton {url} {event} />
