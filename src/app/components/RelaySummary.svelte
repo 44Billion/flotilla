@@ -23,7 +23,7 @@
       <div class="relative">
         <div class="avatar relative">
           <div
-            class="center !flex h-12 w-12 min-w-12 rounded-full border-2 border-solid border-base-300 bg-base-300">
+            class="center flex! h-12 w-12 min-w-12 rounded-full border-2 border-solid border-base-300 bg-base-300">
             <RelayIcon {url} />
           </div>
         </div>

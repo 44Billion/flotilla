@@ -25,10 +25,10 @@
 <div class="flex flex-col gap-2">
   {#each spaceUrls as url (url)}
     <div class="card2 bg-alt flex flex-row items-center gap-2">
-      <div class="flex-shrink-0">
+      <div class="shrink-0">
         <RelayIcon {url} size={12} />
       </div>
-      <div class="flex flex-grow flex-col">
+      <div class="flex grow flex-col">
         <RelayName {url} />
         <div class="text-sm opacity-75">
           {url}

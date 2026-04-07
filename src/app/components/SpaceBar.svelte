@@ -27,7 +27,7 @@
     <Button onclick={back} class="place-self-start pr-3 md:hidden">
       <Icon icon={ArrowLeft} size={7} />
     </Button>
-    <div class="ellipsize whitespace-nowrap flex flex-grow items-center justify-between gap-4">
+    <div class="ellipsize whitespace-nowrap flex grow items-center justify-between gap-4">
       <div class="flex flex-col">
         <div class="flex gap-2 items-center">
           {@render title?.()}

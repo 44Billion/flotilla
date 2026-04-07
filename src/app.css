@@ -1,149 +1,245 @@
-@import "@welshman/editor/index.css";
+@import 'tailwindcss';
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@config "../tailwind.config.js";
 
-/* Fonts */
-
-@font-face {
-  font-family: "Satoshis";
-  font-style: normal;
-  font-weight: 400;
-  src:
-    local(""),
-    url("/fonts/Satoshi Symbol.ttf") format("truetype");
+@utility pt-sai {
+  padding-top: var(--sait);
 }
 
-@font-face {
-  font-family: "Lato";
-  font-style: normal;
-  font-weight: 400;
-  src:
-    local(""),
-    url("/fonts/Lato-Regular.ttf") format("truetype");
+@utility pr-sai {
+  padding-right: var(--sair);
 }
 
-@font-face {
-  font-family: "Lato";
-  font-style: bold;
-  font-weight: 600;
-  src:
-    local(""),
-    url("/fonts/Lato-Bold.ttf") format("truetype");
+@utility pb-sai {
+  padding-bottom: var(--saib);
 }
 
-@font-face {
-  font-family: "Lato";
-  font-style: italic;
-  font-weight: 400;
-  src:
-    local(""),
-    url("/fonts/Italic.ttf") format("truetype");
+@utility pl-sai {
+  padding-left: var(--sail);
 }
 
-/* root */
-
-:root {
-  font-family: Lato;
-  --sait: var(--safe-area-inset-top, env(safe-area-inset-top));
-  --saib: var(--safe-area-inset-bottom, env(safe-area-inset-bottom));
-  --sail: var(--safe-area-inset-left, env(safe-area-inset-left));
-  --sair: var(--safe-area-inset-right, env(safe-area-inset-right));
+@utility px-sai {
+  @apply pl-sai pr-sai;
 }
 
-[data-theme] {
-  @apply bg-base-300;
-  --base-100: oklch(var(--b1));
-  --base-200: oklch(var(--b2));
-  --base-300: oklch(var(--b3));
-  --base-content: oklch(var(--bc));
-  --primary: oklch(var(--p));
-  --primary-content: oklch(var(--pc));
-  --secondary: oklch(var(--s));
-  --secondary-content: oklch(var(--sc));
-  --neutral: oklch(var(--n));
-  --neutral-content: oklch(var(--nc));
+@utility py-sai {
+  @apply pt-sai pb-sai;
 }
 
-.mobile [data-tip]::before {
-  display: none !important;
+@utility p-sai {
+  @apply py-sai px-sai;
 }
 
-/* safe area insets */
+@utility mt-sai {
+  margin-top: var(--sait);
+}
 
-@layer components {
-  .pt-sai {
-    padding-top: var(--sait);
+@utility mr-sai {
+  margin-right: var(--sair);
+}
+
+@utility mb-sai {
+  margin-bottom: var(--saib);
+}
+
+@utility ml-sai {
+  margin-left: var(--sail);
+}
+
+@utility mx-sai {
+  @apply ml-sai mr-sai;
+}
+
+@utility my-sai {
+  @apply mt-sai mb-sai;
+}
+
+@utility m-sai {
+  @apply my-sai mx-sai;
+}
+
+@utility top-sai {
+  top: var(--sait);
+}
+
+@utility right-sai {
+  right: var(--sair);
+}
+
+@utility bottom-sai {
+  bottom: var(--saib);
+}
+
+@utility left-sai {
+  left: var(--sail);
+}
+
+@utility card2 {
+  @apply rounded-box text-base-content p-4 sm:p-6;
+}
+
+@utility column {
+  @apply flex flex-col;
+}
+
+@utility center {
+  @apply flex items-center justify-center;
+}
+
+@utility row-2 {
+  @apply flex items-center gap-2;
+}
+
+@utility row-3 {
+  @apply flex items-center gap-3;
+}
+
+@utility row-4 {
+  @apply flex items-center gap-4;
+}
+
+@utility col-2 {
+  @apply flex flex-col gap-2;
+}
+
+@utility col-3 {
+  @apply flex flex-col gap-3;
+}
+
+@utility col-4 {
+  @apply flex flex-col gap-4;
+}
+
+@utility col-8 {
+  @apply flex flex-col gap-8;
+}
+
+@utility ellipsize {
+  @apply overflow-hidden text-ellipsis;
+}
+
+@utility content-padding-x {
+  @apply px-4 sm:px-8 md:px-12;
+}
+
+@utility content-padding-t {
+  @apply pt-4 sm:pt-8 md:pt-12;
+}
+
+@utility content-padding-b {
+  @apply pb-4 sm:pb-8 md:pb-12;
+}
+
+@utility content-padding-y {
+  @apply pt-4 sm:pt-8 md:pt-12 pb-4 sm:pb-8 md:pb-12;
+}
+
+@utility content-sizing {
+  @apply m-auto w-full max-w-3xl;
+}
+
+@utility content {
+  @apply m-auto w-full max-w-3xl px-4 sm:px-8 md:px-12 pt-4 sm:pt-8 md:pt-12 pb-4 sm:pb-8 md:pb-12;
+}
+
+@utility heading {
+  @apply text-center text-2xl;
+}
+
+@utility subheading {
+  @apply text-center text-xl;
+}
+
+@utility superheading {
+  @apply text-center text-4xl;
+}
+
+@utility link {
+  @apply text-primary cursor-pointer underline;
+}
+
+/* content visibility */
+
+@utility cv {
+  content-visibility: auto;
+}
+
+/*
+  The default border color has changed to `currentcolor` in Tailwind CSS v4,
+  so we've added these compatibility styles to make sure everything still
+  looks the same as it did with Tailwind CSS v3.
+
+  If we ever want to remove these styles, we need to add an explicit border
+  color utility to any element that depends on these defaults.
+*/
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentcolor);
+  }
+}
+
+@layer utilities {
+  /* Fonts */
+
+  @font-face {
+    font-family: "Satoshis";
+    font-style: normal;
+    font-weight: 400;
+    src:
+      local(""),
+      url("/fonts/Satoshi Symbol.ttf") format("truetype");
   }
 
-  .pr-sai {
-    padding-right: var(--sair);
+  @font-face {
+    font-family: "Lato";
+    font-style: normal;
+    font-weight: 400;
+    src:
+      local(""),
+      url("/fonts/Lato-Regular.ttf") format("truetype");
   }
 
-  .pb-sai {
-    padding-bottom: var(--saib);
+  @font-face {
+    font-family: "Lato";
+    font-style: bold;
+    font-weight: 600;
+    src:
+      local(""),
+      url("/fonts/Lato-Bold.ttf") format("truetype");
   }
 
-  .pl-sai {
-    padding-left: var(--sail);
+  @font-face {
+    font-family: "Lato";
+    font-style: italic;
+    font-weight: 400;
+    src:
+      local(""),
+      url("/fonts/Italic.ttf") format("truetype");
   }
 
-  .px-sai {
-    @apply pl-sai pr-sai;
+  /* root */
+
+  :root {
+    font-family: Lato;
+    --sait: var(--safe-area-inset-top, env(safe-area-inset-top));
+    --saib: var(--safe-area-inset-bottom, env(safe-area-inset-bottom));
+    --sail: var(--safe-area-inset-left, env(safe-area-inset-left));
+    --sair: var(--safe-area-inset-right, env(safe-area-inset-right));
   }
 
-  .py-sai {
-    @apply pt-sai pb-sai;
+  [data-theme] {
+    @apply bg-base-300;
   }
 
-  .p-sai {
-    @apply py-sai px-sai;
+  .mobile [data-tip]::before {
+    display: none !important;
   }
 
-  .mt-sai {
-    margin-top: var(--sait);
-  }
-
-  .mr-sai {
-    margin-right: var(--sair);
-  }
-
-  .mb-sai {
-    margin-bottom: var(--saib);
-  }
-
-  .ml-sai {
-    margin-left: var(--sail);
-  }
-
-  .mx-sai {
-    @apply ml-sai mr-sai;
-  }
-
-  .my-sai {
-    @apply mt-sai mb-sai;
-  }
-
-  .m-sai {
-    @apply my-sai mx-sai;
-  }
-
-  .top-sai {
-    top: var(--sait);
-  }
-
-  .right-sai {
-    right: var(--sair);
-  }
-
-  .bottom-sai {
-    bottom: var(--saib);
-  }
-
-  .left-sai {
-    left: var(--sail);
-  }
+  /* safe area insets */
 }
 
 /* utilities */
@@ -165,108 +261,16 @@
   @apply bg-base-300 text-base-content transition-colors;
 }
 
-.card2 {
-  @apply rounded-box p-4 text-base-content sm:p-6;
-}
-
 .card2.card2-sm {
-  @apply p-2 text-base-content sm:p-4;
-}
-
-.column {
-  @apply flex flex-col;
-}
-
-.center {
-  @apply flex items-center justify-center;
-}
-
-.row-2 {
-  @apply flex items-center gap-2;
-}
-
-.row-3 {
-  @apply flex items-center gap-3;
-}
-
-.row-4 {
-  @apply flex items-center gap-4;
-}
-
-.col-2 {
-  @apply flex flex-col gap-2;
-}
-
-.col-3 {
-  @apply flex flex-col gap-3;
-}
-
-.col-4 {
-  @apply flex flex-col gap-4;
-}
-
-.col-8 {
-  @apply flex flex-col gap-8;
-}
-
-.badge {
-  @apply justify-start overflow-hidden text-ellipsis whitespace-nowrap;
-}
-
-.ellipsize {
-  @apply overflow-hidden text-ellipsis;
+  @apply text-base-content p-2 sm:p-4;
 }
 
 [data-tip]::before {
-  @apply ellipsize;
-}
-
-.content-padding-x {
-  @apply px-4 sm:px-8 md:px-12;
-}
-
-.content-padding-t {
-  @apply pt-4 sm:pt-8 md:pt-12;
-}
-
-.content-padding-b {
-  @apply pb-4 sm:pb-8 md:pb-12;
-}
-
-.content-padding-y {
-  @apply content-padding-t content-padding-b;
-}
-
-.content-sizing {
-  @apply m-auto w-full max-w-3xl;
-}
-
-.content {
-  @apply content-sizing content-padding-x content-padding-y;
-}
-
-.heading {
-  @apply text-center text-2xl;
-}
-
-.subheading {
-  @apply text-center text-xl;
-}
-
-.superheading {
-  @apply text-center text-4xl;
-}
-
-.link {
-  @apply cursor-pointer text-primary underline;
+  @apply overflow-hidden text-ellipsis;
 }
 
 .input input::placeholder {
   opacity: 0.5;
-}
-
-.shadow-top-xl {
-  @apply shadow-[0_20px_25px_-5px_rgb(0,0,0,0.1)_0_8px_10px_-6px_rgb(0,0,0,0.1)];
 }
 
 /* tiptap */
@@ -278,21 +282,21 @@
 }
 
 .tiptap {
-  --tiptap-object-bg: var(--neutral);
-  --tiptap-object-fg: var(--neutral-content);
-  --tiptap-active-bg: var(--primary);
-  --tiptap-active-fg: var(--primary-content);
+  --tiptap-object-bg: var(--color-neutral);
+  --tiptap-object-fg: var(--color-neutral-content);
+  --tiptap-active-bg: var(--color-primary);
+  --tiptap-active-fg: var(--color-primary-content);
 }
 
 .tiptap-suggestions {
-  --tiptap-object-bg: var(--base-100);
-  --tiptap-object-fg: var(--base-content);
-  --tiptap-active-bg: var(--base-300);
-  --tiptap-active-fg: var(--base-content);
+  --tiptap-object-bg: var(--color-base-100);
+  --tiptap-object-fg: var(--color-base-content);
+  --tiptap-active-bg: var(--color-base-300);
+  --tiptap-active-fg: var(--color-base-content);
 }
 
 .tiptap-suggestions__item {
-  @apply border-l-2 border-solid border-base-100;
+  @apply border-base-100 border-l-2 border-solid;
 }
 
 .tiptap-suggestions__selected {
@@ -312,13 +316,13 @@
 }
 
 .note-editor .tiptap {
-  --tiptap-object-bg: var(--base-200);
-  @apply input input-bordered h-auto min-h-32 rounded-box p-[.65rem] pb-6;
+  --tiptap-object-bg: var(--color-base-200);
+  @apply input rounded-box h-auto min-h-32 p-[.65rem] pb-6;
 }
 
 .input-editor .tiptap {
-  --tiptap-object-bg: var(--base-200);
-  @apply input input-bordered h-auto p-[.65rem];
+  --tiptap-object-bg: var(--color-base-200);
+  @apply input h-auto p-[.65rem];
 }
 
 /* link-content, based on tiptap */
@@ -330,8 +334,8 @@
   white-space: nowrap;
   border-radius: 3px;
   padding: 0 0.25rem;
-  background-color: var(--base-100);
-  color: var(--base-content);
+  background-color: var(--color-base-100);
+  color: var(--color-base-content);
 }
 
 /* content rendered by welshman/content */
@@ -347,25 +351,25 @@
 /* date input */
 
 .picker {
-  --date-picker-foreground: var(--base-content);
-  --date-picker-background: var(--base-300);
-  --date-picker-highlight-border: var(--primary);
-  --date-picker-selected-color: var(--primary-content);
-  --date-picker-selected-background: var(--primary);
+  --date-picker-foreground: var(--color-base-content);
+  --date-picker-background: var(--color-base-300);
+  --date-picker-highlight-border: var(--color-primary);
+  --date-picker-selected-color: var(--color-primary-content);
+  --date-picker-selected-background: var(--color-primary);
 }
 
 .date-time-field {
-  @apply input input-bordered rounded-lg px-0;
+  @apply input rounded-lg px-0;
 }
 
 .date-time-field input {
-  @apply !h-full !w-full !rounded-lg !border-none !bg-inherit !px-4 !text-inherit;
+  @apply h-full! w-full! rounded-lg! border-none! bg-inherit! px-4! text-inherit!;
 }
 
 /* tippy popover */
 
 .tippy-target {
-  @apply pointer-events-none fixed inset-0 z-tooltip;
+  @apply z-tooltip pointer-events-none fixed inset-0;
 }
 
 .tippy-target > * {
@@ -379,15 +383,15 @@
 /* emoji picker */
 
 emoji-picker {
-  --background: var(--base-100);
-  --border-color: var(--base-100);
+  --background: var(--color-base-100);
+  --border-color: var(--color-base-100);
   --border-radius: var(--rounded-box);
-  --button-active-background: var(--base-content);
-  --button-hover-background: var(--base-content);
-  --indicator-color: var(--base-content);
-  --input-border-color: var(--base-100);
-  --input-font-color: var(--base-content);
-  --outline-color: var(--base-100);
+  --button-active-background: var(--color-base-content);
+  --button-hover-background: var(--color-base-content);
+  --indicator-color: var(--color-base-content);
+  --input-border-color: var(--color-base-100);
+  --input-font-color: var(--color-base-content);
+  --outline-color: var(--color-base-100);
 }
 
 /* progress */
@@ -411,7 +415,7 @@ body.keyboard-open .hide-on-keyboard {
 /* chat view */
 
 .chat__compose {
-  @apply relative z-compose mb-14 flex-grow md:mb-0;
+  @apply z-compose relative mb-14 grow md:mb-0;
 }
 
 .chat__compose .chat__compose-inner {
@@ -419,11 +423,5 @@ body.keyboard-open .hide-on-keyboard {
 }
 
 .chat__scroll-down {
-  @apply pb-sai fixed bottom-28 right-4 z-feature md:bottom-16;
-}
-
-/* content visibility */
-
-.cv {
-  content-visibility: auto;
+  @apply pb-sai z-feature fixed right-4 bottom-28 md:bottom-16;
 }

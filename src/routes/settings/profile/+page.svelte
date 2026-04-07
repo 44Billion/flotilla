@@ -67,7 +67,7 @@
 </script>
 
 <div class="content column gap-4">
-  <div class="card2 bg-alt shadow-md">
+  <div class="card2 bg-alt shadow-md col-2">
     <div class="flex justify-between gap-2">
       <div class="flex max-w-full gap-3">
         <div class="py-1">
@@ -116,9 +116,9 @@
       {/snippet}
       {#snippet input()}
         <label class="input input-bordered flex w-full items-center justify-between gap-2">
-          <div class="row-2 flex-grow items-center">
+          <div class="row-2 grow items-center">
             <Icon icon={LinkRound} />
-            <input readonly class="ellipsize flex-grow" value={npub} />
+            <input readonly class="ellipsize grow" value={npub} />
           </div>
           <Button class="flex items-center" onclick={copyNpub}>
             <Icon icon={Copy} />

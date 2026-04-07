@@ -80,7 +80,7 @@
             Amount (satoshis)
           {/snippet}
           {#snippet input()}
-            <div class="flex flex-grow justify-end">
+            <div class="flex grow justify-end">
               <label class="input input-bordered flex items-center gap-2">
                 <Icon icon={Bolt} />
                 <input bind:value={sats} type="number" class="w-14" placeholder="0" />

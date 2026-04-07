@@ -121,6 +121,6 @@
     </div>
   </ModalBody>
   <ModalFooter>
-    <Button class="btn btn-primary flex-grow" onclick={back}>Done</Button>
+    <Button class="btn btn-primary grow" onclick={back}>Done</Button>
   </ModalFooter>
 </Modal>

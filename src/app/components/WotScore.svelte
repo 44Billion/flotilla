@@ -1,7 +1,7 @@
 <style>
   .wot-background {
     fill: transparent;
-    stroke: var(--base-content);
+    stroke: var(--color-base-content);
     opacity: 30%;
   }
 
@@ -32,7 +32,7 @@
   const normalizedScore = $derived(clamp([0, max], $score) / max)
   const dashOffset = $derived(100 - 44 * normalizedScore)
   const style = $derived(`transform: rotate(${135 - normalizedScore * 180}deg)`)
-  const stroke = $derived(active ? "var(--primary)" : "var(--base-content)")
+  const stroke = $derived(active ? "var(--color-primary)" : "var(--color-base-content)")
 </script>
 
 <div class="relative h-[14px] w-[14px]">

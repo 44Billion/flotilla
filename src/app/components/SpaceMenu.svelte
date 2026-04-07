@@ -140,7 +140,7 @@
 
 <div bind:this={element} class="flex min-h-0 flex-1 flex-col">
   <SecondaryNavSection class="min-h-0 flex-1 flex flex-col overflow-hidden pb-0">
-    <div class="flex-shrink-0">
+    <div class="shrink-0">
       <Button
         class="relative flex w-full flex-col rounded-xl p-3 transition-all hover:bg-base-100"
         onclick={openMenu}>
@@ -270,14 +270,14 @@
       {/if}
       {#if hasNip29($relay)}
         {#if $userRooms.length > 0}
-          <div class="h-2 flex-shrink-0"></div>
+          <div class="h-2 shrink-0"></div>
           <SecondaryNavHeader>Your Rooms</SecondaryNavHeader>
         {/if}
         {#each $userRooms as h (h)}
           <SpaceMenuRoomItem {url} {h} />
         {/each}
         {#if $otherRooms.length > 0}
-          <div class="h-2 flex-shrink-0"></div>
+          <div class="h-2 shrink-0"></div>
           <SecondaryNavHeader>
             {#if $userRooms.length > 0}
               Other Rooms
@@ -296,7 +296,7 @@
           <SpaceMenuRoomItem {url} {h} />
         {/each}
         {#if $otherVoiceRooms.length > 0}
-          <div class="h-2 flex-shrink-0"></div>
+          <div class="h-2 shrink-0"></div>
           <SecondaryNavHeader>Voice Rooms</SecondaryNavHeader>
           {#each $otherVoiceRooms as h (h)}
             <SpaceMenuRoomItem {url} {h} />
@@ -309,11 +309,11 @@
           </SecondaryNavItem>
         {/if}
       {/if}
-      <div class="h-5 flex-shrink-0"></div>
+      <div class="h-5 shrink-0"></div>
     </div>
   </SecondaryNavSection>
   <div
-    class="flex flex-shrink-0 flex-col gap-2 p-2 pt-0 -mt-4 pb-[calc(var(--saib)+0.25rem)] md:pb-2 z-nav">
+    class="flex shrink-0 flex-col gap-2 p-2 pt-0 -mt-4 pb-[calc(var(--saib)+0.25rem)] md:pb-2 z-nav">
     <VoiceWidget />
     <Button class="btn btn-neutral btn-sm h-10" onclick={showDetail}>
       <SocketStatusIndicator {url} />

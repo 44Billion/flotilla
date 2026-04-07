@@ -43,7 +43,7 @@
   const uploading = writable(false)
 
   const editorClass = $derived(
-    cx("chat-editor flex-grow overflow-hidden", {
+    cx("chat-editor grow overflow-hidden", {
       "pointer-events-none opacity-50": disabled,
     }),
   )

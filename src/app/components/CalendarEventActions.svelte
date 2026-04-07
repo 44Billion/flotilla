@@ -38,7 +38,7 @@
     publishReaction({...template, event, relays: [url], protect: await shouldProtect})
 </script>
 
-<div class="flex flex-grow flex-wrap justify-end gap-2">
+<div class="flex grow flex-wrap justify-end gap-2">
   {#if h && showRoom}
     <Link href={makeSpacePath(url, h)} class="btn btn-neutral btn-xs rounded-full">
       Posted in #<RoomName {h} {url} />

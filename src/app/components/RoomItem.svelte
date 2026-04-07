@@ -94,7 +94,7 @@
     {:else}
       <div class="w-8 shrink-0"></div>
     {/if}
-    <div class="min-w-0 flex-grow pr-1">
+    <div class="min-w-0 grow pr-1">
       {#if showPubkey}
         <div class="flex items-center gap-2">
           <Button onclick={openProfile} class="text-sm font-bold" style="color: {colorValue}">

@@ -23,7 +23,7 @@
   {#if meta.location}
     <span class="flex items-start gap-1">
       <Icon icon={MapPoint} class="mt-[2px]" size={4} />
-      <span class="break-words">{meta.location}</span>
+      <span class="wrap-break-word">{meta.location}</span>
     </span>
   {/if}
 </div>

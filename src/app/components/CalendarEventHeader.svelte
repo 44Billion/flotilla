@@ -19,7 +19,7 @@
   const end = $derived(parseInt(meta.end))
 </script>
 
-<div class="flex flex-grow flex-wrap justify-between gap-2">
+<div class="flex grow flex-wrap justify-between gap-2">
   <p class="text-xl">{meta.title || meta.name}</p>
   {#if !isNaN(start) && !isNaN(end)}
     {@const startDateDisplay = formatTimestampAsDate(start)}

@@ -28,7 +28,7 @@
 </script>
 
 <div class="flex flex-wrap items-center justify-between gap-2">
-  <div class="flex flex-grow flex-wrap justify-end gap-2">
+  <div class="flex grow flex-wrap justify-end gap-2">
     <ReactionSummary {url} {event} {deleteReaction} {createReaction} reactionClass="tooltip-left" />
     <ThunkStatusOrDeleted {event} />
     {#if showActivity}

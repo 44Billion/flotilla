@@ -43,7 +43,7 @@
 
 <div class="flex flex-col gap-2 card2 card2-sm bg-alt">
   <div class="flex items-center justify-between gap-2">
-    <label class="flex min-w-0 flex-grow items-center gap-2">
+    <label class="flex min-w-0 grow items-center gap-2">
       {#if !closed}
         {#if pollType === "singlechoice"}
           <input

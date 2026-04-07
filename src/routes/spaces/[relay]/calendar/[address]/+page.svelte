@@ -69,11 +69,11 @@
     <div class="card2 bg-alt col-3 z-feature">
       <div class="flex items-start gap-4">
         <CalendarEventDate event={$event} />
-        <div class="flex min-w-0 flex-grow flex-col gap-1">
+        <div class="flex min-w-0 grow flex-col gap-1">
           <CalendarEventHeader event={$event} />
           <CalendarEventMeta event={$event} {url} />
           <div class="flex py-2 opacity-50">
-            <div class="h-px flex-grow bg-base-content opacity-25"></div>
+            <div class="h-px grow bg-base-content opacity-25"></div>
           </div>
           <Content showEntire event={$event} {url} />
         </div>

@@ -26,8 +26,8 @@
   type="button"
   class="btn font-normal flex h-[unset] w-full flex-nowrap py-4 text-left items-start justify-between"
   {onclick}>
-  <div class="flex flex-grow flex-row items-start gap-4">
-    <div class="flex h-7 w-7 flex-shrink-0 items-center justify-center">
+  <div class="flex grow flex-row items-start gap-4">
+    <div class="flex h-7 w-7 shrink-0 items-center justify-center">
       <Icon {icon} />
     </div>
     <div class="flex flex-col gap-1">

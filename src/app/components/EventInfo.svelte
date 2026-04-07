@@ -101,7 +101,7 @@
     {/if}
     <div class="relative">
       <pre class="card2 card2-sm bg-alt overflow-auto text-xs"><code>{json}</code></pre>
-      <p class="absolute right-2 top-2 flex flex-grow items-center justify-between">
+      <p class="absolute right-2 top-2 flex grow items-center justify-between">
         <Button onclick={copyJson} class="btn btn-neutral btn-sm flex items-center">
           <Icon icon={Copy} /> Copy
         </Button>
@@ -109,6 +109,6 @@
     </div>
   </ModalBody>
   <ModalFooter>
-    <Button class="btn btn-primary flex-grow" onclick={() => history.back()}>Got it</Button>
+    <Button class="btn btn-primary grow" onclick={() => history.back()}>Got it</Button>
   </ModalFooter>
 </Modal>

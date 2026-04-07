@@ -101,7 +101,7 @@
       </p>
     </div>
   {:else}
-    <div class="overflow-hidden text-ellipsis break-words">
+    <div class="overflow-hidden text-ellipsis wrap-break-word">
       {#each shortContent as parsed, i}
         {#if isNewline(parsed)}
           <ContentNewline value={parsed.value} />

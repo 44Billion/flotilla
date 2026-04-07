@@ -311,9 +311,9 @@
         {id}
         class="flex items-center py-2 text-xs transition-colors"
         class:opacity-0={showFixedNewMessages}>
-        <div class="h-px flex-grow bg-primary"></div>
+        <div class="h-px grow bg-primary"></div>
         <p class="rounded-full bg-primary px-2 py-1 text-primary-content">New Messages</p>
-        <div class="h-px flex-grow bg-primary"></div>
+        <div class="h-px grow bg-primary"></div>
       </div>
     {:else if type === "date"}
       <Divider>{value}</Divider>

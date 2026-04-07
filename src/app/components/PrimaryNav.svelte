@@ -32,7 +32,7 @@
 </script>
 
 <div
-  class="ml-sai mt-sai mb-sai relative z-popover isolate hidden w-14 flex-shrink-0 bg-base-200 pt-2 md:block">
+  class="ml-sai mt-sai mb-sai relative z-popover isolate hidden w-14 shrink-0 bg-base-200 pt-2 md:block">
   <div class="flex h-full flex-col" class:justify-between={PLATFORM_RELAYS.length === 0}>
     <PrimaryNavSpaces />
     {#if PLATFORM_RELAYS.length > 0}
@@ -63,7 +63,7 @@
 
 <!-- a little extra something for ios -->
 <div
-  class="hide-on-keyboard fixed bottom-0 left-0 right-0 z-nav h-[var(--saib)] bg-base-100 md:hidden">
+  class="hide-on-keyboard fixed bottom-0 left-0 right-0 z-nav h-(--saib) bg-base-100 md:hidden">
 </div>
 <div
   class="hide-on-keyboard border-top bottom-sai fixed left-0 right-0 z-nav h-14 border border-base-200 bg-base-100 md:hidden">

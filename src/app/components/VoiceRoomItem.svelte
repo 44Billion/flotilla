@@ -64,7 +64,7 @@
   {replaceState}
   {notification}
   onclick={handleClick}
-  class={cx("!items-start", isActive && "!bg-base-100 !text-base-content")}>
+  class={cx("items-start!", isActive && "bg-base-100! text-base-content!")}>
   <div class="flex w-full min-w-0 flex-col gap-2">
     <div class="flex gap-2 items-center">
       {#if isJoining}

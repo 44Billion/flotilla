@@ -131,7 +131,7 @@
         <p>Icon</p>
       {/snippet}
       {#snippet input()}
-        <div class="flex flex-grow items-center justify-between gap-4">
+        <div class="flex grow items-center justify-between gap-4">
           {#if imagePreview}
             <div class="flex items-center gap-2">
               <span class="text-sm opacity-75">Selected:</span>

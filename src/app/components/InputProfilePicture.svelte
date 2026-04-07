@@ -97,10 +97,10 @@
           tabindex="-1"
           onmousedown={stopPropagation(onClear)}
           ontouchstart={stopPropagation(onClear)}>
-          <Icon icon={CloseCircle} class="scale-150 !bg-base-300" />
+          <Icon icon={CloseCircle} class="scale-150 bg-base-300!" />
         </span>
       {:else}
-        <Icon icon={AddCircle} class="scale-150 !bg-base-300" />
+        <Icon icon={AddCircle} class="scale-150 bg-base-300!" />
       {/if}
     </div>
     {#if !url}

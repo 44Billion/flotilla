@@ -37,8 +37,8 @@
 
 <ContentSearch class="md:hidden">
   {#snippet input()}
-    <div class="row-2 min-w-0 flex-grow items-center">
-      <label class="input input-bordered flex flex-grow items-center gap-2">
+    <div class="row-2 min-w-0 grow items-center">
+      <label class="input input-bordered flex grow items-center gap-2">
         <Icon icon={Magnifier} />
         <input
           bind:value={term}

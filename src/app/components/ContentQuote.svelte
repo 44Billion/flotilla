@@ -45,7 +45,7 @@
     {#if $quote.kind === MESSAGE}
       <div
         class="border-l-2 border-solid border-l-primary py-1 pl-2 opacity-90"
-        style="background-color: color-mix(in srgb, var(--primary) 10%, var(--base-300) 90%);">
+        style="background-color: color-mix(in srgb, var(--color-primary) 10%, var(--color-base-300) 90%);">
         <NoteContentMinimal trimParent {url} event={$quote} />
       </div>
     {:else}

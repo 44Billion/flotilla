@@ -132,7 +132,7 @@
       </Button>
     </Tippy>
   </div>
-  <div class="chat-editor flex-grow overflow-hidden">
+  <div class="chat-editor grow overflow-hidden">
     <EditorContent {autofocus} {editor} />
   </div>
   <Button

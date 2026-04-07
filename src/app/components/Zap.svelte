@@ -118,26 +118,26 @@
   <ModalBody>
     <ModalHeader>
       <ModalTitle>Send a Zap</ModalTitle>
-      <ModalSubtitle>To <ProfileLink {pubkey} class="!text-primary" /></ModalSubtitle>
+      <ModalSubtitle>To <ProfileLink {pubkey} class="text-primary!" /></ModalSubtitle>
     </ModalHeader>
-    <FieldInline class="!grid-cols-3">
+    <FieldInline class="grid-cols-3!">
       {#snippet label()}
         Emoji Reaction
       {/snippet}
       {#snippet input()}
-        <div class="flex flex-grow items-center justify-end gap-4">
+        <div class="flex grow items-center justify-end gap-4">
           <EmojiButton {onEmoji} class="btn btn-neutral">
             {content}
           </EmojiButton>
         </div>
       {/snippet}
     </FieldInline>
-    <FieldInline class="!grid-cols-3">
+    <FieldInline class="grid-cols-3!">
       {#snippet label()}
         Amount
       {/snippet}
       {#snippet input()}
-        <div class="flex flex-grow justify-end">
+        <div class="flex grow justify-end">
           <label class="input input-bordered flex items-center gap-2">
             <Icon icon={Bolt} />
             <input bind:value={amount} type="number" class="w-24" />

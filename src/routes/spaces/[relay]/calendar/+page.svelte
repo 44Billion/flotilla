@@ -128,9 +128,9 @@
     <div class={"calendar-event-" + event.id}>
       {#if isFirstFutureEvent}
         <div class="flex items-center gap-2 p-2">
-          <div class="h-px flex-grow bg-primary"></div>
+          <div class="h-px grow bg-primary"></div>
           <p class="text-xs uppercase text-primary">Today</p>
-          <div class="h-px flex-grow bg-primary"></div>
+          <div class="h-px grow bg-primary"></div>
         </div>
       {/if}
       {#if dateDisplay}

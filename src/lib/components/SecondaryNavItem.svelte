@@ -36,7 +36,7 @@
 
   const active = $derived($page.url.pathname === href)
   const wrapperClass = $derived(
-    cx(restProps.class, "relative flex flex-shrink-0 items-center gap-3 text-left transition-all", {
+    cx(restProps.class, "relative flex shrink-0 items-center gap-3 text-left transition-all", {
       "hover:bg-base-100 hover:text-base-content": true,
       "text-base-content bg-base-100": active,
       "tooltip tooltip-right": title,

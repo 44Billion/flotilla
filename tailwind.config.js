@@ -1,6 +1,7 @@
 import {config} from "dotenv"
 import daisyui from "daisyui"
-import themes from "daisyui/src/theming/themes"
+import daisyTheme from "daisyui/theme"
+import themes from "daisyui/theme/object"
 
 config({path: ".env.local"})
 config({path: ".env"})
@@ -25,27 +26,29 @@ export default {
       toast: 9,
     },
   },
-  plugins: [daisyui],
-  daisyui: {
-    themes: [
-      {
-        dark: {
-          ...themes["dark"],
-          primary: process.env.VITE_PLATFORM_ACCENT,
-          "primary-content": process.env.VITE_PLATFORM_ACCENT_CONTENT || "#EAE7FF",
-          secondary: process.env.VITE_PLATFORM_SECONDARY,
-          "secondary-content": process.env.VITE_PLATFORM_SECONDARY_CONTENT || "#EAE7FF",
-        },
-        light: {
-          ...themes["winter"],
-          neutral: "#F2F7FF",
-          warning: "#FD8D0B",
-          primary: process.env.VITE_PLATFORM_ACCENT,
-          "primary-content": process.env.VITE_PLATFORM_ACCENT_CONTENT || "#EAE7FF",
-          secondary: process.env.VITE_PLATFORM_SECONDARY,
-          "secondary-content": process.env.VITE_PLATFORM_SECONDARY_CONTENT || "#EAE7FF",
-        },
-      },
-    ],
-  },
+  plugins: [
+    daisyui({
+      themes: ["light --default", "dark --prefersdark"],
+    }),
+    daisyTheme({
+      name: "dark",
+      ...themes["night"],
+      "--color-base-content": "oklch(75% 0.029 256.847)",
+      "--color-primary": process.env.VITE_PLATFORM_ACCENT,
+      "--color-primary-content": process.env.VITE_PLATFORM_ACCENT_CONTENT || "#EAE7FF",
+      "--color-secondary": process.env.VITE_PLATFORM_SECONDARY,
+      "--color-secondary-content": process.env.VITE_PLATFORM_SECONDARY_CONTENT || "#EAE7FF",
+    }),
+    daisyTheme({
+      name: "light",
+      ...themes["winter"],
+      "--color-neutral": "#F2F7FF",
+      "--color-neutral-content": "var(--color-base-content)",
+      "--color-warning": "#FD8D0B",
+      "--color-primary": process.env.VITE_PLATFORM_ACCENT,
+      "--color-primary-content": process.env.VITE_PLATFORM_ACCENT_CONTENT || "#EAE7FF",
+      "--color-secondary": process.env.VITE_PLATFORM_SECONDARY,
+      "--color-secondary-content": process.env.VITE_PLATFORM_SECONDARY_CONTENT || "#EAE7FF",
+    }),
+  ],
 }

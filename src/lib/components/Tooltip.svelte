@@ -1,7 +1,7 @@
 <style>
   :global(.tippy-box[data-theme~="tooltip"]) {
-    background-color: var(--neutral);
-    color: var(--neutral-content);
+    background-color: var(--color-neutral);
+    color: var(--color-neutral-content);
     border-radius: 0.5rem;
     padding: 0.25rem 0.5rem;
     font-size: 0.875rem;
@@ -11,19 +11,19 @@
   }
 
   :global(.tippy-box[data-theme~="tooltip"][data-placement^="top"] > .tippy-arrow::before) {
-    border-top-color: var(--neutral);
+    border-top-color: var(--color-neutral);
   }
 
   :global(.tippy-box[data-theme~="tooltip"][data-placement^="bottom"] > .tippy-arrow::before) {
-    border-bottom-color: var(--neutral);
+    border-bottom-color: var(--color-neutral);
   }
 
   :global(.tippy-box[data-theme~="tooltip"][data-placement^="left"] > .tippy-arrow::before) {
-    border-left-color: var(--neutral);
+    border-left-color: var(--color-neutral);
   }
 
   :global(.tippy-box[data-theme~="tooltip"][data-placement^="right"] > .tippy-arrow::before) {
-    border-right-color: var(--neutral);
+    border-right-color: var(--color-neutral);
   }
 </style>
 

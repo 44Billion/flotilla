@@ -155,7 +155,7 @@
       {#snippet input()}
         <div
           class="relative z-feature flex gap-2 border-t border-solid border-base-100 bg-base-100">
-          <div class="input-editor flex-grow overflow-hidden">
+          <div class="input-editor grow overflow-hidden">
             <EditorContent {editor} />
           </div>
           <Button data-tip="Add an image" class="center btn tooltip" onclick={selectFiles}>

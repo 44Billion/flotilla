@@ -146,7 +146,7 @@
             <p>Details*</p>
           {/snippet}
           {#snippet input()}
-            <div class="note-editor flex-grow overflow-hidden">
+            <div class="note-editor grow overflow-hidden">
               <EditorContent {editor} />
             </div>
           {/snippet}
@@ -168,7 +168,7 @@
             Goal Amount (sats)*
           {/snippet}
           {#snippet input()}
-            <div class="flex flex-grow justify-end">
+            <div class="flex grow justify-end">
               <label class="input input-bordered flex items-center gap-2">
                 <Icon icon={Bolt} />
                 <input bind:value={amount} type="number" class="w-28" />

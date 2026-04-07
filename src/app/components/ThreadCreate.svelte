@@ -130,7 +130,7 @@
           <p>Message*</p>
         {/snippet}
         {#snippet input()}
-          <div class="note-editor flex-grow overflow-hidden">
+          <div class="note-editor grow overflow-hidden">
             <EditorContent {editor} />
           </div>
         {/snippet}

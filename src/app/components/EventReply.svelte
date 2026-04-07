@@ -87,7 +87,7 @@
   class="left-content bottom-sai right-sai ml-2 pl-2 fixed z-feature">
   <div class="card2 mx-2 my-2 bg-alt shadow-md">
     <div class="relative">
-      <div class="note-editor flex-grow overflow-hidden">
+      <div class="note-editor grow overflow-hidden">
         <EditorContent {autofocus} {editor} />
       </div>
       <Button

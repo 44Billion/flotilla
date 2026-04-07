@@ -9,10 +9,10 @@
 
 <div class="flex items-start gap-4">
   <CalendarEventDate event={props.event} />
-  <div class="flex flex-grow flex-col">
+  <div class="flex grow flex-col">
     <CalendarEventHeader event={props.event} />
     <div class="flex py-2 opacity-50">
-      <div class="h-px flex-grow bg-base-content opacity-25"></div>
+      <div class="h-px grow bg-base-content opacity-25"></div>
     </div>
     <Content {...props} />
   </div>
