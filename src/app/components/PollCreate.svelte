@@ -22,7 +22,20 @@
   import {pushToast} from "@app/util/toast"
   import {PROTECTED} from "@app/core/state"
   import {canEnforceNip70} from "@app/core/commands"
+  import {DraftKey} from "@app/util/drafts"
   import type {PollType} from "@app/util/polls"
+
+  type DraftOption = {
+    id: string
+    value: string
+  }
+
+  type PollDraft = {
+    title?: string
+    pollType?: PollType
+    endsAt?: number
+    options?: DraftOption[]
+  }
 
   type Props = {
     url: string
@@ -31,12 +44,10 @@
 
   const {url, h}: Props = $props()
 
-  const shouldProtect = canEnforceNip70(url)
+  const draftKey = new DraftKey<PollDraft>(`poll:${url}:${h ?? ""}`)
+  const draft = draftKey.get()
 
-  type DraftOption = {
-    id: string
-    value: string
-  }
+  const shouldProtect = canEnforceNip70(url)
 
   const back = () => history.back()
 
@@ -129,17 +140,24 @@
       event: makeEvent(Poll, {content: title.trim(), tags}),
     })
 
+    draftKey.clear()
     history.back()
   }
 
-  let title = $state("")
-  let pollType = $state<PollType>("singlechoice")
-  let endsAt = $state<number | undefined>()
-  let options = $state<DraftOption[]>([
-    {id: randomId(), value: "Yes"},
-    {id: randomId(), value: "No"},
-  ])
+  let title = $state(draft?.title ?? "")
+  let pollType = $state<PollType>(draft?.pollType ?? "singlechoice")
+  let endsAt = $state<number | undefined>(draft?.endsAt)
+  let options = $state<DraftOption[]>(
+    draft?.options ?? [
+      {id: randomId(), value: "Yes"},
+      {id: randomId(), value: "No"},
+    ],
+  )
   let draggedOptionId = $state<string | undefined>()
+
+  $effect(() => {
+    draftKey.set({title, pollType, endsAt, options})
+  })
 </script>
 
 <Modal tag="form" onsubmit={preventDefault(submit)}>

@@ -11,13 +11,17 @@
   let element: HTMLElement
 
   onMount(() => {
-    editor.then(({options}) => {
-      if (options.element) {
-        element?.append(options.element)
+    editor.then(ed => {
+      if (ed.options.element) {
+        element?.append(ed.options.element)
       }
 
-      if (options.autofocus) {
-        ;(element?.querySelector("[contenteditable]") as HTMLElement)?.focus()
+      if ((ed as any)._shouldAutofocus) {
+        const hasContent = ed.getText().trim().length > 0
+
+        requestAnimationFrame(() => {
+          ed.commands.focus(hasContent ? "end" : "start")
+        })
       }
     })
   })

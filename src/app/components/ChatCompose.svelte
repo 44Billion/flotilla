@@ -10,16 +10,20 @@
   import Button from "@lib/components/Button.svelte"
   import EditorContent from "@app/editor/EditorContent.svelte"
   import {makeEditor} from "@app/editor"
+  import {type DraftKey} from "@app/util/drafts"
 
   type Props = {
     content?: string
     disabled?: boolean
+    draftKey?: DraftKey<{content?: unknown}>
     onEscape?: () => void
     onEditPrevious?: () => void
     onSubmit: (event: EventContent) => void
   }
 
-  const {content, disabled = false, onEscape, onEditPrevious, onSubmit}: Props = $props()
+  const {content, disabled = false, draftKey, onEscape, onEditPrevious, onSubmit}: Props = $props()
+
+  const draft = draftKey?.get()
 
   const autofocus = !isMobile && !disabled
 
@@ -59,14 +63,20 @@
 
     onSubmit({content, tags})
 
+    draftKey?.clear()
     ed.chain().clearContent().run()
   }
 
+  const onChange = (json: unknown) => {
+    draftKey?.set({content: json})
+  }
+
   const editor = makeEditor({
-    content,
+    content: content ?? (draft?.content as string | object | undefined),
     autofocus,
     submit,
     uploading,
+    onChange,
     aggressive: true,
     encryptFiles: true,
   })

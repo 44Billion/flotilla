@@ -20,6 +20,7 @@
   import {pushToast} from "@app/util/toast"
   import {PROTECTED} from "@app/core/state"
   import {makeEditor} from "@app/editor"
+  import {DraftKey} from "@app/util/drafts"
   import {canEnforceNip70, uploadFile} from "@app/core/commands"
 
   type Props = {
@@ -32,13 +33,31 @@
       content?: string
       price?: number
       currency?: string
-      images?: string[]
+      images?: (string | File)[]
       status?: string
       topics?: string[]
     }
   }
 
-  const {url, h, header, initialValues}: Props = $props()
+  let {url, h, header, initialValues}: Props = $props()
+
+  type ClassifiedDraft = {
+    editorContent?: unknown
+    d?: string
+    title?: string
+    content?: string
+    price?: number
+    currency?: string
+    images?: (string | File)[]
+    status?: string
+    topics?: string[]
+  }
+
+  const draftKey = new DraftKey<ClassifiedDraft>(`classified:${url}:${h ?? ""}`)
+  const draft = draftKey.get()
+  if (!initialValues) {
+    initialValues = draft
+  }
 
   const shouldProtect = canEnforceNip70(url)
 
@@ -110,22 +129,35 @@
         event: makeEvent(CLASSIFIED, {content, tags}),
       })
 
+      draftKey.clear()
       history.back()
     } finally {
       loading = false
     }
   }
 
-  const content = initialValues?.content || ""
-  const editor = makeEditor({url, submit, content})
+  const initialContent = initialValues?.content || ""
+  const onChange = (json: unknown) => {
+    draftKey.set({editorContent: json, title, price, currency, topics, status, images})
+  }
+  const editor = makeEditor({
+    url,
+    submit,
+    onChange,
+    content: draft?.editorContent ?? initialContent,
+  })
 
   let loading = $state(false)
-  let title = $state(initialValues?.title || "")
-  let status = $state(initialValues?.status || "active")
-  let price = $state(Number(initialValues?.price || 0))
-  let currency = $state(initialValues?.currency || "SAT")
-  let images = $state<(string | File)[]>(initialValues?.images || [])
-  let topics = $state(uniq(removeUndefined((initialValues?.topics || []).map(normalizeTopic))))
+  let title = $state(initialValues?.title ?? "")
+  let status = $state(initialValues?.status ?? "active")
+  let price = $state(Number(initialValues?.price ?? 0))
+  let currency = $state(initialValues?.currency ?? "SAT")
+  let images = $state<(string | File)[]>(initialValues?.images ?? [])
+  let topics = $state(uniq(removeUndefined((initialValues?.topics ?? []).map(normalizeTopic))))
+
+  $effect(() => {
+    draftKey.set({...draftKey.get(), title, price, currency, topics, status, images})
+  })
 </script>
 
 <Modal tag="form" onsubmit={preventDefault(submit)}>

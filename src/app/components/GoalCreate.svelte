@@ -20,14 +20,31 @@
   import {pushToast} from "@app/util/toast"
   import {PROTECTED} from "@app/core/state"
   import {makeEditor} from "@app/editor"
+  import {DraftKey} from "@app/util/drafts"
   import {canEnforceNip70} from "@app/core/commands"
 
   type Props = {
     url: string
     h?: string
+    initialValues?: {
+      content?: string
+      amount?: number
+    }
   }
 
-  const {url, h}: Props = $props()
+  let {url, h, initialValues}: Props = $props()
+
+  type GoalDraft = {
+    editorContent?: unknown
+    content?: string
+    amount?: number
+  }
+
+  const draftKey = new DraftKey<GoalDraft>(`goal:${url}:${h ?? ""}`)
+  const draft = draftKey.get()
+  if (!initialValues) {
+    initialValues = draft
+  }
 
   const shouldProtect = canEnforceNip70(url)
 
@@ -77,13 +94,27 @@
       event: makeEvent(ZAP_GOAL, {content, tags}),
     })
 
+    draftKey.clear()
     history.back()
   }
 
-  const editor = makeEditor({url, submit, uploading, placeholder: "What's on your mind?"})
+  const onChange = (json: unknown) => draftKey.update({editorContent: json})
 
-  let content = $state("")
-  let amount = $state(1000)
+  const editor = makeEditor({
+    url,
+    submit,
+    uploading,
+    onChange,
+    placeholder: "What's on your mind?",
+    content: draft?.editorContent as string | object | undefined,
+  })
+
+  let content = $state(initialValues?.content ?? "")
+  let amount = $state(initialValues?.amount ?? 1000)
+
+  $effect(() => {
+    draftKey.update({content, amount})
+  })
 </script>
 
 <Modal tag="form" onsubmit={preventDefault(submit)}>

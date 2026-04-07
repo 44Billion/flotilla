@@ -55,6 +55,7 @@
   import ThunkToast from "@app/components/ThunkToast.svelte"
   import {userSettingsValues, deriveChat} from "@app/core/state"
   import {pushModal} from "@app/util/modal"
+  import {DraftKey} from "@app/util/drafts"
   import {makeDelete, prependParent} from "@app/core/commands"
   import {pushToast} from "@app/util/toast"
 
@@ -66,6 +67,7 @@
   const {pubkeys, info}: Props = $props()
 
   const chat = deriveChat(pubkeys)
+  const draftKey = new DraftKey<{content?: unknown}>(`dm:${$chat?.id}`)
   const others = remove($pubkey!, pubkeys)
   const missingRelayLists = $derived(others.filter(pk => !$messagingRelayListsByPubkey.has(pk)))
 
@@ -337,6 +339,7 @@
       {onEscape}
       {onEditPrevious}
       content={eventToEdit?.content}
+      draftKey={eventToEdit ? undefined : draftKey}
       disabled={Boolean(missingRelayLists.length)} />
   {/key}
 </div>

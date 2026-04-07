@@ -12,6 +12,7 @@
   import ComposeMenu from "@app/components/ComposeMenu.svelte"
   import EditorContent from "@app/editor/EditorContent.svelte"
   import {makeEditor} from "@app/editor"
+  import {DraftKey} from "@app/util/drafts"
   import {onDestroy, onMount} from "svelte"
 
   type Props = {
@@ -24,6 +25,11 @@
   }
 
   const {url, h, content, onEscape, onEditPrevious, onSubmit}: Props = $props()
+
+  type ComposeDraft = {content?: unknown}
+
+  const draftKey = url || h ? new DraftKey<ComposeDraft>(`room:${url ?? ""}:${h ?? ""}`) : undefined
+  const draft = draftKey?.get()
 
   const autofocus = !isMobile
 
@@ -61,10 +67,23 @@
 
     onSubmit({content, tags})
 
+    draftKey?.clear()
     ed.chain().clearContent().run()
   }
 
-  const editor = makeEditor({url, content, autofocus, submit, uploading, aggressive: true})
+  const onChange = (json: unknown) => {
+    draftKey?.set({content: json})
+  }
+
+  const editor = makeEditor({
+    url,
+    content: content ?? (draft?.content as string | object | undefined),
+    autofocus,
+    submit,
+    uploading,
+    onChange,
+    aggressive: true,
+  })
 
   let popover: Instance | undefined = $state()
 

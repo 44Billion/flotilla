@@ -20,24 +20,33 @@
   import EditorContent from "@app/editor/EditorContent.svelte"
   import {PROTECTED} from "@app/core/state"
   import {makeEditor} from "@app/editor"
+  import {DraftKey} from "@app/util/drafts"
   import {pushToast} from "@app/util/toast"
   import {canEnforceNip70} from "@app/core/commands"
+
+  type CalendarValues = {
+    d?: string
+    title: string
+    content: unknown
+    location: string
+    start: number | undefined
+    end: number | undefined
+  }
 
   type Props = {
     url: string
     h?: string
     header: Snippet
-    initialValues?: {
-      d: string
-      title: string
-      content: string
-      location: string
-      start: number
-      end: number
-    }
+    initialValues?: CalendarValues
   }
 
-  const {url, h, header, initialValues}: Props = $props()
+  let {url, h, header, initialValues}: Props = $props()
+
+  const draftKey = new DraftKey<CalendarValues>(`calendar:${url}:${h ?? ""}`)
+  const draft = draftKey.get()
+  if (!initialValues) {
+    initialValues = draft
+  }
 
   const shouldProtect = canEnforceNip70(url)
 
@@ -95,17 +104,33 @@
 
     pushToast({message: "Your event has been saved!"})
     publishThunk({event, relays: [url]})
+    draftKey.clear()
     history.back()
   }
 
-  const content = initialValues?.content || ""
-  const editor = makeEditor({url, submit, uploading, content})
+  let editorContent = $state<unknown>(initialValues?.content ?? "")
 
-  let title = $state(initialValues?.title || "")
-  let location = $state(initialValues?.location || "")
+  const onChange = (json: unknown) => {
+    editorContent = json
+  }
+
+  const editor = makeEditor({
+    url,
+    submit,
+    uploading,
+    onChange,
+    content: initialValues?.content ?? "",
+  })
+
+  let title = $state(initialValues?.title ?? "")
+  let location = $state(initialValues?.location ?? "")
   let start: number | undefined = $state(initialValues?.start)
   let end: number | undefined = $state(initialValues?.end)
-  let endDirty = Boolean(initialValues?.end)
+  let endDirty = $state(Boolean(initialValues?.end))
+
+  $effect(() => {
+    draftKey.set({d: initialValues?.d, title, location, start, end, content: editorContent})
+  })
 
   $effect(() => {
     if (!endDirty && start) {

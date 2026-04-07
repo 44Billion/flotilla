@@ -28,6 +28,7 @@ export const makeEditor = async ({
   autofocus = false,
   charCount,
   content = "",
+  onChange,
   placeholder = "",
   url,
   submit,
@@ -38,7 +39,8 @@ export const makeEditor = async ({
   aggressive?: boolean
   autofocus?: boolean
   charCount?: Writable<number>
-  content?: string
+  content?: string | object
+  onChange?: (json: unknown) => void
   placeholder?: string
   url?: string
   submit: () => void
@@ -82,9 +84,9 @@ export const makeEditor = async ({
     },
   )
 
-  return new Editor({
-    content: escapeHtml(content),
-    autofocus,
+  const ed = new Editor({
+    content: typeof content === "string" ? escapeHtml(content) : content,
+    autofocus: false,
     editorProps,
     element: document.createElement("div"),
     extensions: [
@@ -142,6 +144,11 @@ export const makeEditor = async ({
     onUpdate({editor}) {
       wordCount?.set(editor.storage.wordCount.words)
       charCount?.set(editor.storage.wordCount.chars)
+      onChange?.(editor.getJSON())
     },
   })
+
+  ;(ed as any)._shouldAutofocus = autofocus
+
+  return ed
 }

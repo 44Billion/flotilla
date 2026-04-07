@@ -10,9 +10,13 @@
   import {publishComment, canEnforceNip70} from "@app/core/commands"
   import {PROTECTED} from "@app/core/state"
   import {makeEditor} from "@app/editor"
+  import {DraftKey} from "@app/util/drafts"
   import {pushToast} from "@app/util/toast"
 
   const {url, event, onClose, onSubmit} = $props()
+
+  const draftKey = new DraftKey<{content?: unknown}>(`reply:${event.id}`)
+  const draft = draftKey.get()
 
   const shouldProtect = canEnforceNip70(url)
 
@@ -38,10 +42,20 @@
       })
     }
 
+    draftKey.clear()
     onSubmit(publishComment({event, content, tags, relays: [url]}))
   }
 
-  const editor = makeEditor({url, submit, uploading, autofocus: !isMobile})
+  const onChange = (json: unknown) => draftKey.set({content: json})
+
+  const editor = makeEditor({
+    url,
+    submit,
+    uploading,
+    autofocus: !isMobile,
+    content: draft?.content as string | object | undefined,
+    onChange,
+  })
 
   let form: HTMLElement
   let spacer: HTMLElement

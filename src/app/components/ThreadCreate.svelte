@@ -18,6 +18,7 @@
   import {pushToast} from "@app/util/toast"
   import {PROTECTED} from "@app/core/state"
   import {makeEditor} from "@app/editor"
+  import {DraftKey} from "@app/util/drafts"
   import {canEnforceNip70} from "@app/core/commands"
 
   type Props = {
@@ -26,6 +27,9 @@
   }
 
   const {url, h}: Props = $props()
+
+  const draftKey = new DraftKey<{content?: unknown; title?: string}>(`thread:${url}:${h ?? ""}`)
+  const draft = draftKey.get()
 
   const shouldProtect = canEnforceNip70(url)
 
@@ -70,12 +74,26 @@
       event: makeEvent(THREAD, {content, tags}),
     })
 
+    draftKey.clear()
     history.back()
   }
 
-  const editor = makeEditor({url, submit, uploading, placeholder: "What's on your mind?"})
+  const onChange = (json: unknown) => draftKey.update({content: json})
 
-  let title: string = $state("")
+  const editor = makeEditor({
+    url,
+    submit,
+    uploading,
+    onChange,
+    placeholder: "What's on your mind?",
+    content: draft?.content as string | object | undefined,
+  })
+
+  let title: string = $state(draft?.title ?? "")
+
+  $effect(() => {
+    draftKey.update({title})
+  })
 </script>
 
 <Modal tag="form" onsubmit={preventDefault(submit)}>
