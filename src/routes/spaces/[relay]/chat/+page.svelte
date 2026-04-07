@@ -210,14 +210,21 @@
           elements.push({type: "date", value: date, id: date, showPubkey: false})
         }
 
+        const showPubkey =
+          previousPubkey !== event.pubkey ||
+          event.created_at - previousCreatedAt > int(3, MINUTE) ||
+          previousKind === RELAY_ADD_MEMBER
+
+        if (showPubkey && elements.length > 0) {
+          elements[elements.length - 1].addSpaceBelow = true
+        }
+
         elements.push({
           id: event.id,
           type: "note",
           value: event,
-          showPubkey:
-            previousPubkey !== event.pubkey ||
-            event.created_at - previousCreatedAt > int(3, MINUTE) ||
-            previousKind === RELAY_ADD_MEMBER,
+          showPubkey,
+          addSpaceBelow: false,
         })
 
         previousDate = date
@@ -225,6 +232,9 @@
         previousPubkey = event.pubkey
         previousCreatedAt = event.created_at
         seen.add(event.id)
+      }
+      if (elements.length > 0) {
+        elements[elements.length - 1].addSpaceBelow = true
       }
     }
 
@@ -295,7 +305,7 @@
       <Spinner loading={loadingForward}>Looking for messages...</Spinner>
     </p>
   {/if}
-  {#each elements as { type, id, value, showPubkey } (id)}
+  {#each elements as { type, id, value, showPubkey, addSpaceBelow } (id)}
     {#if type === "new-messages"}
       <div
         {id}
@@ -312,14 +322,15 @@
       {#if event.kind === RELAY_ADD_MEMBER}
         <RoomItemAddMember {url} {event} />
       {:else}
-        <div class:-mt-1={!showPubkey}>
+        <div>
           <RoomItem
             {url}
             {event}
             {replyTo}
             {showPubkey}
             canEdit={canEditEvent}
-            onEdit={onEditEvent} />
+            onEdit={onEditEvent}
+            {addSpaceBelow} />
         </div>
       {/if}
     {/if}

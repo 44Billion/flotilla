@@ -37,6 +37,7 @@
     event: TrustedEvent
     replyTo?: (event: TrustedEvent) => void
     showPubkey?: boolean
+    addSpaceBelow?: boolean
     inert?: boolean
     canEdit: (event: TrustedEvent) => boolean
     onEdit: (event: TrustedEvent) => void
@@ -47,6 +48,7 @@
     event,
     replyTo = undefined,
     showPubkey = false,
+    addSpaceBelow = false,
     inert = false,
     canEdit,
     onEdit,
@@ -77,17 +79,20 @@
 <TapTarget
   data-event={event.id}
   onTap={inert ? null : onTap}
-  class="group relative flex w-full cursor-default flex-col p-2 pb-3 text-left hover:bg-base-100/50">
+  class={cx(
+    "group relative flex w-full cursor-default flex-col px-2 py-0.5 text-left hover:bg-base-100/50",
+    {"mt-1.5": showPubkey, "mb-1.5": addSpaceBelow},
+  )}>
   <div class="flex w-full gap-3 overflow-auto">
     {#if showPubkey}
-      <Button onclick={openProfile} class="flex items-start">
+      <Button onclick={openProfile} class="flex items-start pt-1.5 justify-center w-8 shrink-0">
         <ProfileCircle
           pubkey={event.pubkey}
           class="border border-solid border-base-content"
           size={8} />
       </Button>
     {:else}
-      <div class="w-8 min-w-8 max-w-8"></div>
+      <div class="w-8 shrink-0"></div>
     {/if}
     <div class="min-w-0 flex-grow pr-1">
       {#if showPubkey}
