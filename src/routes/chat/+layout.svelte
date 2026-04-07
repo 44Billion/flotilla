@@ -6,7 +6,6 @@
   import {shouldUnwrap} from "@welshman/app"
   import MenuDots from "@assets/icons/menu-dots.svg?dataurl"
   import ChatSquarePlus from "@assets/icons/chat-square-plus.svg?dataurl"
-  import AddCircle from "@assets/icons/add-circle.svg?dataurl"
   import Magnifier from "@assets/icons/magnifier.svg?dataurl"
   import Icon from "@lib/components/Icon.svelte"
   import Page from "@lib/components/Page.svelte"
@@ -51,8 +50,8 @@
         <Icon icon={MenuDots} />
       </Button>
     </SecondaryNavHeader>
-    <Button class="btn btn-primary w-full row-2 min-h-0 h-[30px]" onclick={startChat}>
-      <Icon icon={AddCircle} />
+    <Button class="btn btn-primary w-full btn-sm" onclick={startChat}>
+      <Icon icon={ChatSquarePlus} />
       Start New Chat
     </Button>
     <label class="input input-sm input-bordered flex items-center gap-2">

@@ -46,7 +46,7 @@
           type="text"
           placeholder="Search for conversations..." />
       </label>
-      <Button class="btn btn-primary" onclick={openMenu}>
+      <Button class="btn btn-neutral" onclick={openMenu}>
         <Icon icon={MenuDots} />
       </Button>
     </div>
