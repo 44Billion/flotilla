@@ -62,8 +62,7 @@
 {@render children?.()}
 
 <!-- a little extra something for ios -->
-<div
-  class="hide-on-keyboard fixed bottom-0 left-0 right-0 z-nav h-(--saib) bg-base-100 md:hidden">
+<div class="hide-on-keyboard fixed bottom-0 left-0 right-0 z-nav h-(--saib) bg-base-100 md:hidden">
 </div>
 <div
   class="hide-on-keyboard border-top bottom-sai fixed left-0 right-0 z-nav h-14 border border-base-200 bg-base-100 md:hidden">

@@ -1,4 +1,4 @@
-@import 'tailwindcss';
+@import "tailwindcss";
 
 @config "../tailwind.config.js";
 
@@ -131,7 +131,7 @@
 }
 
 @utility content-padding-y {
-  @apply pt-4 sm:pt-8 md:pt-12 pb-4 sm:pb-8 md:pb-12;
+  @apply pt-4 pb-4 sm:pt-8 sm:pb-8 md:pt-12 md:pb-12;
 }
 
 @utility content-sizing {
@@ -139,7 +139,7 @@
 }
 
 @utility content {
-  @apply m-auto w-full max-w-3xl px-4 sm:px-8 md:px-12 pt-4 sm:pt-8 md:pt-12 pb-4 sm:pb-8 md:pb-12;
+  @apply m-auto w-full max-w-3xl px-4 pt-4 pb-4 sm:px-8 sm:pt-8 sm:pb-8 md:px-12 md:pt-12 md:pb-12;
 }
 
 @utility heading {

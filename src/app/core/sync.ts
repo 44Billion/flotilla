@@ -1,7 +1,6 @@
 import {page} from "$app/stores"
 import type {Unsubscriber} from "svelte/store"
-import {get} from "svelte/store"
-import {last, call, ifLet, assoc, chunk, sleep, WEEK, ago} from "@welshman/lib"
+import {last, call, ifLet, assoc, chunk, WEEK, ago} from "@welshman/lib"
 import {PollResponse} from "nostr-tools/kinds"
 import {merged} from "@welshman/store"
 import {
@@ -27,7 +26,6 @@ import {request, requestOne, Difference, DifferenceEvent} from "@welshman/net"
 import {
   pubkey,
   loadRelay,
-  userFollowList,
   userRelayList,
   userMessagingRelayList,
   loadRelayList,
@@ -50,7 +48,6 @@ import {
   loadGroupList,
   userSpaceUrls,
   userGroupList,
-  bootstrapPubkeys,
   decodeRelay,
   getSpaceUrlsFromGroupList,
   getSpaceRoomsFromGroupList,
@@ -252,29 +249,6 @@ const syncUserData = () => {
     loadFeedsForPubkey(pubkey)
   }
 
-  const syncFollowList = async (signal: AbortSignal) => {
-    for (const pubkeys of chunk(10, get(bootstrapPubkeys))) {
-      if (signal.aborted) return
-
-      // This isn't urgent, avoid clogging other stuff up
-      await sleep(1000)
-
-      if (signal.aborted) return
-
-      await Promise.all(
-        pubkeys.flatMap(pk => [
-          loadRelayList(pk),
-          loadGroupList(pk),
-          loadProfile(pk),
-          loadFollowList(pk),
-          loadMuteList(pk),
-        ]),
-      )
-    }
-  }
-
-  let bootstrapFollowController = new AbortController()
-
   const unsubscribeGroupList = merged([userGroupList]).subscribe(([$userGroupList]) => {
     syncGroupList($userGroupList)
   })
@@ -283,18 +257,10 @@ const syncUserData = () => {
     syncRelayList($userRelayList)
   })
 
-  const unsubscribeFollows = merged([userFollowList]).subscribe(() => {
-    bootstrapFollowController.abort()
-    bootstrapFollowController = new AbortController()
-    void syncFollowList(bootstrapFollowController.signal)
-  })
-
   return () => {
-    bootstrapFollowController.abort()
     unsubscribersByKey.forEach(call)
     unsubscribeGroupList()
     unsubscribeRelayList()
-    unsubscribeFollows()
   }
 }
 
