@@ -24,8 +24,10 @@
 	<false/>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSCameraUsageDescription</key>
+	<string>Flotilla uses the camera when you enable it in a voice room.</string>
 	<key>NSMicrophoneUsageDescription</key>
-	<string>Flotilla uses the microphone for voice chat in rooms.</string>
+	<string>Flotilla uses the microphone when you enable it in a voice room.</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>remote-notification</string>

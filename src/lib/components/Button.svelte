@@ -14,6 +14,7 @@
     style?: string
     disabled?: boolean
     "data-tip"?: string
+    "aria-pressed"?: boolean
   } = $props()
 
   const className = $derived(`text-left ${restProps.class}`)

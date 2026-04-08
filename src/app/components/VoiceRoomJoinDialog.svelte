@@ -14,7 +14,7 @@
   import ModalTitle from "@lib/components/ModalTitle.svelte"
   import {AbortError, TimeoutError} from "$lib/util"
   import {displayRoom} from "@app/core/state"
-  import {joinVoiceRoom} from "@app/voice"
+  import {joinVoiceRoom} from "@app/call/voice"
   import {popModal} from "@app/util/modal"
   import {pushToast} from "@app/util/toast"
 

@@ -7,13 +7,8 @@
   import ModalHeader from "@lib/components/ModalHeader.svelte"
   import ModalSubtitle from "@lib/components/ModalSubtitle.svelte"
   import ModalTitle from "@lib/components/ModalTitle.svelte"
-  import {
-    currentVoiceSession,
-    DeviceKind,
-    supportsAudioOutputSelection,
-    switchVoiceActiveDevice,
-    type VoiceSession,
-  } from "@app/voice"
+  import {currentVoiceSession, type VoiceSession} from "@app/call/stores"
+  import {DeviceKind, supportsAudioOutputSelection, switchVoiceActiveDevice} from "@app/call/voice"
   import {popModal} from "@app/util/modal"
 
   const selectValueForActiveDevice = (session: VoiceSession, kind: DeviceKind): string => {
@@ -26,8 +21,10 @@
 
   let audioInputs = $state<MediaDeviceInfo[]>([])
   let audioOutputs = $state<MediaDeviceInfo[]>([])
+  let videoInputs = $state<MediaDeviceInfo[]>([])
   let selectedInput = $state("")
   let selectedOutput = $state("")
+  let selectedVideo = $state("")
 
   const loadDevices = async () => {
     if (!navigator.mediaDevices?.enumerateDevices) return
@@ -35,9 +32,11 @@
       const devices = await navigator.mediaDevices.enumerateDevices()
       audioInputs = devices.filter(d => d.kind === "audioinput")
       audioOutputs = devices.filter(d => d.kind === "audiooutput")
+      videoInputs = devices.filter(d => d.kind === "videoinput")
     } catch {
       audioInputs = []
       audioOutputs = []
+      videoInputs = []
     }
   }
 
@@ -55,6 +54,7 @@
     }
     selectedInput = selectValueForActiveDevice(session, DeviceKind.AudioInput)
     selectedOutput = selectValueForActiveDevice(session, DeviceKind.AudioOutput)
+    selectedVideo = selectValueForActiveDevice(session, DeviceKind.VideoInput)
   })
 
   const onInputChange = () => {
@@ -63,6 +63,10 @@
 
   const onOutputChange = () => {
     void switchVoiceActiveDevice(DeviceKind.AudioOutput, selectedOutput)
+  }
+
+  const onVideoChange = () => {
+    void switchVoiceActiveDevice(DeviceKind.VideoInput, selectedVideo)
   }
 
   const onDone = () => {
@@ -76,8 +80,8 @@
 <Modal>
   <ModalBody>
     <ModalHeader>
-      <ModalTitle>Audio settings</ModalTitle>
-      <ModalSubtitle>Choose microphone and speaker for this call.</ModalSubtitle>
+      <ModalTitle>Call settings</ModalTitle>
+      <ModalSubtitle>Microphone, speaker, and camera for this call.</ModalSubtitle>
     </ModalHeader>
     <div class="flex flex-col gap-4 pt-2">
       <FieldInline>
@@ -120,6 +124,25 @@
           {/snippet}
         </FieldInline>
       {/if}
+      <FieldInline>
+        {#snippet label()}
+          <p>Camera</p>
+        {/snippet}
+        {#snippet input()}
+          <select
+            class="select select-bordered w-full"
+            bind:value={selectedVideo}
+            onchange={onVideoChange}
+            aria-label="Camera">
+            <option value="">Default camera</option>
+            {#each videoInputs as d (d.deviceId)}
+              <option value={d.deviceId}>
+                {d.label || `Camera ${d.deviceId.slice(0, 8)}…`}
+              </option>
+            {/each}
+          </select>
+        {/snippet}
+      </FieldInline>
     </div>
   </ModalBody>
   <ModalFooter>

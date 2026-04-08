@@ -4,21 +4,35 @@
  */
 import {
   DisconnectReason,
+  LocalParticipant,
+  LocalTrackPublication,
   Room as LiveKitRoom,
   RoomEvent,
   Track,
   supportsAudioOutputSelection,
   type AudioCaptureOptions,
-  type LocalParticipant,
 } from "livekit-client"
-import {derived, get, writable} from "svelte/store"
+import {derived, get} from "svelte/store"
 import {map, removeUndefined, uniqBy} from "@welshman/lib"
 import type {TrustedEvent} from "@welshman/util"
 import {makeHttpAuth, makeHttpAuthHeader, getTags} from "@welshman/util"
 import {signer} from "@welshman/app"
 import {getLivekitEndpoint} from "$lib/livekit"
 import {AbortError, whenAborted, whenTimeout} from "$lib/util"
-import {deriveLatestEventForUrl, deriveRoom, makeRoomId, type Room} from "@app/core/state"
+import {
+  currentVoiceRoom,
+  currentVoiceSession,
+  participantFromLiveKitIdentity,
+  participantKey,
+  participantPubkeyMap,
+  pubkeyFromLiveKitIdentity,
+  speakingParticipants,
+  VoiceState,
+  type VoiceParticipant,
+  voiceState,
+} from "@app/call/stores"
+import {resetVideoCallLayout, triggerVideoFeedCount, videoPrimaryTileKey} from "@app/call/video"
+import {deriveLatestEventForUrl, deriveRoom, makeRoomId} from "@app/core/state"
 import {pushToast} from "@app/util/toast"
 
 export const LIVEKIT_PARTICIPANTS = 39004
@@ -27,30 +41,12 @@ export {checkRelayHasLivekit} from "$lib/livekit"
 
 export {supportsAudioOutputSelection}
 
-export type VoiceSession = {
-  url: string
-  h: string
-  room: LiveKitRoom
-  muted: boolean
-}
-
-export type Pubkey = string
-
-export type VoiceParticipant = {pubkey?: Pubkey; identity: string}
-
-export enum VoiceState {
-  Joining = "joining",
-  Connected = "connected",
-  Disconnected = "disconnected",
-}
-
-export const currentVoiceSession = writable<VoiceSession | undefined>(undefined)
-
 const LIVEKIT_DEFAULT_DEVICE_ID = "default"
 
 export enum DeviceKind {
   AudioInput = "audioinput",
   AudioOutput = "audiooutput",
+  VideoInput = "videoinput",
 }
 
 export const switchVoiceActiveDevice = async (
@@ -71,16 +67,13 @@ export const switchVoiceActiveDevice = async (
       case DeviceKind.AudioOutput:
         label = "speaker"
         break
+      case DeviceKind.VideoInput:
+        label = "camera"
+        break
     }
     pushToast({theme: "error", message: `Error changing ${label}`})
   }
 }
-
-export const voiceState = writable<VoiceState>(VoiceState.Disconnected)
-
-export const currentVoiceRoom = writable<Room | undefined>(undefined)
-
-export const participantPubkeyMap = writable<Map<string, Pubkey>>(new Map())
 
 const addParticipant = (identity: string) => {
   participantPubkeyMap.update(m => {
@@ -97,24 +90,6 @@ const deleteParticipant = (identity: string) => {
     return next
   })
 }
-
-export const pubkeyFromLiveKitIdentity = (identity: string): string | undefined =>
-  /^[a-f0-9]{64}$/.test(identity.slice(0, 64)) ? identity.slice(0, 64) : undefined
-
-export const participantFromLiveKitIdentity = (identity: string): VoiceParticipant => {
-  const pk = pubkeyFromLiveKitIdentity(identity)
-  return pk ? {pubkey: pk, identity} : {identity}
-}
-
-export const participantKey = (p: VoiceParticipant) => p.pubkey ?? p.identity
-
-export const speakingParticipants = writable<VoiceParticipant[]>([])
-
-export const isParticipantSpeaking = derived(
-  speakingParticipants,
-  $participants => (p: VoiceParticipant) =>
-    $participants.some(sp => participantKey(sp) === participantKey(p)),
-)
 
 const fetchLivekitToken = async (
   url: string,
@@ -197,7 +172,9 @@ const setUpMicrophone = async (
 }
 
 const onRoomDisconnected = (reason?: DisconnectReason) => {
+  videoPrimaryTileKey.set(undefined)
   currentVoiceSession.set(undefined)
+  resetVideoCallLayout()
   if (reason !== undefined && reason !== DisconnectReason.CLIENT_INITIATED) {
     voiceState.set(VoiceState.Disconnected)
     const message =
@@ -216,11 +193,16 @@ const onTrackSubscribed = (track: Track) => {
     element.style.display = "none"
     document.body.appendChild(element)
     element.play().catch(() => {})
+  } else if (track.kind === Track.Kind.Video) {
+    triggerVideoFeedCount()
   }
 }
 
 const onTrackUnsubscribed = (track: Track) => {
   track.detach().forEach(el => el.remove())
+  if (track.kind === Track.Kind.Video) {
+    triggerVideoFeedCount()
+  }
 }
 
 const onActiveSpeakersChanged = (participants: {identity: string}[]) => {
@@ -239,6 +221,17 @@ const onParticipantConnected = (participant: {identity: string}) => {
 
 const onParticipantDisconnected = (participant: {identity: string}) => {
   deleteParticipant(participant.identity)
+}
+
+const onLocalTrackUnpublished = (
+  publication: LocalTrackPublication,
+  participant: LocalParticipant,
+) => {
+  if (publication.source !== Track.Source.ScreenShare) return
+  const session = get(currentVoiceSession)
+  if (!session || participant.identity !== session.room.localParticipant.identity) return
+  if (!session.screenShareOn) return
+  currentVoiceSession.set({...session, screenShareOn: false})
 }
 
 let joinAbortController: AbortController | undefined
@@ -278,6 +271,7 @@ export const joinVoiceRoom = async (
     liveKitRoom.on(RoomEvent.ParticipantDisconnected, onParticipantDisconnected)
     liveKitRoom.on(RoomEvent.TrackSubscribed, onTrackSubscribed)
     liveKitRoom.on(RoomEvent.TrackUnsubscribed, onTrackUnsubscribed)
+    liveKitRoom.on(RoomEvent.LocalTrackUnpublished, onLocalTrackUnpublished)
     liveKitRoom.on(RoomEvent.ActiveSpeakersChanged, onActiveSpeakersChanged)
 
     try {
@@ -301,7 +295,14 @@ export const joinVoiceRoom = async (
 
     const muted = await setUpMicrophone(startMuted, preferredMicId, liveKitRoom.localParticipant)
 
-    currentVoiceSession.set({url, h, room: liveKitRoom, muted})
+    currentVoiceSession.set({
+      url,
+      h,
+      room: liveKitRoom,
+      muted,
+      cameraOn: false,
+      screenShareOn: false,
+    })
     voiceState.set(VoiceState.Connected)
     playJoinSound()
   } catch (e) {
@@ -320,8 +321,26 @@ export const leaveVoiceRoom = async () => {
   const audio = new Audio("/leave-voice-room.mp3")
   audio.play().catch(() => {})
 
+  if (session.cameraOn) {
+    try {
+      await session.room.localParticipant.setCameraEnabled(false)
+    } catch {
+      pushToast({theme: "error", message: "Error turning off camera."})
+    }
+  }
+
+  if (session.screenShareOn) {
+    try {
+      await session.room.localParticipant.setScreenShareEnabled(false)
+    } catch {
+      pushToast({theme: "error", message: "Error turning off screen sharing."})
+    }
+  }
+
   voiceState.set(VoiceState.Disconnected)
+  videoPrimaryTileKey.set(undefined)
   currentVoiceSession.set(undefined)
+  resetVideoCallLayout()
   session.room.disconnect()
   speakingParticipants.set([])
   participantPubkeyMap.set(new Map())

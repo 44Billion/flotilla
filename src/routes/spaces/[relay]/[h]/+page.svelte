@@ -13,6 +13,7 @@
   import ClockCircle from "@assets/icons/clock-circle.svg?dataurl"
   import InfoCircle from "@assets/icons/info-circle.svg?dataurl"
   import Login2 from "@assets/icons/login-3.svg?dataurl"
+  import cx from "classnames"
   import {slide, fade, fly} from "@lib/transition"
   import Button from "@lib/components/Button.svelte"
   import Divider from "@lib/components/Divider.svelte"
@@ -43,7 +44,9 @@
     userSettingsValues,
   } from "@app/core/state"
   import VoiceWidget from "@app/components/VoiceWidget.svelte"
-  import {VoiceState, voiceState} from "@app/voice"
+  import VideoCallContent from "@app/components/VideoCallContent.svelte"
+  import {VoiceState, currentVoiceRoom, voiceState} from "@app/call/stores"
+  import {VideoCallLayout, videoCallLayout, videoTileCount} from "@app/call/video"
   import {makeFeed} from "@app/core/requests"
   import {popKey} from "@lib/implicit"
   import {checked} from "@app/util/notifications"
@@ -56,6 +59,49 @@
   const url = decodeRelay(relay)
   const room = deriveRoom(url, h)
   const isVoiceRoom = $derived(getRoomType($room) === RoomType.Voice)
+
+  const voiceConnectedHere = $derived(
+    isVoiceRoom &&
+      $voiceState === VoiceState.Connected &&
+      $currentVoiceRoom?.url === url &&
+      $currentVoiceRoom?.h === h,
+  )
+
+  const showMobileVideoPanel = $derived(
+    isVoiceRoom &&
+      $voiceState === VoiceState.Connected &&
+      $videoCallLayout === VideoCallLayout.Video,
+  )
+
+  const pageContentHiddenDesktopVideoOnly = $derived(
+    voiceConnectedHere && $videoCallLayout === VideoCallLayout.Video,
+  )
+
+  let prevVideoTileCount = $state(0)
+
+  $effect(() => {
+    if ($voiceState !== VoiceState.Connected) {
+      videoCallLayout.set(VideoCallLayout.Chat)
+      prevVideoTileCount = 0
+      return
+    }
+
+    const here = isVoiceRoom && $currentVoiceRoom?.url === url && $currentVoiceRoom?.h === h
+    const n = $videoTileCount
+
+    if (!here) {
+      prevVideoTileCount = 0
+      return
+    }
+
+    if (prevVideoTileCount === 0 && n >= 1) {
+      videoCallLayout.set(VideoCallLayout.Video)
+    }
+    if (prevVideoTileCount >= 1 && n === 0 && $videoCallLayout === VideoCallLayout.Split) {
+      videoCallLayout.set(VideoCallLayout.Chat)
+    }
+    prevVideoTileCount = n
+  })
   const shouldProtect = canEnforceNip70(url)
   const membershipStatus = deriveUserRoomMembershipStatus(url, h)
   const at = $derived(parseInt($page.url.searchParams.get("at")!))
@@ -364,127 +410,168 @@
   {/snippet}
 </SpaceBar>
 
-<PageContent bind:element onscroll={onScroll} class="flex flex-col-reverse pt-4">
-  {#if $room.isPrivate && $membershipStatus !== MembershipStatus.Granted}
-    <div class="py-20">
-      <div class="card2 col-8 m-auto max-w-md items-center text-center">
-        <p class="opacity-75">You aren't currently a member of this room.</p>
-        {#if $membershipStatus === MembershipStatus.Pending}
-          <Button class="btn btn-neutral btn-sm" disabled={leaving} onclick={leave}>
-            <Icon icon={ClockCircle} />
-            Access Pending
-          </Button>
-        {:else}
-          <Button class="btn btn-neutral btn-sm" disabled={joining} onclick={join}>
-            {#if joining}
-              <span class="loading loading-spinner loading-sm"></span>
-            {:else}
-              <Icon icon={Login2} />
-            {/if}
-            Join Room
-          </Button>
-        {/if}
-      </div>
-    </div>
-  {:else}
-    {#if loadingForward}
-      <p class="py-20 flex justify-center">
-        <Spinner loading={loadingForward}>Looking for messages...</Spinner>
-      </p>
-    {/if}
-    {#each elements as { type, id, value, showPubkey, addSpaceBelow } (id)}
-      {#if type === "new-messages"}
-        <div
-          {id}
-          class="flex items-center py-2 text-xs transition-colors"
-          class:opacity-0={showFixedNewMessages}>
-          <div class="h-px grow bg-primary"></div>
-          <p class="rounded-full bg-primary px-2 py-1 text-primary-content">New Messages</p>
-          <div class="h-px grow bg-primary"></div>
-        </div>
-      {:else if type === "date"}
-        <Divider>{value}</Divider>
-      {:else}
-        {@const event = $state.snapshot(value as TrustedEvent)}
-        {#if event.kind === ROOM_ADD_MEMBER}
-          <RoomItemAddMember {url} {event} />
-        {:else}
-          <div in:slide class="cv">
-            <RoomItem
-              {url}
-              {event}
-              {replyTo}
-              {showPubkey}
-              {addSpaceBelow}
-              canEdit={canEditEvent}
-              onEdit={onEditEvent} />
-          </div>
-        {/if}
-      {/if}
-    {/each}
-    <p class="flex h-10 items-center justify-center py-20">
-      {#if loadingBackward}
-        <Spinner loading={loadingBackward}>Looking for messages...</Spinner>
-      {:else}
-        <Spinner>End of message history</Spinner>
-      {/if}
-    </p>
+<div
+  class={cx(
+    "flex min-h-0 flex-1 flex-col",
+    voiceConnectedHere && $videoCallLayout === VideoCallLayout.Split && "md:flex-row",
+  )}>
+  {#if voiceConnectedHere}
+    <VideoCallContent
+      layout={$videoCallLayout}
+      {url}
+      {h}
+      class="hidden min-h-0 w-full min-w-0 flex-1 flex-col md:flex" />
   {/if}
-  <div class="h-screen"></div>
-</PageContent>
 
-<div class="chat__compose flex flex-col gap-1 bg-base-200 md:flex-row md:gap-0">
-  <div class="chat__compose-inner min-w-0 flex-1">
-    {#if $room.isPrivate && $membershipStatus !== MembershipStatus.Granted}
-      <!-- pass -->
-    {:else if $room.isRestricted && $membershipStatus !== MembershipStatus.Granted}
-      <div class="bg-alt card m-4 flex flex-row items-center justify-between px-4 py-3">
-        <p class="opacity-75">Only members are allowed to post to this room.</p>
-        {#if $membershipStatus === MembershipStatus.Pending}
-          <Button class="btn btn-neutral btn-sm" disabled={leaving} onclick={leave}>
-            <Icon icon={ClockCircle} />
-            Access Pending
-          </Button>
-        {:else}
-          <Button class="btn btn-neutral btn-sm" disabled={joining} onclick={join}>
-            {#if joining}
-              <span class="loading loading-spinner loading-sm"></span>
-            {:else}
-              <Icon icon={Login2} />
-            {/if}
-            Ask to Join
-          </Button>
-        {/if}
-      </div>
-    {:else}
-      <div>
-        {#if parent}
-          <RoomComposeParent event={parent} clear={clearParent} verb="Replying to" />
-        {/if}
-        {#if share}
-          <RoomComposeParent event={share} clear={clearShare} verb="Sharing" />
-        {/if}
-        {#if eventToEdit}
-          <RoomComposeEdit clear={clearEventToEdit} />
-        {/if}
-      </div>
-      {#key eventToEdit}
-        <RoomCompose
-          {url}
-          {h}
-          {onSubmit}
-          {onEscape}
-          {onEditPrevious}
-          initialValues={eventToEdit}
-          bind:this={compose} />
-      {/key}
+  <div
+    class={cx(
+      "flex min-h-0 min-w-0 flex-1 flex-col",
+      voiceConnectedHere && $videoCallLayout === VideoCallLayout.Video && "md:hidden",
+    )}>
+    {#if isVoiceRoom && $voiceState === VoiceState.Connected}
+      <VideoCallContent layout={$videoCallLayout} mobile {url} {h} class="md:hidden" />
     {/if}
-  </div>
-  {#if isVoiceRoom || $voiceState === VoiceState.Joining || $voiceState === VoiceState.Connected}
-    <div class="hide-on-keyboard shrink-0 p-2 md:hidden">
-      <VoiceWidget />
+
+    <PageContent
+      bind:element
+      onscroll={onScroll}
+      class={cx(
+        showMobileVideoPanel
+          ? "hidden flex-col-reverse pt-4 md:flex md:flex-col-reverse"
+          : "flex flex-col-reverse pt-4",
+        pageContentHiddenDesktopVideoOnly && "md:hidden",
+      )}>
+      {#if $room.isPrivate && $membershipStatus !== MembershipStatus.Granted}
+        <div class="py-20">
+          <div class="card2 col-8 m-auto max-w-md items-center text-center">
+            <p class="opacity-75">You aren't currently a member of this room.</p>
+            {#if $membershipStatus === MembershipStatus.Pending}
+              <Button class="btn btn-neutral btn-sm" disabled={leaving} onclick={leave}>
+                <Icon icon={ClockCircle} />
+                Access Pending
+              </Button>
+            {:else}
+              <Button class="btn btn-neutral btn-sm" disabled={joining} onclick={join}>
+                {#if joining}
+                  <span class="loading loading-spinner loading-sm"></span>
+                {:else}
+                  <Icon icon={Login2} />
+                {/if}
+                Join Room
+              </Button>
+            {/if}
+          </div>
+        </div>
+      {:else}
+        {#if loadingForward}
+          <p class="py-20 flex justify-center">
+            <Spinner loading={loadingForward}>Looking for messages...</Spinner>
+          </p>
+        {/if}
+        {#each elements as { type, id, value, showPubkey, addSpaceBelow } (id)}
+          {#if type === "new-messages"}
+            <div
+              {id}
+              class="flex items-center py-2 text-xs transition-colors"
+              class:opacity-0={showFixedNewMessages}>
+              <div class="h-px flex-grow bg-primary"></div>
+              <p class="rounded-full bg-primary px-2 py-1 text-primary-content">New Messages</p>
+              <div class="h-px flex-grow bg-primary"></div>
+            </div>
+          {:else if type === "date"}
+            <Divider>{value}</Divider>
+          {:else}
+            {@const event = $state.snapshot(value as TrustedEvent)}
+            {#if event.kind === ROOM_ADD_MEMBER}
+              <RoomItemAddMember {url} {event} />
+            {:else}
+              <div in:slide class="cv">
+                <RoomItem
+                  {url}
+                  {event}
+                  {replyTo}
+                  {showPubkey}
+                  {addSpaceBelow}
+                  canEdit={canEditEvent}
+                  onEdit={onEditEvent} />
+              </div>
+            {/if}
+          {/if}
+        {/each}
+        <p class="flex h-10 items-center justify-center py-20">
+          {#if loadingBackward}
+            <Spinner loading={loadingBackward}>Looking for messages...</Spinner>
+          {:else}
+            <Spinner>End of message history</Spinner>
+          {/if}
+        </p>
+      {/if}
+      <div class="h-screen"></div>
+    </PageContent>
+
+    <div
+      class={cx(
+        "chat__compose-zone chat__compose flex flex-col gap-1 bg-base-200 md:flex-row md:gap-0",
+        pageContentHiddenDesktopVideoOnly && "md:hidden",
+        showMobileVideoPanel && "max-md:hidden",
+      )}>
+      <div class="chat__compose-inner min-w-0 flex-1">
+        {#if $room.isPrivate && $membershipStatus !== MembershipStatus.Granted}
+          <!-- pass -->
+        {:else if $room.isRestricted && $membershipStatus !== MembershipStatus.Granted}
+          <div class="bg-alt card m-4 flex flex-row items-center justify-between px-4 py-3">
+            <p class="opacity-75">Only members are allowed to post to this room.</p>
+            {#if $membershipStatus === MembershipStatus.Pending}
+              <Button class="btn btn-neutral btn-sm" disabled={leaving} onclick={leave}>
+                <Icon icon={ClockCircle} />
+                Access Pending
+              </Button>
+            {:else}
+              <Button class="btn btn-neutral btn-sm" disabled={joining} onclick={join}>
+                {#if joining}
+                  <span class="loading loading-spinner loading-sm"></span>
+                {:else}
+                  <Icon icon={Login2} />
+                {/if}
+                Ask to Join
+              </Button>
+            {/if}
+          </div>
+        {:else}
+          <div>
+            {#if parent}
+              <RoomComposeParent event={parent} clear={clearParent} verb="Replying to" />
+            {/if}
+            {#if share}
+              <RoomComposeParent event={share} clear={clearShare} verb="Sharing" />
+            {/if}
+            {#if eventToEdit}
+              <RoomComposeEdit clear={clearEventToEdit} />
+            {/if}
+          </div>
+          {#key eventToEdit}
+            <RoomCompose
+              {url}
+              {h}
+              {onSubmit}
+              {onEscape}
+              {onEditPrevious}
+              initialValues={eventToEdit}
+              bind:this={compose} />
+          {/key}
+        {/if}
+      </div>
+      {#if isVoiceRoom || $voiceState === VoiceState.Joining || $voiceState === VoiceState.Connected}
+        <div
+          class={cx(
+            "hide-on-keyboard flex-shrink-0 p-2 md:hidden",
+            showMobileVideoPanel && "hidden",
+          )}>
+          <VoiceWidget />
+        </div>
+      {/if}
     </div>
-  {/if}
+  </div>
 </div>
 
 {#if showScrollButton}

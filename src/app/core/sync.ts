@@ -55,7 +55,7 @@ import {
   loadFeedsForPubkey,
 } from "@app/core/state"
 import {hasBlossomSupport} from "@app/core/commands"
-import {LIVEKIT_PARTICIPANTS} from "@app/voice"
+import {LIVEKIT_PARTICIPANTS} from "@app/call/voice"
 
 // Utils
 

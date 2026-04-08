@@ -12,14 +12,13 @@
   import {makeRoomId} from "@app/core/state"
   import {
     VoiceState,
-    deriveVoiceParticipants,
-    cancelJoinVoiceRoom,
     currentVoiceRoom,
-    voiceState,
     isParticipantSpeaking,
     participantKey,
+    voiceState,
     type VoiceParticipant,
-  } from "@app/voice"
+  } from "@app/call/stores"
+  import {cancelJoinVoiceRoom, deriveVoiceParticipants} from "@app/call/voice"
 
   interface Props {
     url: string
