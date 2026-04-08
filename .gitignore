@@ -28,6 +28,7 @@ node_modules/
 .pnpm-store/
 build/
 .svelte-kit/
+.next/
 
 # Rust/Tauri
 *target/
