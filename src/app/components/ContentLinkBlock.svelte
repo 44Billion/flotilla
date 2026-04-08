@@ -1,12 +1,19 @@
 <script lang="ts">
   import {call, ellipsize, displayUrl, postJson} from "@welshman/lib"
   import {isRelayUrl, getTagValue} from "@welshman/util"
+  import {Capacitor} from "@capacitor/core"
   import {preventDefault, stopPropagation} from "@lib/html"
   import Link from "@lib/components/Link.svelte"
   import ContentLinkDetail from "@app/components/ContentLinkDetail.svelte"
   import ContentLinkBlockImage from "@app/components/ContentLinkBlockImage.svelte"
   import {pushModal} from "@app/util/modal"
-  import {dufflepud, PLATFORM_URL, IMAGE_CONTENT_TYPES, VIDEO_CONTENT_TYPES} from "@app/core/state"
+  import {
+    dufflepud,
+    PLATFORM_URL,
+    IMAGE_CONTENT_TYPES,
+    VIDEO_CONTENT_TYPES,
+    THUMBNAIL_URL,
+  } from "@app/core/state"
   import {makeSpacePath} from "@app/util/routes"
 
   const {value, event} = $props()
@@ -21,6 +28,14 @@
 
     return [url, true]
   })
+
+  const getVideoPoster = (videoUrl: string): string | undefined => {
+    if (Capacitor.getPlatform() === "android" && THUMBNAIL_URL) {
+      return `${THUMBNAIL_URL}/thumbnail?url=${encodeURIComponent(videoUrl)}`
+    }
+
+    return undefined
+  }
 
   const loadPreview = async () => {
     const json = await postJson(dufflepud("link/preview"), {url})
@@ -42,7 +57,12 @@
 <Link {external} {href} class="my-2 block">
   <div class="overflow-hidden rounded-box">
     {#if url.match(/\.(mov|webm|mp4)$/) || VIDEO_CONTENT_TYPES.includes(fileType)}
-      <video controls src={url} class="max-h-96 rounded-box object-contain object-center">
+      <video
+        controls
+        src={url}
+        poster={getVideoPoster(url)}
+        preload="metadata"
+        class="max-h-96 rounded-box object-contain object-center">
         <track kind="captions" />
       </video>
     {:else if url.match(/\.(jpe?g|png|gif|webp)$/) || IMAGE_CONTENT_TYPES.includes(fileType)}
