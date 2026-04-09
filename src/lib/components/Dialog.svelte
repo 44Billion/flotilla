@@ -6,7 +6,6 @@
   import Close from "@assets/icons/close.svg?dataurl"
   import Icon from "@lib/components/Icon.svelte"
   import Button from "@lib/components/Button.svelte"
-  import {clearModals} from "@app/util/modal"
 
   type Props = {
     onClose?: any
@@ -56,7 +55,7 @@
   <div class={wrapperClass}>
     <div class={innerClass} transition:fly>
       {#if !noEscape}
-        <Button class={buttonClass} onclick={clearModals}>
+        <Button class={buttonClass} onclick={onClose}>
           <Icon icon={Close} size={6} />
         </Button>
       {/if}

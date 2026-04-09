@@ -4,13 +4,15 @@
   import Dialog from "@lib/components/Dialog.svelte"
   import SpaceInviteAccept from "@app/components/SpaceInviteAccept.svelte"
 
+  const close = () => goto("/home")
+
   const children = {
     component: SpaceInviteAccept,
     props: {
       invite: $page.url.href,
-      back: () => goto("/home"),
+      back: close,
     },
   }
 </script>
 
-<Dialog {children} />
+<Dialog {children} onClose={close} />
