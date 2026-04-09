@@ -13,6 +13,8 @@ import {
   ROOM_MEMBERS,
   ROOM_ADD_MEMBER,
   ROOM_REMOVE_MEMBER,
+  ROOM_JOIN,
+  ROOM_LEAVE,
   ROOM_CREATE_PERMISSION,
   RELAY_MEMBERS,
   RELAY_ADD_MEMBER,
@@ -278,8 +280,13 @@ const syncSpace = (url: string, rooms: string[]) => {
         url,
         signal: controller.signal,
         filters: [
+          {kinds: [ROOM_META, ROOM_ADMINS, ROOM_MEMBERS], "#d": [room]},
           {kinds: MESSAGE_KINDS, since, "#h": [room]},
           makeCommentFilter(CONTENT_KINDS, {since, "#h": [room]}),
+          {
+            kinds: [ROOM_DELETE, ROOM_JOIN, ROOM_LEAVE, ROOM_ADD_MEMBER, ROOM_REMOVE_MEMBER],
+            "#h": [room],
+          },
           {kinds: [PollResponse], since},
         ],
       })
@@ -292,7 +299,7 @@ const syncSpace = (url: string, rooms: string[]) => {
 
   const relayKinds = [RELAY_MEMBERS, RELAY_ADD_MEMBER, RELAY_REMOVE_MEMBER]
   const roomMetaKinds = [ROOM_META, ROOM_ADMINS, ROOM_MEMBERS, LIVEKIT_PARTICIPANTS]
-  const roomMemberKinds = [ROOM_DELETE, ROOM_ADD_MEMBER, ROOM_REMOVE_MEMBER]
+  const roomMemberKinds = [ROOM_DELETE, ROOM_JOIN, ROOM_LEAVE, ROOM_ADD_MEMBER, ROOM_REMOVE_MEMBER]
 
   pullAndListen({
     url,
@@ -325,9 +332,10 @@ const syncSpaces = () => {
 
   const unsubscribe = store.subscribe(([$userGroupList, $page]) => {
     const urls = new Set(getSpaceUrlsFromGroupList($userGroupList))
+    const currentUrl = $page.params.relay ? decodeRelay($page.params.relay) : undefined
 
-    if ($page.params.relay) {
-      urls.add(decodeRelay($page.params.relay))
+    if (currentUrl) {
+      urls.add(currentUrl)
     }
 
     // Stop syncing removed spaces
@@ -342,6 +350,11 @@ const syncSpaces = () => {
     // Start or restart syncing for each space
     for (const url of urls) {
       const rooms = getSpaceRoomsFromGroupList(url, $userGroupList)
+
+      if (currentUrl === url && $page.params.h && !rooms.includes($page.params.h)) {
+        rooms.push($page.params.h)
+      }
+
       const roomsKey = rooms.join(",")
 
       if (unsubscribersByUrl.has(url) && roomsByUrl.get(url) === roomsKey) continue

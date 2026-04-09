@@ -8,7 +8,6 @@ import {
   on,
   gt,
   max,
-  find,
   spec,
   call,
   first,
@@ -815,36 +814,78 @@ export const deriveOtherRooms = (url: string) =>
 
 // Space/room memberships
 
+const getSpaceMembers = (_url: string, events: TrustedEvent[]) => {
+  const members = new Set<string>()
+
+  for (const event of sortEventsAsc(events)) {
+    if (event.kind === RELAY_MEMBERS) {
+      members.clear()
+
+      for (const pubkey of uniq(getTagValues("member", event.tags))) {
+        members.add(pubkey)
+      }
+
+      continue
+    }
+
+    const pubkeys = getPubkeyTagValues(event.tags)
+
+    if (event.kind === RELAY_ADD_MEMBER) {
+      for (const pubkey of pubkeys) {
+        members.add(pubkey)
+      }
+    }
+
+    if (event.kind === RELAY_REMOVE_MEMBER) {
+      for (const pubkey of pubkeys) {
+        members.delete(pubkey)
+      }
+    }
+  }
+
+  return Array.from(members)
+}
+
+const getRoomMembers = (_url: string, h: string, events: TrustedEvent[]) => {
+  const members = new Set<string>()
+
+  for (const event of sortEventsAsc(events)) {
+    if (event.kind === ROOM_MEMBERS && getTagValue("d", event.tags) === h) {
+      members.clear()
+
+      for (const pubkey of uniq(getPubkeyTagValues(event.tags))) {
+        members.add(pubkey)
+      }
+
+      continue
+    }
+
+    if (getTagValue("h", event.tags) !== h) {
+      continue
+    }
+
+    const pubkeys = getPubkeyTagValues(event.tags)
+
+    if (event.kind === ROOM_ADD_MEMBER) {
+      for (const pubkey of pubkeys) {
+        members.add(pubkey)
+      }
+    }
+
+    if (event.kind === ROOM_REMOVE_MEMBER) {
+      for (const pubkey of pubkeys) {
+        members.delete(pubkey)
+      }
+    }
+  }
+
+  return Array.from(members)
+}
+
 export const deriveSpaceMembers = (url: string) =>
   derived(
     deriveRelaySignedEvents(url, [{kinds: [RELAY_ADD_MEMBER, RELAY_REMOVE_MEMBER, RELAY_MEMBERS]}]),
-    $events => {
-      const membersEvent = $events.find(spec({kind: RELAY_MEMBERS}))
-
-      if (membersEvent) {
-        return uniq(getTagValues("member", membersEvent.tags))
-      }
-
-      const members = new Set<string>()
-
-      for (const event of sortBy(e => e.created_at, $events)) {
-        const pubkeys = getPubkeyTagValues(event.tags)
-
-        if (event.kind === RELAY_ADD_MEMBER) {
-          for (const pubkey of pubkeys) {
-            members.add(pubkey)
-          }
-        }
-
-        if (event.kind === RELAY_REMOVE_MEMBER) {
-          for (const pubkey of pubkeys) {
-            members.delete(pubkey)
-          }
-        }
-      }
-
-      return Array.from(members)
-    },
+    $events => getSpaceMembers(url, $events),
   )
 
 export type BannedPubkeyItem = {
@@ -871,33 +912,7 @@ export const deriveRoomMembers = (url: string, h: string) => {
     {kinds: [ROOM_ADD_MEMBER, ROOM_REMOVE_MEMBER], "#h": [h]},
   ]
 
-  return derived(deriveEventsForUrl(url, filters), $events => {
-    const membersEvent = find(spec({kind: ROOM_MEMBERS}), $events)
-
-    if (membersEvent) {
-      return uniq(getPubkeyTagValues(membersEvent.tags))
-    }
-
-    const members = new Set<string>()
-
-    for (const event of sortEventsAsc($events)) {
-      const pubkeys = getPubkeyTagValues(event.tags)
-
-      if (event.kind === ROOM_ADD_MEMBER) {
-        for (const pubkey of pubkeys) {
-          members.add(pubkey)
-        }
-      }
-
-      if (event.kind === ROOM_REMOVE_MEMBER) {
-        for (const pubkey of pubkeys) {
-          members.delete(pubkey)
-        }
-      }
-    }
-
-    return Array.from(members)
-  })
+  return derived(deriveEventsForUrl(url, filters), $events => getRoomMembers(url, h, $events))
 }
 
 export const deriveRoomAdmins = (url: string, h: string) => {
@@ -921,7 +936,7 @@ export const deriveSpaceActionItems = (url: string) =>
   derived(
     deriveEventsForUrl(url, [
       {
-        kinds: [REPORT, ROOM_JOIN, ROOM_LEAVE, ROOM_MEMBERS],
+        kinds: [REPORT, ROOM_JOIN, ROOM_LEAVE, ROOM_MEMBERS, ROOM_ADD_MEMBER, ROOM_REMOVE_MEMBER],
       },
     ]),
     $events => {
@@ -936,8 +951,10 @@ export const deriveSpaceActionItems = (url: string) =>
 
         const roomJoins = roomEvents.filter(spec({kind: ROOM_JOIN}))
         const roomLeaves = roomEvents.filter(spec({kind: ROOM_LEAVE}))
-        const roomMembersEvent = roomEvents.find(spec({kind: ROOM_MEMBERS}))
-        const roomMembers = getTagValues("p", roomMembersEvent?.tags ?? [])
+        const roomMembershipEvents = roomEvents.filter(event =>
+          [ROOM_MEMBERS, ROOM_ADD_MEMBER, ROOM_REMOVE_MEMBER].includes(event.kind),
+        )
+        const roomMembers = new Set(getRoomMembers(url, h, roomMembershipEvents))
 
         pendingJoins.push(
           ...removeUndefined(
@@ -945,8 +962,22 @@ export const deriveSpaceActionItems = (url: string) =>
               .map(sortEventsDesc)
               .map(first),
           ).filter(({pubkey, created_at}) => {
-            if (roomMembers.includes(pubkey)) return false
-            if (gt(roomMembersEvent?.created_at, created_at)) return false
+            if (roomMembers.has(pubkey)) return false
+            if (
+              roomMembershipEvents.some(event => {
+                if (event.created_at <= created_at) {
+                  return false
+                }
+
+                if (event.kind === ROOM_MEMBERS) {
+                  return true
+                }
+
+                return getPubkeyTagValues(event.tags).includes(pubkey)
+              })
+            ) {
+              return false
+            }
             if (roomLeaves.some(e => e.pubkey === pubkey && e.created_at > created_at)) return false
 
             return true
