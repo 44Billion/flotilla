@@ -172,9 +172,9 @@
       </strong>
       <Button onclick={() => (showAdvanced = !showAdvanced)}>
         {#if showAdvanced}
-          <Icon icon={AltArrowDown} />
-        {:else}
           <Icon icon={AltArrowUp} />
+        {:else}
+          <Icon icon={AltArrowDown} />
         {/if}
       </Button>
     </div>
