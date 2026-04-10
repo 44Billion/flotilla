@@ -318,7 +318,7 @@
     {:else if type === "date"}
       <Divider>{value}</Divider>
     {:else}
-      {@const event = $state.snapshot(value as TrustedEvent)}
+      {@const event = value as TrustedEvent}
       {#if event.kind === RELAY_ADD_MEMBER}
         <RoomItemAddMember {url} {event} />
       {:else}

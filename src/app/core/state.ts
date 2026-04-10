@@ -967,8 +967,9 @@ export const deriveSpaceActionItems = (url: string) =>
 
         pendingJoins.push(
           ...removeUndefined(
-            Array.from(groupBy(e => e.pubkey, roomJoins).values())
-              .map(events => first(sortEventsDesc(events))),
+            Array.from(groupBy(e => e.pubkey, roomJoins).values()).map(events =>
+              first(sortEventsDesc(events)),
+            ),
           ).filter(({pubkey, created_at}) => {
             if (roomMembers.has(pubkey)) return false
             if (

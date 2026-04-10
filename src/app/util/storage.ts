@@ -211,7 +211,8 @@ const loadCriticalRelays = async () => {
   relaysByUrl.set(indexBy(r => r.url, await table.getAll()))
 }
 
-const syncRelays = () => onRelay(batch(FLUSH_INTERVAL, idleWrite(db.table<RelayProfile>("relays").bulkPut)))
+const syncRelays = () =>
+  onRelay(batch(FLUSH_INTERVAL, idleWrite(db.table<RelayProfile>("relays").bulkPut)))
 
 const initRelayStats = async () => {
   const table = db.table<RelayStats>("relayStats")

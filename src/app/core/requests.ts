@@ -101,22 +101,26 @@ export const makeFeed = ({
   }
 
   const unsubscribers = [
-    on(repository, "update", batch(16, (updates: RepositoryUpdate[]) => {
-      const {added, removed} = mergeRepositoryUpdates(updates)
+    on(
+      repository,
+      "update",
+      batch(150, (updates: RepositoryUpdate[]) => {
+        const {added, removed} = mergeRepositoryUpdates(updates)
 
-      if (removed.size > 0) {
-        buffer = buffer.filter(e => !removed.has(e.id))
-        events.update($events => $events.filter(e => !removed.has(e.id)))
-      }
+        if (removed.size > 0) {
+          buffer = buffer.filter(e => !removed.has(e.id))
+          events.update($events => $events.filter(e => !removed.has(e.id)))
+        }
 
-      const matching = added.filter(
-        event => matchFilters(filters, event) && tracker.getRelays(event.id).has(url),
-      )
+        const matching = added.filter(
+          event => matchFilters(filters, event) && tracker.getRelays(event.id).has(url),
+        )
 
-      if (matching.length > 0) {
-        insertEvents(matching)
-      }
-    })),
+        if (matching.length > 0) {
+          insertEvents(matching)
+        }
+      }),
+    ),
     on(tracker, "add", (id: string, trackerUrl: string) => {
       if (trackerUrl === url) {
         const event = repository.getEvent(id)
@@ -252,19 +256,23 @@ export const makeCalendarFeed = ({
   }
 
   const unsubscribers = [
-    on(repository, "update", batch(16, (updates: RepositoryUpdate[]) => {
-      const {added, removed} = mergeRepositoryUpdates(updates)
+    on(
+      repository,
+      "update",
+      batch(150, (updates: RepositoryUpdate[]) => {
+        const {added, removed} = mergeRepositoryUpdates(updates)
 
-      if (removed.size > 0) {
-        events.update($events => $events.filter(e => !removed.has(e.id)))
-      }
+        if (removed.size > 0) {
+          events.update($events => $events.filter(e => !removed.has(e.id)))
+        }
 
-      const matching = added.filter(event => matchFilters(filters, event))
+        const matching = added.filter(event => matchFilters(filters, event))
 
-      if (matching.length > 0) {
-        insertEvents(matching)
-      }
-    })),
+        if (matching.length > 0) {
+          insertEvents(matching)
+        }
+      }),
+    ),
     on(tracker, "add", (id: string, trackerUrl: string) => {
       if (trackerUrl === url) {
         const event = repository.getEvent(id)
