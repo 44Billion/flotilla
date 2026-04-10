@@ -1,4 +1,4 @@
-import {writable} from "svelte/store"
+import {get, writable} from "svelte/store"
 import type {Nip46ResponseWithResult} from "@welshman/signer"
 import {Nip46Broker} from "@welshman/signer"
 import {makeSecret} from "@welshman/util"
@@ -10,6 +10,22 @@ import {
   NIP46_PERMS,
 } from "@app/core/state"
 import {pushToast} from "@app/util/toast"
+
+const APP_SCHEME = "social.flotilla"
+
+const makeSignerCallbackUrl = (path: string) => `${APP_SCHEME}://x-callback-url/${path}`
+
+const makeSignerLaunchUrl = (nostrconnectUrl: string) => {
+  const params = new URLSearchParams({
+    method: "connect",
+    nostrconnect: nostrconnectUrl,
+    "x-source": APP_SCHEME,
+    "x-success": makeSignerCallbackUrl("authSuccess"),
+    "x-error": makeSignerCallbackUrl("authError"),
+  })
+
+  return `nostrsigner://x-callback-url/auth/nip46?${params.toString()}`
+}
 
 export class Nip46Controller {
   url = writable("")
@@ -52,6 +68,22 @@ export class Nip46Controller {
       this.loading.set(true)
       this.onNostrConnect(response)
     }
+  }
+
+  launchSigner() {
+    const nostrconnectUrl = get(this.url)
+    const signerUrl = nostrconnectUrl && makeSignerLaunchUrl(nostrconnectUrl)
+
+    if (!signerUrl) {
+      pushToast({
+        theme: "error",
+        message: "Unable to open signer app right now. Please try again.",
+      })
+
+      return
+    }
+
+    window.location.href = signerUrl
   }
 
   stop() {

@@ -1,4 +1,5 @@
 <script lang="ts">
+  import {Capacitor} from "@capacitor/core"
   import {onMount, onDestroy} from "svelte"
   import type {Nip46ResponseWithResult} from "@welshman/signer"
   import {Nip46Broker} from "@welshman/signer"
@@ -103,9 +104,15 @@
     mode = "connect"
   }
 
+  const openSigner = () => {
+    controller.launchSigner()
+  }
+
   const selectBunker = () => {
     mode = "bunker"
   }
+
+  const isIos = Capacitor.getPlatform() === "ios"
 
   let mode: string = $state("bunker")
 
@@ -138,6 +145,9 @@
       <BunkerUrl {controller} />
       <Button class="btn {$bunker ? 'btn-neutral' : 'btn-primary'}" onclick={selectConnect}
         >Log in with a QR code instead</Button>
+      {#if isIos}
+        <Button class="btn btn-neutral" onclick={openSigner}>Open in Signer</Button>
+      {/if}
     {/if}
   </ModalBody>
   <ModalFooter>

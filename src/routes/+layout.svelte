@@ -78,6 +78,21 @@
       return
     }
 
+    if (url.host === "x-callback-url") {
+      if (url.pathname === "/authError") {
+        const errorMessage = url.searchParams.get("errorMessage")
+
+        pushToast({
+          theme: "error",
+          message: errorMessage || "Signer authorization failed.",
+        })
+      }
+
+      if (["/authSuccess", "/authError"].includes(url.pathname)) {
+        return
+      }
+    }
+
     const target = `${url.pathname}${url.search}${url.hash}`
     goto(target, {replaceState: false, noScroll: false})
   })
