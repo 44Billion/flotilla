@@ -3,7 +3,7 @@
   import {writable} from "svelte/store"
   import {randomId, HOUR} from "@welshman/lib"
   import {makeEvent, EVENT_TIME} from "@welshman/util"
-  import {publishThunk} from "@welshman/app"
+  import {publishThunk, waitForThunkError} from "@welshman/app"
   import {preventDefault} from "@lib/html"
   import {daysBetween} from "@lib/util"
   import GallerySend from "@assets/icons/gallery-send.svg?dataurl"
@@ -22,7 +22,7 @@
   import {makeEditor} from "@app/editor"
   import {DraftKey} from "@app/util/drafts"
   import {pushToast} from "@app/util/toast"
-  import {canEnforceNip70} from "@app/core/commands"
+  import {canEnforceNip70, publishRoomQuote} from "@app/core/commands"
 
   type Values = {
     d: string
@@ -36,11 +36,12 @@
   type Props = {
     url: string
     h?: string
+    shareToChat?: boolean
     header: Snippet
     initialValues?: Values
   }
 
-  let {url, h, header, initialValues}: Props = $props()
+  let {url, h, shareToChat = false, header, initialValues}: Props = $props()
 
   const draftKey = new DraftKey<Values>(`calendar:${url}:${h ?? ""}`)
 
@@ -57,7 +58,7 @@
   const selectFiles = () => editor.then(ed => ed.chain().selectFiles().run())
 
   const submit = async () => {
-    if ($uploading) return
+    if ($uploading || loading) return
 
     if (!title) {
       return pushToast({
@@ -92,21 +93,41 @@
       ...ed.storage.nostr.getEditorTags(),
     ]
 
-    if (await shouldProtect) {
-      tags.push(PROTECTED)
+    loading = true
+
+    try {
+      const protect = await shouldProtect
+
+      if (protect) {
+        tags.push(PROTECTED)
+      }
+
+      if (h) {
+        tags.push(["h", h])
+      }
+
+      const event = makeEvent(EVENT_TIME, {content, tags})
+      const calendarThunk = publishThunk({event, relays: [url]})
+      const error = await waitForThunkError(calendarThunk)
+
+      if (error) {
+        return pushToast({theme: "error", message: error})
+      }
+
+      draftKey.clear()
+      history.back()
+
+      if (shareToChat) {
+        publishRoomQuote({url, h, parent: calendarThunk.event, protect})
+      }
+
+      pushToast({message: "Your event has been saved!"})
+    } finally {
+      loading = false
     }
-
-    if (h) {
-      tags.push(["h", h])
-    }
-
-    const event = makeEvent(EVENT_TIME, {content, tags})
-
-    pushToast({message: "Your event has been saved!"})
-    publishThunk({event, relays: [url]})
-    draftKey.clear()
-    history.back()
   }
+
+  let loading = $state(false)
 
   const d = $state(initialValues?.d ?? randomId())
   let title = $state(initialValues?.title ?? "")
@@ -158,7 +179,11 @@
           <div class="input-editor grow overflow-hidden">
             <EditorContent {editor} />
           </div>
-          <Button data-tip="Add an image" class="center btn tooltip" onclick={selectFiles}>
+          <Button
+            data-tip="Add an image"
+            class="center btn tooltip"
+            onclick={selectFiles}
+            disabled={loading}>
             {#if $uploading}
               <span class="loading loading-spinner loading-xs"></span>
             {:else}
@@ -197,12 +222,12 @@
     </Field>
   </ModalBody>
   <ModalFooter>
-    <Button class="btn btn-link" onclick={back}>
+    <Button class="btn btn-link" onclick={back} disabled={loading}>
       <Icon icon={AltArrowLeft} />
       Go back
     </Button>
-    <Button type="submit" class="btn btn-primary" disabled={$uploading}>
-      <Spinner loading={$uploading}>Save Event</Spinner>
+    <Button type="submit" class="btn btn-primary" disabled={$uploading || loading}>
+      <Spinner loading={$uploading || loading}>Save Event</Spinner>
     </Button>
   </ModalFooter>
 </Modal>

@@ -327,7 +327,7 @@
 
 .note-editor .tiptap {
   --tiptap-object-bg: var(--color-base-200);
-  @apply input rounded-box h-auto min-h-32 p-[.65rem] pb-6;
+  @apply input rounded-box block h-auto min-h-32 w-full p-[.65rem] pb-6;
 }
 
 .input-editor .tiptap {

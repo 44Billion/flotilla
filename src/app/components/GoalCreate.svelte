@@ -1,7 +1,7 @@
 <script lang="ts">
   import {writable} from "svelte/store"
   import {makeEvent, ZAP_GOAL} from "@welshman/util"
-  import {publishThunk} from "@welshman/app"
+  import {publishThunk, waitForThunkError} from "@welshman/app"
   import {isMobile, preventDefault} from "@lib/html"
   import Paperclip from "@assets/icons/paperclip-2.svg?dataurl"
   import Bolt from "@assets/icons/bolt.svg?dataurl"
@@ -10,6 +10,7 @@
   import Field from "@lib/components/Field.svelte"
   import FieldInline from "@lib/components/FieldInline.svelte"
   import Button from "@lib/components/Button.svelte"
+  import Spinner from "@lib/components/Spinner.svelte"
   import ModalHeader from "@lib/components/ModalHeader.svelte"
   import ModalTitle from "@lib/components/ModalTitle.svelte"
   import ModalSubtitle from "@lib/components/ModalSubtitle.svelte"
@@ -21,7 +22,7 @@
   import {PROTECTED} from "@app/core/state"
   import {makeEditor} from "@app/editor"
   import {DraftKey} from "@app/util/drafts"
-  import {canEnforceNip70} from "@app/core/commands"
+  import {canEnforceNip70, publishRoomQuote} from "@app/core/commands"
 
   type Values = {
     title: string
@@ -33,9 +34,10 @@
     url: string
     h?: string
     initialValues?: Values
+    shareToChat?: boolean
   }
 
-  let {url, h, initialValues}: Props = $props()
+  let {url, h, initialValues, shareToChat = false}: Props = $props()
 
   const draftKey = new DraftKey<Values>(`goal:${url}:${h ?? ""}`)
 
@@ -52,7 +54,7 @@
   const selectFiles = () => editor.then(ed => ed.commands.selectFiles())
 
   const submit = async () => {
-    if ($uploading) return
+    if ($uploading || loading) return
 
     if (!title) {
       return pushToast({
@@ -78,22 +80,42 @@
       ["relays", url],
     ]
 
-    if (await shouldProtect) {
-      tags.push(PROTECTED)
+    loading = true
+
+    try {
+      const protect = await shouldProtect
+
+      if (protect) {
+        tags.push(PROTECTED)
+      }
+
+      if (h) {
+        tags.push(["h", h])
+      }
+
+      const goalThunk = publishThunk({
+        relays: [url],
+        event: makeEvent(ZAP_GOAL, {content: title, tags}),
+      })
+
+      const error = await waitForThunkError(goalThunk)
+
+      if (error) {
+        return pushToast({theme: "error", message: error})
+      }
+
+      draftKey.clear()
+      history.back()
+
+      if (shareToChat) {
+        publishRoomQuote({url, h, parent: goalThunk.event, protect})
+      }
+    } finally {
+      loading = false
     }
-
-    if (h) {
-      tags.push(["h", h])
-    }
-
-    publishThunk({
-      relays: [url],
-      event: makeEvent(ZAP_GOAL, {content: title, tags}),
-    })
-
-    draftKey.clear()
-    history.back()
   }
+
+  let loading = $state(false)
 
   let title = $state(initialValues?.title ?? "")
   let amount = $state(initialValues?.amount ?? 1000)
@@ -154,7 +176,8 @@
         <Button
           data-tip="Add an image"
           class="tooltip tooltip-left absolute bottom-1 right-2"
-          onclick={selectFiles}>
+          onclick={selectFiles}
+          disabled={loading}>
           {#if $uploading}
             <span class="loading loading-spinner loading-xs"></span>
           {:else}
@@ -169,16 +192,16 @@
           {/snippet}
           {#snippet input()}
             <div class="flex grow justify-end">
-              <label class="input input-bordered flex items-center gap-2">
+              <label class="input input-bordered flex w-auto items-center gap-2">
                 <Icon icon={Bolt} />
-                <input bind:value={amount} type="number" class="w-28" />
-                <p class="opacity-50">sats</p>
+                <input bind:value={amount} type="number" class="w-28 grow" />
+                <p class="shrink-0 opacity-50">sats</p>
               </label>
             </div>
           {/snippet}
         </FieldInline>
         <input
-          class="range range-primary -mt-2"
+          class="range range-primary -mt-2 w-full"
           type="range"
           min="1000"
           max="100000"
@@ -188,10 +211,12 @@
     </div>
   </ModalBody>
   <ModalFooter>
-    <Button class="btn btn-link" onclick={back}>
+    <Button class="btn btn-link" onclick={back} disabled={loading}>
       <Icon icon={AltArrowLeft} />
       Go back
     </Button>
-    <Button type="submit" class="btn btn-primary">Create Goal</Button>
+    <Button type="submit" class="btn btn-primary" disabled={$uploading || loading}>
+      <Spinner {loading}>Create Goal</Spinner>
+    </Button>
   </ModalFooter>
 </Modal>

@@ -26,7 +26,7 @@
   import RoomCompose from "@app/components/RoomCompose.svelte"
   import RoomComposeEdit from "@src/app/components/RoomComposeEdit.svelte"
   import RoomComposeParent from "@app/components/RoomComposeParent.svelte"
-  import {userSettingsValues, decodeRelay, PROTECTED, MESSAGE_KINDS} from "@app/core/state"
+  import {userSettingsValues, decodeRelay, PROTECTED} from "@app/core/state"
   import {prependParent, canEnforceNip70, publishDelete} from "@app/core/commands"
   import {checked} from "@app/util/notifications"
   import {pushToast} from "@app/util/toast"
@@ -258,7 +258,7 @@
       url,
       at: at || now(),
       element: element!,
-      filters: [{kinds: [...MESSAGE_KINDS, RELAY_ADD_MEMBER]}],
+      filters: [{kinds: [MESSAGE, RELAY_ADD_MEMBER]}],
       onBackwardExhausted: () => {
         loadingBackward = false
       },

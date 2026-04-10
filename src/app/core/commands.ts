@@ -22,6 +22,7 @@ import {PollResponse} from "nostr-tools/kinds"
 import {
   DELETE,
   REPORT,
+  MESSAGE,
   PROFILE,
   MESSAGING_RELAYS,
   RELAYS,
@@ -120,6 +121,34 @@ export const prependParent = (
   }
 
   return {content, tags}
+}
+
+export const publishRoomQuote = ({
+  url,
+  h,
+  parent,
+  protect,
+  delay,
+}: {
+  url: string
+  h?: string
+  parent: TrustedEvent
+  protect: boolean
+  delay?: number
+}) => {
+  const tags: string[][] = []
+
+  if (h) {
+    tags.push(["h", h])
+  }
+
+  if (protect) {
+    tags.push(PROTECTED)
+  }
+
+  const event = makeEvent(MESSAGE, prependParent(parent, {content: "", tags}, url))
+
+  return publishThunk({relays: [url], event, delay})
 }
 
 // Synchronization

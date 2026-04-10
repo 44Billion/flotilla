@@ -68,7 +68,7 @@
     })
 
     const observer = new ResizeObserver(() => {
-      spacer!.style.minHeight = `${form!.offsetHeight}px`
+      spacer!.style.minHeight = `${form!.offsetHeight + 60}px`
     })
 
     observer.observe(form!)
@@ -84,7 +84,7 @@
   in:fly
   bind:this={form}
   onsubmit={preventDefault(submit)}
-  class="left-content bottom-sai right-sai ml-2 pl-2 fixed z-feature">
+  class="left-content bottom-sai right-sai fixed z-feature mb-14 md:mb-0 w-full md:w-auto pr-2">
   <div class="card2 mx-2 my-2 bg-alt shadow-md">
     <div class="relative">
       <div class="note-editor grow overflow-hidden">

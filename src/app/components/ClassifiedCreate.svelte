@@ -7,12 +7,13 @@
   type Props = {
     url: string
     h?: string
+    shareToChat?: boolean
   }
 
-  const {url, h}: Props = $props()
+  const {url, h, shareToChat = false}: Props = $props()
 </script>
 
-<ClassifiedForm {url} {h}>
+<ClassifiedForm {url} {h} {shareToChat}>
   {#snippet header()}
     <ModalHeader>
       <ModalTitle>Create a Classified Listing</ModalTitle>

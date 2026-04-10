@@ -8,14 +8,9 @@
   import {getRoomItemPath} from "@app/util/routes"
 
   const props: ComponentProps<typeof NoteContent> = $props()
-  const MESSAGE_MIN_LENGTH = 5000
-  const MESSAGE_MAX_LENGTH = 5500
-
   const path = getRoomItemPath(props.url!, props.event)
-  const minLength =
-    props.minLength ?? (props.event.kind === MESSAGE ? MESSAGE_MIN_LENGTH : undefined)
-  const maxLength =
-    props.maxLength ?? (props.event.kind === MESSAGE ? MESSAGE_MAX_LENGTH : undefined)
+  const minLength = 5000
+  const maxLength = 5500
 </script>
 
 <div class={cx("text-sm", {"card2 card2-sm bg-alt": props.event.kind !== MESSAGE})}>

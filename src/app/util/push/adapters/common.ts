@@ -17,13 +17,13 @@ import {
   getRelaysFromList,
   getTagValue,
   matchFilters,
+  MESSAGE,
   type Filter,
   type TrustedEvent,
 } from "@welshman/util"
 import {
   DM_KINDS,
   CONTENT_KINDS,
-  MESSAGE_KINDS,
   notificationSettings,
   pushState,
   shouldNotify,
@@ -45,7 +45,10 @@ export type PushPermissionResult = {
 }
 
 export const onNotification = call(() => {
-  const allFilters = [{kinds: [...MESSAGE_KINDS, ...DM_KINDS]}, makeCommentFilter(MESSAGE_KINDS)]
+  const allFilters = [
+    {kinds: [MESSAGE, ...CONTENT_KINDS, ...DM_KINDS]},
+    makeCommentFilter(CONTENT_KINDS),
+  ]
   const filters = allFilters.map(assoc("since", now()))
   const subscribers: Subscriber<TrustedEvent>[] = []
 
@@ -158,7 +161,7 @@ export const syncRelaySubscriptions = (
     userSettingsValues,
   ]).subscribe(
     throttle(3000, ([$userSpaceUrls, {spaces, mentions}, {alerts}]) => {
-      const baseFilters = [{kinds: MESSAGE_KINDS}, makeCommentFilter(CONTENT_KINDS)]
+      const baseFilters = [{kinds: [MESSAGE, ...CONTENT_KINDS]}, makeCommentFilter(CONTENT_KINDS)]
 
       for (const url of $userSpaceUrls) {
         const {notify = true, exceptions = []} = alerts.find(spec({url})) || {}

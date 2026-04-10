@@ -17,7 +17,7 @@
     "aria-pressed"?: boolean
   } = $props()
 
-  const className = $derived(`text-left ${restProps.class}`)
+  const className = $derived(`text-left cursor-pointer ${restProps.class}`)
 
   const onClick = (e: Event) => {
     e.preventDefault()

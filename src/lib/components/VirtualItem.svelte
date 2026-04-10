@@ -1,17 +1,14 @@
 <script lang="ts">
   import type {Snippet} from "svelte"
 
-  let {
-    children,
-    root,
-    initiallyVisible = false,
-    estimatedHeight = 48,
-  }: {
+  type Props = {
     children: Snippet
     root?: HTMLElement
     initiallyVisible?: boolean
     estimatedHeight?: number
-  } = $props()
+  }
+
+  const {children, root, initiallyVisible = false, estimatedHeight = 48}: Props = $props()
 
   let visible = $state(initiallyVisible)
   let height = $state(estimatedHeight)

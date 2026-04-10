@@ -1,7 +1,7 @@
 <script lang="ts">
   import {insertAt, now, randomId, removeAt, removeUndefined} from "@welshman/lib"
   import {makeEvent} from "@welshman/util"
-  import {publishThunk} from "@welshman/app"
+  import {publishThunk, waitForThunkError} from "@welshman/app"
   import {Poll} from "nostr-tools/kinds"
   import {isMobile, preventDefault} from "@lib/html"
   import AltArrowLeft from "@assets/icons/alt-arrow-left.svg?dataurl"
@@ -13,6 +13,7 @@
   import FieldInline from "@lib/components/FieldInline.svelte"
   import DateTimeInput from "@lib/components/DateTimeInput.svelte"
   import Button from "@lib/components/Button.svelte"
+  import Spinner from "@lib/components/Spinner.svelte"
   import ModalHeader from "@lib/components/ModalHeader.svelte"
   import ModalTitle from "@lib/components/ModalTitle.svelte"
   import ModalSubtitle from "@lib/components/ModalSubtitle.svelte"
@@ -21,7 +22,7 @@
   import ModalBody from "@lib/components/ModalBody.svelte"
   import {pushToast} from "@app/util/toast"
   import {PROTECTED} from "@app/core/state"
-  import {canEnforceNip70} from "@app/core/commands"
+  import {canEnforceNip70, publishRoomQuote} from "@app/core/commands"
   import {DraftKey} from "@app/util/drafts"
   import type {PollType} from "@app/util/polls"
 
@@ -40,9 +41,10 @@
   type Props = {
     url: string
     h?: string
+    shareToChat?: boolean
   }
 
-  const {url, h}: Props = $props()
+  const {url, h, shareToChat = false}: Props = $props()
   const draftKey = new DraftKey<Values>(`poll:${url}:${h ?? ""}`)
   const initialValues = draftKey.get()
 
@@ -102,6 +104,8 @@
   }
 
   const submit = async () => {
+    if (loading) return
+
     if (!title.trim()) {
       return pushToast({theme: "error", message: "Please provide a title for your poll."})
     }
@@ -130,18 +134,38 @@
       tags.push(["h", h])
     }
 
-    if (await shouldProtect) {
-      tags.push(PROTECTED)
+    loading = true
+
+    try {
+      const protect = await shouldProtect
+
+      if (protect) {
+        tags.push(PROTECTED)
+      }
+
+      const pollThunk = publishThunk({
+        relays: [url],
+        event: makeEvent(Poll, {content: title.trim(), tags}),
+      })
+
+      const error = await waitForThunkError(pollThunk)
+
+      if (error) {
+        return pushToast({theme: "error", message: error})
+      }
+
+      draftKey.clear()
+      history.back()
+
+      if (shareToChat) {
+        publishRoomQuote({url, h, parent: pollThunk.event, protect})
+      }
+    } finally {
+      loading = false
     }
-
-    publishThunk({
-      relays: [url],
-      event: makeEvent(Poll, {content: title.trim(), tags}),
-    })
-
-    draftKey.clear()
-    history.back()
   }
+
+  let loading = $state(false)
 
   let draggedOptionId = $state<string | undefined>()
   let title = $state(initialValues?.title ?? "")
@@ -246,10 +270,12 @@
     </div>
   </ModalBody>
   <ModalFooter>
-    <Button class="btn btn-link" onclick={back}>
+    <Button class="btn btn-link" onclick={back} disabled={loading}>
       <Icon icon={AltArrowLeft} />
       Go back
     </Button>
-    <Button type="submit" class="btn btn-primary">Create Poll</Button>
+    <Button type="submit" class="btn btn-primary" disabled={loading}>
+      <Spinner {loading}>Create Poll</Spinner>
+    </Button>
   </ModalFooter>
 </Modal>

@@ -22,15 +22,15 @@
 
   const {url, h, onClick}: Props = $props()
 
-  const createGoal = () => pushModal(GoalCreate, {url, h})
+  const createGoal = () => pushModal(GoalCreate, {url, h, shareToChat: true})
 
-  const createCalendarEvent = () => pushModal(CalendarEventCreate, {url, h})
+  const createCalendarEvent = () => pushModal(CalendarEventCreate, {url, h, shareToChat: true})
 
-  const createThread = () => pushModal(ThreadCreate, {url, h})
+  const createThread = () => pushModal(ThreadCreate, {url, h, shareToChat: true})
 
-  const createClassified = () => pushModal(ClassifiedCreate, {url, h})
+  const createClassified = () => pushModal(ClassifiedCreate, {url, h, shareToChat: true})
 
-  const createPoll = () => pushModal(PollCreate, {url, h})
+  const createPoll = () => pushModal(PollCreate, {url, h, shareToChat: true})
 
   let ul: Element
 

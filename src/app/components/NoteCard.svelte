@@ -16,6 +16,7 @@
     children,
     minimal = false,
     hideProfile = false,
+    noShadow = false,
     url,
     ...restProps
   }: {
@@ -23,6 +24,7 @@
     children: Snippet
     minimal?: boolean
     hideProfile?: boolean
+    noShadow?: boolean
     url?: string
     class?: string
   } = $props()
@@ -34,7 +36,7 @@
   let muted = $state($isEventMuted(event))
 </script>
 
-<div class="flex flex-col gap-2 shadow-md {restProps.class}">
+<div class="flex flex-col gap-2 {restProps.class}" class:shadow-md={!noShadow}>
   {#if muted}
     <div class="flex items-center justify-between">
       <div class="row-2 relative">

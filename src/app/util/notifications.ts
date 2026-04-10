@@ -5,10 +5,10 @@ import {pubkey, tracker, repository, relaysByUrl} from "@welshman/app"
 import {assoc, prop, first, identity, groupBy, now} from "@welshman/lib"
 import type {TrustedEvent} from "@welshman/util"
 import {deriveEventsByIdByUrl} from "@welshman/store"
-import {sortEventsDesc, getTagValue} from "@welshman/util"
+import {sortEventsDesc, getTagValue, MESSAGE} from "@welshman/util"
 import {makeSpacePath, makeRoomPath, makeSpaceChatPath, makeChatPath} from "@app/util/routes"
 import {
-  MESSAGE_KINDS,
+  CONTENT_KINDS,
   notificationSettings,
   chatsById,
   userGroupList,
@@ -85,7 +85,7 @@ export const allNotifications = derived(
         deriveEventsByIdByUrl({
           tracker,
           repository,
-          filters: [{kinds: MESSAGE_KINDS}, makeCommentFilter(MESSAGE_KINDS)],
+          filters: [{kinds: [MESSAGE, ...CONTENT_KINDS]}, makeCommentFilter(CONTENT_KINDS)],
         }),
       ],
       identity,

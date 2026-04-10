@@ -38,7 +38,6 @@
     deriveRoom,
     deriveUserRoomMembershipStatus,
     getRoomType,
-    MESSAGE_KINDS,
     MembershipStatus,
     PROTECTED,
     RoomType,
@@ -366,7 +365,7 @@
       url,
       at: at || now(),
       element: element!,
-      filters: [{kinds: [...MESSAGE_KINDS, ROOM_ADD_MEMBER], "#h": [h]}],
+      filters: [{kinds: [MESSAGE, ROOM_ADD_MEMBER], "#h": [h]}],
       onBackwardExhausted: () => {
         loadingBackward = false
       },

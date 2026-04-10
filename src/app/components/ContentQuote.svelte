@@ -49,7 +49,7 @@
         <NoteContentMinimal trimParent {url} event={$quote} />
       </div>
     {:else}
-      <NoteCard event={$quote} {url} class="bg-alt rounded-box p-4">
+      <NoteCard noShadow event={$quote} {url} class="bg-alt rounded-box p-4">
         <NoteContentMinimal {url} event={$quote} />
       </NoteCard>
     {/if}

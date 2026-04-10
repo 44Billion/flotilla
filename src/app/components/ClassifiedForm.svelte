@@ -2,7 +2,7 @@
   import type {Snippet} from "svelte"
   import {removeUndefined, randomId, uniq} from "@welshman/lib"
   import {makeEvent, CLASSIFIED} from "@welshman/util"
-  import {publishThunk} from "@welshman/app"
+  import {publishThunk, waitForThunkError} from "@welshman/app"
   import {isMobile, preventDefault} from "@lib/html"
   import {normalizeTopic} from "@lib/util"
   import AltArrowLeft from "@assets/icons/alt-arrow-left.svg?dataurl"
@@ -21,7 +21,7 @@
   import {PROTECTED} from "@app/core/state"
   import {makeEditor} from "@app/editor"
   import {DraftKey} from "@app/util/drafts"
-  import {canEnforceNip70, uploadFile} from "@app/core/commands"
+  import {canEnforceNip70, publishRoomQuote, uploadFile} from "@app/core/commands"
 
   type Values = {
     d: string
@@ -37,11 +37,12 @@
   type Props = {
     url: string
     h?: string
+    shareToChat?: boolean
     header: Snippet
     initialValues?: Values
   }
 
-  let {url, h, header, initialValues}: Props = $props()
+  let {url, h, shareToChat = false, header, initialValues}: Props = $props()
 
   const draftKey = new DraftKey<Values>(`classified:${url}:${h ?? ""}`)
 
@@ -87,7 +88,9 @@
         tags.push(["t", topic])
       }
 
-      if (await shouldProtect) {
+      const protect = await shouldProtect
+
+      if (protect) {
         tags.push(PROTECTED)
       }
 
@@ -114,13 +117,23 @@
         }
       }
 
-      publishThunk({
+      const classifiedThunk = publishThunk({
         relays: [url],
         event: makeEvent(CLASSIFIED, {content, tags}),
       })
 
+      const error = await waitForThunkError(classifiedThunk)
+
+      if (error) {
+        return pushToast({theme: "error", message: error})
+      }
+
       draftKey.clear()
       history.back()
+
+      if (shareToChat) {
+        publishRoomQuote({url, h, parent: classifiedThunk.event, protect})
+      }
     } finally {
       loading = false
     }

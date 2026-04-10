@@ -7,12 +7,13 @@
   type Props = {
     url: string
     h?: string
+    shareToChat?: boolean
   }
 
-  const {url, h}: Props = $props()
+  const {url, h, shareToChat = false}: Props = $props()
 </script>
 
-<CalendarEventForm {url} {h}>
+<CalendarEventForm {url} {h} {shareToChat}>
   {#snippet header()}
     <ModalHeader>
       <ModalTitle>Create an Event</ModalTitle>

@@ -19,6 +19,7 @@ import {
   RELAY_MEMBERS,
   RELAY_ADD_MEMBER,
   RELAY_REMOVE_MEMBER,
+  MESSAGE,
   isSignedEvent,
   unionFilters,
   getTagValue,
@@ -43,7 +44,6 @@ import {
 } from "@welshman/app"
 import {
   REACTION_KINDS,
-  MESSAGE_KINDS,
   CONTENT_KINDS,
   INDEXER_RELAYS,
   loadSettings,
@@ -281,7 +281,7 @@ const syncSpace = (url: string, rooms: string[]) => {
         signal: controller.signal,
         filters: [
           {kinds: [ROOM_META, ROOM_ADMINS, ROOM_MEMBERS], "#d": [room]},
-          {kinds: MESSAGE_KINDS, since, "#h": [room]},
+          {kinds: [MESSAGE, ...CONTENT_KINDS], since, "#h": [room]},
           makeCommentFilter(CONTENT_KINDS, {since, "#h": [room]}),
           {
             kinds: [ROOM_DELETE, ROOM_JOIN, ROOM_LEAVE, ROOM_ADD_MEMBER, ROOM_REMOVE_MEMBER],
@@ -305,7 +305,7 @@ const syncSpace = (url: string, rooms: string[]) => {
     url,
     signal: controller.signal,
     filters: [
-      {kinds: [...relayKinds, ...roomMetaKinds, ...roomMemberKinds, ...MESSAGE_KINDS]},
+      {kinds: [...relayKinds, ...roomMetaKinds, ...roomMemberKinds, ...CONTENT_KINDS, MESSAGE]},
       makeCommentFilter(CONTENT_KINDS, {since}),
       {kinds: [PollResponse], since},
     ],
