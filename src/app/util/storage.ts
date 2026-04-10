@@ -48,6 +48,18 @@ import {
 import type {Unsubscriber} from "svelte/store"
 import {db} from "@app/core/storage"
 
+// Shared interval for all non-critical store flushes, so they batch on the same cadence
+const FLUSH_INTERVAL = 3000
+
+// Wraps a write callback to run during idle time (non-critical persistence)
+const idleWrite = <T>(f: (xs: T[]) => void): ((xs: T[]) => void) => {
+  if (typeof requestIdleCallback !== "undefined") {
+    return (xs: T[]) => requestIdleCallback(() => f(xs))
+  }
+
+  return f
+}
+
 const kinds = {
   meta: [PROFILE, FOLLOWS, MUTES, RELAYS, BLOSSOM_SERVERS, MESSAGING_RELAYS, APP_DATA, ROOMS],
   alert: [ALERT_STATUS, ALERT_EMAIL, ALERT_WEB, ALERT_IOS, ALERT_ANDROID],
@@ -199,14 +211,14 @@ const loadCriticalRelays = async () => {
   relaysByUrl.set(indexBy(r => r.url, await table.getAll()))
 }
 
-const syncRelays = () => onRelay(batch(1000, db.table<RelayProfile>("relays").bulkPut))
+const syncRelays = () => onRelay(batch(FLUSH_INTERVAL, idleWrite(db.table<RelayProfile>("relays").bulkPut)))
 
 const initRelayStats = async () => {
   const table = db.table<RelayStats>("relayStats")
 
   relayStatsByUrl.set(indexBy(r => r.url, await table.getAll()))
 
-  return onRelayStats(batch(1000, table.bulkPut))
+  return onRelayStats(batch(FLUSH_INTERVAL, idleWrite(table.bulkPut)))
 }
 
 const initHandles = async () => {
@@ -214,7 +226,7 @@ const initHandles = async () => {
 
   handlesByNip05.set(indexBy(r => r.nip05, await table.getAll()))
 
-  return onHandle(batch(1000, table.bulkPut))
+  return onHandle(batch(FLUSH_INTERVAL, idleWrite(table.bulkPut)))
 }
 
 const initZappers = async () => {
@@ -222,7 +234,7 @@ const initZappers = async () => {
 
   zappersByLnurl.set(indexBy(z => z.lnurl, await table.getAll()))
 
-  return onZapper(batch(3000, table.bulkPut))
+  return onZapper(batch(FLUSH_INTERVAL, idleWrite(table.bulkPut)))
 }
 
 const initPlaintext = async () => {

@@ -554,7 +554,7 @@ export const chatsById = call(() => {
         setTimeout(() => {
           addEvents(added)
           removeEvents(removed)
-        }, 50)
+        }, 200)
       }),
     ]
 
@@ -568,7 +568,7 @@ export const deriveChat = call(() => {
   return (pubkeys: string[]) => _deriveChat(makeChatId(pubkeys))
 })
 
-export const chatSearch = derived(throttled(800, chatsById), $chatsByPubkey => {
+export const chatSearch = derived(throttled(1500, chatsById), $chatsByPubkey => {
   return createSearch(
     sortBy(c => -c.last_activity, Array.from($chatsByPubkey.values())),
     {
@@ -607,7 +607,7 @@ export const roomMetaEventsByIdByUrl = deriveEventsByIdByUrl({
 })
 
 export const roomsByUrl = derived(roomMetaEventsByIdByUrl, roomMetaEventsByIdByUrl => {
-  const metaByIdByUrl = new Map<string, Map<string, Room>>()
+  const result = new Map<string, Room[]>()
 
   for (const [url, events] of roomMetaEventsByIdByUrl.entries()) {
     const [metaEvents, deleteEvents] = partition(spec({kind: ROOM_META}), events.values())
@@ -619,6 +619,8 @@ export const roomsByUrl = derived(roomMetaEventsByIdByUrl, roomMetaEventsByIdByU
       }
     }
 
+    const metaById = new Map<string, Room>()
+
     for (const event of metaEvents) {
       const meta = tryCatch(() => readRoomMeta(event))
 
@@ -626,22 +628,14 @@ export const roomsByUrl = derived(roomMetaEventsByIdByUrl, roomMetaEventsByIdByU
         continue
       }
 
-      let metaById = metaByIdByUrl.get(url)
-      if (!metaById) {
-        metaById = new Map()
-        metaByIdByUrl.set(url, metaById)
-      }
-
       const id = makeRoomId(url, meta.h)
 
       metaById.set(id, {...meta, url, id})
     }
-  }
 
-  const result = new Map<string, Room[]>()
-
-  for (const [url, metaById] of metaByIdByUrl.entries()) {
-    result.set(url, Array.from(metaById.values()))
+    if (metaById.size > 0) {
+      result.set(url, Array.from(metaById.values()))
+    }
   }
 
   return result
@@ -949,18 +943,32 @@ export const deriveSpaceActionItems = (url: string) =>
       for (const [h, roomEvents] of groupBy(getRoomId, $events)) {
         if (!h) continue
 
-        const roomJoins = roomEvents.filter(spec({kind: ROOM_JOIN}))
-        const roomLeaves = roomEvents.filter(spec({kind: ROOM_LEAVE}))
-        const roomMembershipEvents = roomEvents.filter(event =>
-          [ROOM_MEMBERS, ROOM_ADD_MEMBER, ROOM_REMOVE_MEMBER].includes(event.kind),
-        )
+        const roomJoins: TrustedEvent[] = []
+        const roomLeaves: TrustedEvent[] = []
+        const roomMembershipEvents: TrustedEvent[] = []
+
+        for (const event of roomEvents) {
+          switch (event.kind) {
+            case ROOM_JOIN:
+              roomJoins.push(event)
+              break
+            case ROOM_LEAVE:
+              roomLeaves.push(event)
+              break
+            case ROOM_MEMBERS:
+            case ROOM_ADD_MEMBER:
+            case ROOM_REMOVE_MEMBER:
+              roomMembershipEvents.push(event)
+              break
+          }
+        }
+
         const roomMembers = new Set(getRoomMembers(url, h, roomMembershipEvents))
 
         pendingJoins.push(
           ...removeUndefined(
             Array.from(groupBy(e => e.pubkey, roomJoins).values())
-              .map(sortEventsDesc)
-              .map(first),
+              .map(events => first(sortEventsDesc(events))),
           ).filter(({pubkey, created_at}) => {
             if (roomMembers.has(pubkey)) return false
             if (

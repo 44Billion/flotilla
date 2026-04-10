@@ -1,5 +1,6 @@
-import {get, writable} from "svelte/store"
+import {writable} from "svelte/store"
 import {
+  batch,
   call,
   uniq,
   int,
@@ -25,7 +26,8 @@ import {
   sortEventsDesc,
 } from "@welshman/util"
 import type {TrustedEvent, Filter, List} from "@welshman/util"
-import {load, request} from "@welshman/net"
+import {load, request, mergeRepositoryUpdates} from "@welshman/net"
+import type {RepositoryUpdate} from "@welshman/net"
 import {repository, loadRelay, tracker} from "@welshman/app"
 import {createScroller} from "@lib/html"
 import {daysBetween} from "@lib/util"
@@ -56,57 +58,71 @@ export const makeFeed = ({
   let backwardWindow = [at - interval, at]
   let forwardWindow = [at, at + interval]
 
-  const insertEvent = (event: TrustedEvent) => {
-    let handled = false
+  const insertIntoBuffer = (event: TrustedEvent) => {
+    for (let i = 0; i < buffer.length; i++) {
+      if (buffer[i].created_at > event.created_at) {
+        buffer.splice(i, 0, event)
+        return
+      }
+    }
+    buffer.push(event)
+  }
 
-    if (between([backwardWindow[0], forwardWindow[1]], event.created_at)) {
-      const $events = get(events)
+  // Batch-insert events into the visible store with a single update
+  const insertEvents = (newEvents: TrustedEvent[]) => {
+    const visible: TrustedEvent[] = []
 
-      for (let i = 0; i < $events.length; i++) {
-        if ($events[i].created_at > event.created_at) {
-          events.set(insertAt(i, event, $events))
-          handled = true
-          break
+    for (const event of newEvents) {
+      if (between([backwardWindow[0], forwardWindow[1]], event.created_at)) {
+        visible.push(event)
+      } else {
+        insertIntoBuffer(event)
+      }
+    }
+
+    if (visible.length > 0) {
+      events.update($events => {
+        for (const event of visible) {
+          let inserted = false
+          for (let i = 0; i < $events.length; i++) {
+            if ($events[i].created_at > event.created_at) {
+              $events = insertAt(i, event, $events)
+              inserted = true
+              break
+            }
+          }
+          if (!inserted) {
+            $events = [...$events, event]
+          }
         }
-      }
-
-      if (!handled) {
-        events.set([...$events, event])
-      }
-    } else {
-      for (let i = 0; i < buffer.length; i++) {
-        if (buffer[i].created_at > event.created_at) {
-          buffer.splice(i, 0, event)
-          handled = true
-          break
-        }
-      }
-
-      if (!handled) {
-        buffer.push(event)
-      }
+        return $events
+      })
     }
   }
 
   const unsubscribers = [
-    on(repository, "update", ({added, removed}) => {
+    on(repository, "update", batch(16, (updates: RepositoryUpdate[]) => {
+      const {added, removed} = mergeRepositoryUpdates(updates)
+
       if (removed.size > 0) {
         buffer = buffer.filter(e => !removed.has(e.id))
         events.update($events => $events.filter(e => !removed.has(e.id)))
       }
 
-      for (const event of added) {
-        if (matchFilters(filters, event) && tracker.getRelays(event.id).has(url)) {
-          insertEvent(event)
-        }
+      const matching = added.filter(
+        event => matchFilters(filters, event) && tracker.getRelays(event.id).has(url),
+      )
+
+      if (matching.length > 0) {
+        insertEvents(matching)
       }
-    }),
+    })),
     on(tracker, "add", (id: string, trackerUrl: string) => {
       if (trackerUrl === url) {
         const event = repository.getEvent(id)
 
         if (event && matchFilters(filters, event)) {
-          insertEvent(event)
+          insertEvents([event])
         }
       }
     }),
@@ -137,9 +153,7 @@ export const makeFeed = ({
 
       backwardWindow = [since - interval, since]
 
-      for (const event of buffer.splice(0, 30)) {
-        insertEvent(event)
-      }
+      insertEvents(buffer.splice(0, 30))
 
       if (until > now() - int(2, YEAR)) {
         loadTimeframe(since, until)
@@ -160,9 +174,7 @@ export const makeFeed = ({
 
       forwardWindow = [until, until + interval]
 
-      for (const event of buffer.splice(0, 30)) {
-        insertEvent(event)
-      }
+      insertEvents(buffer.splice(0, 30))
 
       if (until < now()) {
         loadTimeframe(since, until)
@@ -208,40 +220,57 @@ export const makeCalendarFeed = ({
 
   const events = writable(sortBy(getStart, getEventsForUrl(url, filters)))
 
-  const insertEvent = (event: TrustedEvent) => {
-    const start = getStart(event)
-    const address = getAddress(event)
-
-    if (isNaN(start) || isNaN(getEnd(event))) return
+  // Batch-insert calendar events into the store with a single update
+  const insertEvents = (newEvents: TrustedEvent[]) => {
+    const valid = newEvents.filter(e => !isNaN(getStart(e)) && !isNaN(getEnd(e)))
+    if (valid.length === 0) return
 
     events.update($events => {
-      for (let i = 0; i < $events.length; i++) {
-        if ($events[i].id === event.id) return $events
-        if (getStart($events[i]) > start) return insertAt(i, event, $events)
-      }
+      for (const event of valid) {
+        const start = getStart(event)
+        const address = getAddress(event)
 
-      return [...$events.filter(e => getAddress(e) !== address), event]
+        let handled = false
+        for (let i = 0; i < $events.length; i++) {
+          if ($events[i].id === event.id) {
+            handled = true
+            break
+          }
+          if (getStart($events[i]) > start) {
+            $events = insertAt(i, event, $events)
+            handled = true
+            break
+          }
+        }
+
+        if (!handled) {
+          $events = [...$events.filter(e => getAddress(e) !== address), event]
+        }
+      }
+      return $events
     })
   }
 
   const unsubscribers = [
-    on(repository, "update", ({added, removed}) => {
+    on(repository, "update", batch(16, (updates: RepositoryUpdate[]) => {
+      const {added, removed} = mergeRepositoryUpdates(updates)
+
       if (removed.size > 0) {
         events.update($events => $events.filter(e => !removed.has(e.id)))
       }
 
-      for (const event of added) {
-        if (matchFilters(filters, event)) {
-          insertEvent(event)
-        }
+      const matching = added.filter(event => matchFilters(filters, event))
+
+      if (matching.length > 0) {
+        insertEvents(matching)
       }
-    }),
+    })),
     on(tracker, "add", (id: string, trackerUrl: string) => {
       if (trackerUrl === url) {
         const event = repository.getEvent(id)
 
         if (event && matchFilters(filters, event)) {
-          insertEvent(event)
+          insertEvents([event])
         }
       }
     }),
