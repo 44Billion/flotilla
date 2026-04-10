@@ -13,4 +13,4 @@ ios/App/Pods/
 android/capacitor-cordova-android-plugins
 android/app/src/androidTest
 android/app/src/test
-
+node_modules

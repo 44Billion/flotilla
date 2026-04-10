@@ -43,7 +43,7 @@ class AndroidPushFallbackWorker(context: Context, params: WorkerParameters) : Wo
     private const val TAG = "PushFallback"
     private const val CHANNEL_ID = "flotilla_fallback"
     private const val CURSOR_PREFIX = "androidPushFallback.cursor."
-    private const val SOCKET_TIMEOUT_SECONDS = 20L
+    private const val SOCKET_TIMEOUT_SECONDS = 30L
     private const val REJECTED = "__REJECTED__"
     private const val KIND_RELAY_AUTH = 22242
     private const val KIND_NIP46_RPC = 24133
@@ -72,6 +72,8 @@ class AndroidPushFallbackWorker(context: Context, params: WorkerParameters) : Wo
   }
 
   override fun doWork(): Result {
+    Log.i(TAG, "doWork() started")
+
     if (isAppInForeground()) {
       return Result.success()
     }
@@ -88,7 +90,7 @@ class AndroidPushFallbackWorker(context: Context, params: WorkerParameters) : Wo
 
       val activeSince = state.optLong("activeSince", 0L)
       val seen = mutableSetOf<String>()
-      var latestPair: Pair<String, JSONObject>? = null
+      val newEvents = mutableListOf<Pair<String, JSONObject>>()
 
       for (sub in subscriptions) {
         val cursorKey = CURSOR_PREFIX + sub.relay + ":" + sub.key
@@ -102,23 +104,19 @@ class AndroidPushFallbackWorker(context: Context, params: WorkerParameters) : Wo
         for (event in result.events) {
           val id = event.optString("id", "")
           if (id.isNotEmpty() && seen.add(id)) {
-            val createdAt = event.optLong("created_at", 0L)
-            if (latestPair == null || createdAt > latestPair!!.second.optLong("created_at", 0L)) {
-              latestPair = Pair(sub.relay, event)
-            }
+            newEvents.add(Pair(sub.relay, event))
           }
         }
       }
 
-      if (latestPair != null) {
-        val (relay, event) = latestPair!!
+      for ((relay, event) in newEvents) {
         postNotification(relay, event)
       }
 
       return Result.success()
     } catch (e: Exception) {
       Log.e(TAG, "Worker failed", e)
-      return Result.success()
+      return Result.retry()
     } finally {
       pool.closeAll()
       client.dispatcher.executorService.shutdown()
@@ -214,7 +212,8 @@ class AndroidPushFallbackWorker(context: Context, params: WorkerParameters) : Wo
       .setContentIntent(pendingIntent)
       .build()
 
-    NotificationManagerCompat.from(context).notify(1, notification)
+    val notificationId = id.hashCode().let { if (it == 0) 1 else it }
+    NotificationManagerCompat.from(context).notify(notificationId, notification)
   }
 
   private fun matchesFilter(filter: JSONObject, event: JSONObject): Boolean {

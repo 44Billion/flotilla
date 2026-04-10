@@ -7,6 +7,7 @@ import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.ExistingWorkPolicy
 import androidx.work.NetworkType
 import androidx.work.OneTimeWorkRequest
+import androidx.work.OutOfQuotaPolicy
 import androidx.work.PeriodicWorkRequest
 import androidx.work.WorkManager
 import com.getcapacitor.JSObject
@@ -76,6 +77,7 @@ class AndroidPushFallbackPlugin : Plugin() {
 
     val immediate = OneTimeWorkRequest.Builder(AndroidPushFallbackWorker::class.java)
       .setConstraints(constraints)
+      .setExpedited(OutOfQuotaPolicy.RUN_AS_NON_EXPEDITED_WORK_REQUEST)
       .build()
 
     workManager.enqueueUniquePeriodicWork(
