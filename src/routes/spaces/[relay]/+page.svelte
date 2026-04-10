@@ -8,7 +8,7 @@
   import SpaceMenu from "@app/components/SpaceMenu.svelte"
 
   const url = decodeRelay($page.params.relay!)
-  const md = parseInt(theme.screens.md, 10)
+  const md = parseFloat(theme.screens.md) * 16
 
   let width = $state(0)
 
@@ -25,7 +25,7 @@
   <div class="ml-sai mt-sai mb-sai relative z-nav w-14 shrink-0 bg-base-200 pt-2">
     <PrimaryNavSpaces />
   </div>
-  <SecondaryNav class="flex! w-auto! grow pb-16">
+  <SecondaryNav visible class="w-auto grow pb-16">
     <SpaceMenu {url} />
   </SecondaryNav>
 {/if}
