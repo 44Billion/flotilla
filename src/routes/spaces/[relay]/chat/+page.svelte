@@ -21,6 +21,7 @@
   import SpaceSearch from "@app/components/SpaceSearch.svelte"
   import RoomItem from "@app/components/RoomItem.svelte"
   import RoomItemAddMember from "@src/app/components/RoomItemAddMember.svelte"
+  import VirtualItem from "@lib/components/VirtualItem.svelte"
 
   import RoomCompose from "@app/components/RoomCompose.svelte"
   import RoomComposeEdit from "@src/app/components/RoomComposeEdit.svelte"
@@ -37,6 +38,7 @@
   const url = decodeRelay($page.params.relay!)
   const shouldProtect = canEnforceNip70(url)
   const at = $derived(parseInt($page.url.searchParams.get("at")!))
+  const shouldVirtualize = $derived(isNaN(at))
 
   const replyTo = (event: TrustedEvent) => {
     parent = event
@@ -309,7 +311,7 @@
       <Spinner loading={loadingForward}>Looking for messages...</Spinner>
     </p>
   {/if}
-  {#each elements as { type, id, value, showPubkey, addSpaceBelow } (id)}
+  {#each elements as { type, id, value, showPubkey, addSpaceBelow }, i (id)}
     {#if type === "new-messages"}
       <div
         {id}
@@ -321,6 +323,24 @@
       </div>
     {:else if type === "date"}
       <Divider>{value}</Divider>
+    {:else if shouldVirtualize}
+      <VirtualItem root={element} initiallyVisible={i < 25}>
+        {@const event = value as TrustedEvent}
+        {#if event.kind === RELAY_ADD_MEMBER}
+          <RoomItemAddMember {url} {event} />
+        {:else}
+          <div>
+            <RoomItem
+              {url}
+              {event}
+              {replyTo}
+              {showPubkey}
+              canEdit={canEditEvent}
+              onEdit={onEditEvent}
+              {addSpaceBelow} />
+          </div>
+        {/if}
+      </VirtualItem>
     {:else}
       {@const event = value as TrustedEvent}
       {#if event.kind === RELAY_ADD_MEMBER}

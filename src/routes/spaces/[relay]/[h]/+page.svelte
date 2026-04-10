@@ -30,6 +30,7 @@
   import SpaceSearch from "@app/components/SpaceSearch.svelte"
   import ThunkToast from "@app/components/ThunkToast.svelte"
   import RoomItemAddMember from "@src/app/components/RoomItemAddMember.svelte"
+  import VirtualItem from "@lib/components/VirtualItem.svelte"
   import RoomComposeEdit from "@src/app/components/RoomComposeEdit.svelte"
   import {canEnforceNip70, prependParent, publishDelete} from "@app/core/commands"
   import {
@@ -105,6 +106,7 @@
   const shouldProtect = canEnforceNip70(url)
   const membershipStatus = deriveUserRoomMembershipStatus(url, h)
   const at = $derived(parseInt($page.url.searchParams.get("at")!))
+  const shouldVirtualize = $derived(isNaN(at))
 
   const showRoomDetail = () => pushModal(RoomDetail, {url, h})
 
@@ -472,7 +474,7 @@
             <Spinner loading={loadingForward}>Looking for messages...</Spinner>
           </p>
         {/if}
-        {#each elements as { type, id, value, showPubkey, addSpaceBelow } (id)}
+        {#each elements as { type, id, value, showPubkey, addSpaceBelow }, i (id)}
           {#if type === "new-messages"}
             <div
               {id}
@@ -484,6 +486,24 @@
             </div>
           {:else if type === "date"}
             <Divider>{value}</Divider>
+          {:else if shouldVirtualize}
+            <VirtualItem root={element} initiallyVisible={i < 25}>
+              {@const event = value as TrustedEvent}
+              {#if event.kind === ROOM_ADD_MEMBER}
+                <RoomItemAddMember {url} {event} />
+              {:else}
+                <div class="cv">
+                  <RoomItem
+                    {url}
+                    {event}
+                    {replyTo}
+                    {showPubkey}
+                    {addSpaceBelow}
+                    canEdit={canEditEvent}
+                    onEdit={onEditEvent} />
+                </div>
+              {/if}
+            </VirtualItem>
           {:else}
             {@const event = value as TrustedEvent}
             {#if event.kind === ROOM_ADD_MEMBER}
