@@ -33,6 +33,7 @@
     url?: string
     reactionClass?: string
     noTooltip?: boolean
+    innerEvent?: TrustedEvent
     children?: Snippet
   }
 
@@ -43,23 +44,36 @@
     url = "",
     reactionClass = "",
     noTooltip = false,
+    innerEvent = undefined,
     children,
   }: Props = $props()
+
+  const eventIds = innerEvent ? [event.id, innerEvent.id] : [event.id]
 
   const reports = deriveArray(
     deriveEventsById({repository, filters: [{kinds: [REPORT], "#e": [event.id]}]}),
   )
 
   const reactions = deriveArray(
-    deriveEventsById({repository, filters: [{kinds: [REACTION], "#e": [event.id]}]}),
+    deriveEventsById({repository, filters: [{kinds: [REACTION], "#e": eventIds}]}),
   )
 
   const zaps = deriveArray(
     deriveItemsByKey<Zap>({
       repository,
       getKey: zap => zap.response.id,
-      filters: [{kinds: [ZAP_RESPONSE], "#e": [event.id]}],
-      eventToItem: (response: TrustedEvent) => getValidZap(response, event),
+      filters: [{kinds: [ZAP_RESPONSE], "#e": eventIds}],
+      eventToItem: (response: TrustedEvent) => {
+        const zap = getValidZap(response, event)
+
+        if (zap) {
+          return zap
+        }
+
+        if (innerEvent) {
+          return getValidZap(response, innerEvent)
+        }
+      },
     }),
   )
 

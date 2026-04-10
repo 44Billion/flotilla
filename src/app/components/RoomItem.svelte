@@ -1,8 +1,16 @@
 <script lang="ts">
   import cx from "classnames"
-  import {hash, now, displayList, formatTimestampAsTime, formatTimestampAsDate} from "@welshman/lib"
+  import {readable} from "svelte/store"
+  import {
+    hash,
+    gte,
+    now,
+    displayList,
+    formatTimestampAsTime,
+    formatTimestampAsDate,
+  } from "@welshman/lib"
   import type {TrustedEvent, EventContent} from "@welshman/util"
-  import {MESSAGE, COMMENT} from "@welshman/util"
+  import {MESSAGE, COMMENT, getTag} from "@welshman/util"
   import {
     thunks,
     pubkey,
@@ -27,7 +35,7 @@
   import RoomItemMenuButton from "@app/components/RoomItemMenuButton.svelte"
   import RoomItemMenuMobile from "@app/components/RoomItemMenuMobile.svelte"
   import RoomItemContent from "@app/components/RoomItemContent.svelte"
-  import {colors, ENABLE_ZAPS, deriveEventsForUrl} from "@app/core/state"
+  import {colors, ENABLE_ZAPS, deriveEventsForUrl, deriveEvent} from "@app/core/state"
   import {publishDelete, publishReaction, canEnforceNip70} from "@app/core/commands"
   import {getRoomItemPath} from "@app/util/routes"
   import {pushModal} from "@app/util/modal"
@@ -38,7 +46,6 @@
     replyTo?: (event: TrustedEvent) => void
     showPubkey?: boolean
     addSpaceBelow?: boolean
-    inert?: boolean
     canEdit: (event: TrustedEvent) => boolean
     onEdit: (event: TrustedEvent) => void
   }
@@ -49,7 +56,6 @@
     replyTo = undefined,
     showPubkey = false,
     addSpaceBelow = false,
-    inert = false,
     canEdit,
     onEdit,
   }: Props = $props()
@@ -60,7 +66,15 @@
   const profileDisplay = deriveProfileDisplay(event.pubkey, [url])
   const thunk = mergeThunks($thunks.filter(t => t.event.id === event.id))
   const [_, colorValue] = colors[hash(event.pubkey) % colors.length]
-  const comments = deriveEventsForUrl(url, [{kinds: [COMMENT], "#e": [event.id]}])
+
+  const qTag = getTag("q", event.tags)
+  const isQuoteOnly = Boolean(
+    gte(qTag?.length, 2) && event.content.trim().match(/^nostr:n(event|addr)1\w+\s*$/),
+  )
+  const innerComments = isQuoteOnly
+    ? deriveEventsForUrl(url, [{kinds: [COMMENT], "#e": [qTag![1]]}])
+    : readable([])
+  const innerEvent = isQuoteOnly ? deriveEvent(qTag![1], [url]) : readable(undefined)
 
   const reply = () => replyTo!(event)
   const edit = canEdit(event) ? () => onEdit(event) : undefined
@@ -78,7 +92,7 @@
 
 <TapTarget
   data-event={event.id}
-  onTap={inert ? null : onTap}
+  {onTap}
   class={cx(
     "group relative flex w-full cursor-default flex-col px-2 py-0.5 text-left hover:bg-base-100/50",
     {"mt-1.5": showPubkey, "mb-1.5": addSpaceBelow},
@@ -111,7 +125,7 @@
         </div>
       {/if}
       <div class:mt-2={showPubkey && event.kind !== MESSAGE}>
-        <RoomItemContent {url} {event} />
+        <RoomItemContent {url} event={$innerEvent ?? event} />
         {#if thunk}
           <ThunkFailure showToastOnRetry {thunk} class="mt-2 text-sm" />
         {/if}
@@ -124,9 +138,10 @@
       {event}
       {deleteReaction}
       {createReaction}
-      reactionClass="tooltip-right" />
-    {#if path && $comments.length > 0}
-      {@const pubkeys = $comments.map(e => e.pubkey)}
+      reactionClass="tooltip-right"
+      innerEvent={$innerEvent} />
+    {#if path && $innerComments.length > 0}
+      {@const pubkeys = $innerComments.map(e => e.pubkey)}
       {@const isOwn = $pubkey && pubkeys.includes($pubkey)}
       {@const info = displayList(pubkeys.map(pubkey => displayProfileByPubkey(pubkey)))}
       {@const tooltip = `${info} commented`}
@@ -138,7 +153,7 @@
             "btn-primary": isOwn,
           })}>
           <Icon icon={ReplyAlt} />
-          <span>{$comments.length} comment{$comments.length === 1 ? "" : "s"}</span>
+          <span>{$innerComments.length} comment{$innerComments.length === 1 ? "" : "s"}</span>
         </Link>
       </div>
     {/if}
