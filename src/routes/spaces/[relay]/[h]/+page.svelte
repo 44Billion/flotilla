@@ -348,9 +348,13 @@
 
     elements.reverse()
 
-    requestAnimationFrame(manageScrollPosition)
-
     return elements
+  })
+
+  $effect(() => {
+    if (elements.length > 0) {
+      requestAnimationFrame(manageScrollPosition)
+    }
   })
 
   const start = () => {
