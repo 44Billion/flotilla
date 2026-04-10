@@ -60,7 +60,7 @@ export const makeFeed = ({
 
   const insertIntoBuffer = (event: TrustedEvent) => {
     for (let i = 0; i < buffer.length; i++) {
-      if (buffer[i].created_at > event.created_at) {
+      if (buffer[i].created_at < event.created_at) {
         buffer.splice(i, 0, event)
         return
       }
@@ -152,7 +152,7 @@ export const makeFeed = ({
     element,
     delay: 300,
     threshold: 5000,
-    onScroll: () => {
+    onScroll: async () => {
       const [since, until] = backwardWindow
 
       backwardWindow = [since - interval, since]
@@ -160,7 +160,7 @@ export const makeFeed = ({
       insertEvents(buffer.splice(0, 30))
 
       if (until > now() - int(2, YEAR)) {
-        loadTimeframe(since, until)
+        await loadTimeframe(since, until)
       } else if (!buffer.some(e => e.created_at < at)) {
         backwardScroller.stop()
         onBackwardExhausted?.()
@@ -173,7 +173,7 @@ export const makeFeed = ({
     reverse: true,
     delay: 300,
     threshold: 5000,
-    onScroll: () => {
+    onScroll: async () => {
       const [since, until] = forwardWindow
 
       forwardWindow = [until, until + interval]
@@ -181,7 +181,7 @@ export const makeFeed = ({
       insertEvents(buffer.splice(0, 30))
 
       if (until < now()) {
-        loadTimeframe(since, until)
+        await loadTimeframe(since, until)
       } else if (!buffer.some(e => e.created_at > at)) {
         forwardScroller.stop()
         onForwardExhausted?.()
