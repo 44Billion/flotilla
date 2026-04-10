@@ -70,6 +70,7 @@ GoogleService-Info.plist
 .roo
 .idea/
 .vscode/
+.claude/
 
 # OS generated
 .DS_Store

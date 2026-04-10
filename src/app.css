@@ -425,7 +425,7 @@ body.keyboard-open .hide-on-keyboard {
 /* chat view */
 
 .chat__compose {
-  @apply relative z-compose mb-14 shrink-0 md:mb-0;
+  @apply z-compose relative mb-14 shrink-0 md:mb-0;
 }
 
 .chat__compose .chat__compose-inner {
