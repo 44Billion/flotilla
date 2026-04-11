@@ -15,6 +15,7 @@ import {
 } from "@welshman/app"
 import type {FileAttributes} from "@welshman/editor"
 import {Editor, MentionSuggestion, WelshmanExtension, editorProps} from "@welshman/editor"
+import {NativeClipboardPasteExtension} from "@app/editor/clipboard"
 import {escapeHtml} from "@lib/html"
 import {makeMentionNodeView} from "@app/editor/MentionNodeView"
 import ProfileSuggestion from "@app/editor/ProfileSuggestion.svelte"
@@ -137,6 +138,7 @@ export const makeEditor = async ({
           },
         },
       }),
+      NativeClipboardPasteExtension,
     ],
     onUpdate({editor}) {
       wordCount?.set(editor.storage.wordCount.words)
