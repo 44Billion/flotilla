@@ -268,7 +268,7 @@ const syncUserData = () => {
 
 // Spaces
 
-const syncSpace = (url: string, rooms: string[]) => {
+const syncSpace = (url: string) => {
   const since = ago(WEEK)
   const seen = new Set<string>()
   const controller = new AbortController()
@@ -291,10 +291,6 @@ const syncSpace = (url: string, rooms: string[]) => {
         ],
       })
     }
-  }
-
-  for (const room of rooms) {
-    pullRoomContent(room)
   }
 
   const relayKinds = [RELAY_MEMBERS, RELAY_ADD_MEMBER, RELAY_REMOVE_MEMBER]
@@ -328,7 +324,6 @@ const syncSpace = (url: string, rooms: string[]) => {
 const syncSpaces = () => {
   const store = merged([userGroupList, page])
   const unsubscribersByUrl = new Map<string, Unsubscriber>()
-  const roomsByUrl = new Map<string, string>()
 
   const unsubscribe = store.subscribe(([$userGroupList, $page]) => {
     const urls = new Set(getSpaceUrlsFromGroupList($userGroupList))
@@ -342,28 +337,15 @@ const syncSpaces = () => {
     for (const [url, unsubscribe] of unsubscribersByUrl.entries()) {
       if (!urls.has(url)) {
         unsubscribersByUrl.delete(url)
-        roomsByUrl.delete(url)
         unsubscribe()
       }
     }
 
-    // Start or restart syncing for each space
+    // Start syncing for new spaces
     for (const url of urls) {
-      const rooms = getSpaceRoomsFromGroupList(url, $userGroupList)
-
-      if (currentUrl === url && $page.params.h && !rooms.includes($page.params.h)) {
-        rooms.push($page.params.h)
+      if (!unsubscribersByUrl.has(url)) {
+        unsubscribersByUrl.set(url, syncSpace(url))
       }
-
-      const roomsKey = rooms.join(",")
-
-      if (unsubscribersByUrl.has(url) && roomsByUrl.get(url) === roomsKey) continue
-
-      // Tear down existing sync if rooms changed
-      unsubscribersByUrl.get(url)?.()
-
-      roomsByUrl.set(url, roomsKey)
-      unsubscribersByUrl.set(url, syncSpace(url, rooms))
     }
   })
 
