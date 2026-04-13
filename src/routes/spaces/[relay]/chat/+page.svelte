@@ -21,7 +21,6 @@
   import SpaceSearch from "@app/components/SpaceSearch.svelte"
   import RoomItem from "@app/components/RoomItem.svelte"
   import RoomItemAddMember from "@src/app/components/RoomItemAddMember.svelte"
-  import VirtualItem from "@lib/components/VirtualItem.svelte"
 
   import RoomCompose from "@app/components/RoomCompose.svelte"
   import RoomComposeEdit from "@src/app/components/RoomComposeEdit.svelte"
@@ -324,23 +323,21 @@
     {:else if type === "date"}
       <Divider>{value}</Divider>
     {:else if shouldVirtualize}
-      <VirtualItem root={element} initiallyVisible={i < 25}>
-        {@const event = value as TrustedEvent}
-        {#if event.kind === RELAY_ADD_MEMBER}
-          <RoomItemAddMember {url} {event} />
-        {:else}
-          <div>
-            <RoomItem
-              {url}
-              {event}
-              {replyTo}
-              {showPubkey}
-              canEdit={canEditEvent}
-              onEdit={onEditEvent}
-              {addSpaceBelow} />
-          </div>
-        {/if}
-      </VirtualItem>
+      {@const event = value as TrustedEvent}
+      {#if event.kind === RELAY_ADD_MEMBER}
+        <RoomItemAddMember {url} {event} />
+      {:else}
+        <div>
+          <RoomItem
+            {url}
+            {event}
+            {replyTo}
+            {showPubkey}
+            canEdit={canEditEvent}
+            onEdit={onEditEvent}
+            {addSpaceBelow} />
+        </div>
+      {/if}
     {:else}
       {@const event = value as TrustedEvent}
       {#if event.kind === RELAY_ADD_MEMBER}
