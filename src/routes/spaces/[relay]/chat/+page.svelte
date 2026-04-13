@@ -37,7 +37,6 @@
   const url = decodeRelay($page.params.relay!)
   const shouldProtect = canEnforceNip70(url)
   const at = $derived(parseInt($page.url.searchParams.get("at")!))
-  const shouldVirtualize = $derived(isNaN(at))
 
   const replyTo = (event: TrustedEvent) => {
     parent = event
@@ -322,22 +321,6 @@
       </div>
     {:else if type === "date"}
       <Divider>{value}</Divider>
-    {:else if shouldVirtualize}
-      {@const event = value as TrustedEvent}
-      {#if event.kind === RELAY_ADD_MEMBER}
-        <RoomItemAddMember {url} {event} />
-      {:else}
-        <div>
-          <RoomItem
-            {url}
-            {event}
-            {replyTo}
-            {showPubkey}
-            canEdit={canEditEvent}
-            onEdit={onEditEvent}
-            {addSpaceBelow} />
-        </div>
-      {/if}
     {:else}
       {@const event = value as TrustedEvent}
       {#if event.kind === RELAY_ADD_MEMBER}

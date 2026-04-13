@@ -104,7 +104,6 @@
   const shouldProtect = canEnforceNip70(url)
   const membershipStatus = deriveUserRoomMembershipStatus(url, h)
   const at = $derived(parseInt($page.url.searchParams.get("at")!))
-  const shouldVirtualize = $derived(isNaN(at))
 
   const showRoomDetail = () => pushModal(RoomDetail, {url, h})
 
@@ -484,22 +483,6 @@
             </div>
           {:else if type === "date"}
             <Divider>{value}</Divider>
-          {:else if shouldVirtualize}
-            {@const event = value as TrustedEvent}
-            {#if event.kind === ROOM_ADD_MEMBER}
-              <RoomItemAddMember {url} {event} />
-            {:else}
-              <div class="cv">
-                <RoomItem
-                  {url}
-                  {event}
-                  {replyTo}
-                  {showPubkey}
-                  {addSpaceBelow}
-                  canEdit={canEditEvent}
-                  onEdit={onEditEvent} />
-              </div>
-            {/if}
           {:else}
             {@const event = value as TrustedEvent}
             {#if event.kind === ROOM_ADD_MEMBER}
