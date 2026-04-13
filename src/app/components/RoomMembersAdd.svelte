@@ -56,6 +56,11 @@
   }
 
   const onSubmit = async () => {
+    if (!$spaceMembers) {
+      addMembers()
+      return
+    }
+
     const pubkeysSnapshot = $state.snapshot(pubkeys)
     const nonSpaceMembers = pubkeysSnapshot.filter(pubkey => !$spaceMembers.includes(pubkey))
 

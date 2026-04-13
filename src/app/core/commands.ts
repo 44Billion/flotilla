@@ -766,9 +766,10 @@ export const addSpaceMembers = async (
   pubkeys: string[],
 ): Promise<string | undefined> => {
   const spaceMembers = get(deriveSpaceMembers(url))
+
   const results = await Promise.all(
     pubkeys
-      .filter(pubkey => !spaceMembers.includes(pubkey))
+      .filter(pubkey => !spaceMembers || !spaceMembers.includes(pubkey))
       .map(pubkey =>
         manageRelay(url, {
           method: ManagementMethod.AllowPubkey,

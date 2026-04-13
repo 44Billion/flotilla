@@ -243,13 +243,17 @@
         {/if}
       </div>
     </div>
-    {#if $members.length > 0}
+    {#if $members !== undefined && $members.length > 0}
       <div class="card2 card2-sm bg-alt flex items-center justify-between gap-4">
         <div class="flex items-center gap-4">
           <span>Members:</span>
           <ProfileCircles pubkeys={$members} />
         </div>
         <Button class="btn btn-neutral btn-sm" onclick={showMembers}>View All</Button>
+      </div>
+    {:else if $members === undefined}
+      <div class="card2 card2-sm bg-base-200 flex items-center gap-4">
+        <span class="text-error">Member list not available from this relay</span>
       </div>
     {/if}
     <div class="card2 card2-sm bg-alt col-4">

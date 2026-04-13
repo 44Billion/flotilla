@@ -284,7 +284,7 @@ const syncSpace = (url: string) => {
           {kinds: [MESSAGE, ...CONTENT_KINDS], since, "#h": [room]},
           makeCommentFilter(CONTENT_KINDS, {since, "#h": [room]}),
           {
-            kinds: [ROOM_DELETE, ROOM_JOIN, ROOM_LEAVE, ROOM_ADD_MEMBER, ROOM_REMOVE_MEMBER],
+            kinds: [ROOM_DELETE, ROOM_JOIN, ROOM_LEAVE],
             "#h": [room],
           },
           {kinds: [PollResponse], since},
@@ -293,15 +293,15 @@ const syncSpace = (url: string) => {
     }
   }
 
-  const relayKinds = [RELAY_MEMBERS, RELAY_ADD_MEMBER, RELAY_REMOVE_MEMBER]
+  const relayKinds = [RELAY_MEMBERS]
   const roomMetaKinds = [ROOM_META, ROOM_ADMINS, ROOM_MEMBERS, LIVEKIT_PARTICIPANTS]
-  const roomMemberKinds = [ROOM_DELETE, ROOM_JOIN, ROOM_LEAVE, ROOM_ADD_MEMBER, ROOM_REMOVE_MEMBER]
+  const roomDeleteKinds = [ROOM_DELETE, ROOM_JOIN, ROOM_LEAVE]
 
   pullAndListen({
     url,
     signal: controller.signal,
     filters: [
-      {kinds: [...relayKinds, ...roomMetaKinds, ...roomMemberKinds, ...CONTENT_KINDS, MESSAGE]},
+      {kinds: [...relayKinds, ...roomMetaKinds, ...roomDeleteKinds, ...CONTENT_KINDS, MESSAGE]},
       makeCommentFilter(CONTENT_KINDS, {since}),
       {kinds: [PollResponse], since},
     ],

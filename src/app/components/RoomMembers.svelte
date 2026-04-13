@@ -73,34 +73,44 @@
       </ModalSubtitle>
     </ModalHeader>
     <div class="flex flex-col gap-2">
-      {#each $members as pubkey (pubkey)}
-        <div class="card2 bg-alt relative">
-          <div class="flex items-center justify-between gap-2">
-            <div class="min-w-0 flex-1">
-              <Profile {pubkey} {url} />
-            </div>
-            <div class="relative">
-              <Button class="btn btn-circle btn-ghost btn-sm" onclick={() => toggleMenu(pubkey)}>
-                <Icon icon={MenuDots} />
-              </Button>
-              {#if menuPubkey === pubkey}
-                <Popover hideOnClick onClose={closeMenu}>
-                  <ul
-                    transition:fly
-                    class="menu absolute right-0 z-popover mt-2 w-48 gap-1 rounded-box bg-base-100 p-2 shadow-md">
-                    <li>
-                      <Button class="text-error" onclick={() => removeMember(pubkey)}>
-                        <Icon icon={MinusCircle} />
-                        Remove Member
-                      </Button>
-                    </li>
-                  </ul>
-                </Popover>
-              {/if}
+      {#if $members === undefined}
+        <div class="card2 bg-base-200 p-4">
+          <span class="text-error">Member list not available from this relay</span>
+        </div>
+      {:else if $members.length === 0}
+        <div class="card2 bg-base-200 p-4">
+          <span class="text-base-content/70">No members yet</span>
+        </div>
+      {:else}
+        {#each $members as pubkey (pubkey)}
+          <div class="card2 bg-alt relative">
+            <div class="flex items-center justify-between gap-2">
+              <div class="min-w-0 flex-1">
+                <Profile {pubkey} {url} />
+              </div>
+              <div class="relative">
+                <Button class="btn btn-circle btn-ghost btn-sm" onclick={() => toggleMenu(pubkey)}>
+                  <Icon icon={MenuDots} />
+                </Button>
+                {#if menuPubkey === pubkey}
+                  <Popover hideOnClick onClose={closeMenu}>
+                    <ul
+                      transition:fly
+                      class="menu absolute right-0 z-popover mt-2 w-48 gap-1 rounded-box bg-base-100 p-2 shadow-md">
+                      <li>
+                        <Button class="text-error" onclick={() => removeMember(pubkey)}>
+                          <Icon icon={MinusCircle} />
+                          Remove Member
+                        </Button>
+                      </li>
+                    </ul>
+                  </Popover>
+                {/if}
+              </div>
             </div>
           </div>
-        </div>
-      {/each}
+        {/each}
+      {/if}
     </div>
   </ModalBody>
   <ModalFooter>

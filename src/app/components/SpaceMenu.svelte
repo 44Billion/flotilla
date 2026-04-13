@@ -181,7 +181,11 @@
             <li>
               <Button onclick={showMembers}>
                 <Icon icon={UserRounded} />
-                View Members ({$members.length})
+                {#if $members === undefined}
+                  View Members
+                {:else}
+                  View Members ({$members.length})
+                {/if}
               </Button>
             </li>
             {#if $userIsAdmin}

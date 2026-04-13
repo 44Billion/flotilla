@@ -112,46 +112,58 @@
       {/if}
     {/if}
     <div class="flex flex-col gap-2">
-      {#each $members as pubkey (pubkey)}
-        <div class="card2 card2-sm bg-alt relative">
-          <div class="flex items-center justify-between gap-2">
-            <div class="min-w-0 flex-1">
-              <Profile {pubkey} {url} />
-            </div>
-            {#if canBan || canUnallow}
-              <div class="relative">
-                <Button class="btn btn-circle btn-ghost btn-sm" onclick={() => toggleMenu(pubkey)}>
-                  <Icon icon={MenuDots} />
-                </Button>
-                {#if menuPubkey === pubkey}
-                  <Popover hideOnClick onClose={closeMenu}>
-                    <ul
-                      transition:fly
-                      class="menu absolute right-0 z-popover mt-2 w-48 gap-1 rounded-box bg-base-100 p-2 shadow-md">
-                      {#if canUnallow}
-                        <li>
-                          <Button onclick={() => unallowMember(pubkey)}>
-                            <Icon icon={UserMinus} />
-                            Remove User
-                          </Button>
-                        </li>
-                      {/if}
-                      {#if canBan}
-                        <li>
-                          <Button class="text-error" onclick={() => banMember(pubkey)}>
-                            <Icon icon={MinusCircle} />
-                            Ban User
-                          </Button>
-                        </li>
-                      {/if}
-                    </ul>
-                  </Popover>
-                {/if}
-              </div>
-            {/if}
-          </div>
+      {#if $members === undefined}
+        <div class="card2 bg-base-200 p-4">
+          <span class="text-error">Member list not available from this space</span>
         </div>
-      {/each}
+      {:else if $members.length === 0}
+        <div class="card2 bg-base-200 p-4">
+          <span class="text-base-content/70">No members yet</span>
+        </div>
+      {:else}
+        {#each $members as pubkey (pubkey)}
+          <div class="card2 card2-sm bg-alt relative">
+            <div class="flex items-center justify-between gap-2">
+              <div class="min-w-0 flex-1">
+                <Profile {pubkey} {url} />
+              </div>
+              {#if canBan || canUnallow}
+                <div class="relative">
+                  <Button
+                    class="btn btn-circle btn-ghost btn-sm"
+                    onclick={() => toggleMenu(pubkey)}>
+                    <Icon icon={MenuDots} />
+                  </Button>
+                  {#if menuPubkey === pubkey}
+                    <Popover hideOnClick onClose={closeMenu}>
+                      <ul
+                        transition:fly
+                        class="menu absolute right-0 z-popover mt-2 w-48 gap-1 rounded-box bg-base-100 p-2 shadow-md">
+                        {#if canUnallow}
+                          <li>
+                            <Button onclick={() => unallowMember(pubkey)}>
+                              <Icon icon={UserMinus} />
+                              Remove User
+                            </Button>
+                          </li>
+                        {/if}
+                        {#if canBan}
+                          <li>
+                            <Button class="text-error" onclick={() => banMember(pubkey)}>
+                              <Icon icon={MinusCircle} />
+                              Ban User
+                            </Button>
+                          </li>
+                        {/if}
+                      </ul>
+                    </Popover>
+                  {/if}
+                </div>
+              {/if}
+            </div>
+          </div>
+        {/each}
+      {/if}
     </div>
   </ModalBody>
   <ModalFooter>

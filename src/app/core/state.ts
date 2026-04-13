@@ -808,36 +808,49 @@ export const deriveOtherRooms = (url: string) =>
 
 // Space/room memberships
 
-const getSpaceMembers = (_url: string, events: TrustedEvent[]) => {
-  const members = new Set<string>()
+export const deriveSpaceMembers = (url: string) =>
+  derived(deriveRelaySignedEvents(url, [{kinds: [RELAY_MEMBERS]}]), ([event]) =>
+    uniq(getTagValues("member", event?.tags ?? [])),
+  )
 
-  for (const event of sortEventsAsc(events)) {
-    if (event.kind === RELAY_MEMBERS) {
-      members.clear()
+export const deriveRoomMembers = (url: string, h: string) => {
+  const filters: Filter[] = [{kinds: [ROOM_MEMBERS], "#d": [h]}]
 
-      for (const pubkey of uniq(getTagValues("member", event.tags))) {
-        members.add(pubkey)
-      }
+  return derived(deriveEventsForUrl(url, filters), ([event]) =>
+    uniq(getPubkeyTagValues(event?.tags ?? [])),
+  )
+}
 
-      continue
+export type BannedPubkeyItem = {
+  pubkey: string
+  reason: string
+}
+
+export const spaceBannedPubkeyItems = new Map<string, BannedPubkeyItem[]>()
+
+export const deriveSpaceBannedPubkeyItems = (url: string) => {
+  const store = writable(spaceBannedPubkeyItems.get(url) || [])
+
+  manageRelay(url, {method: ManagementMethod.ListBannedPubkeys, params: []}).then(res => {
+    spaceBannedPubkeyItems.set(url, res.result)
+    store.set(res.result)
+  })
+
+  return store
+}
+
+export const deriveRoomAdmins = (url: string, h: string) => {
+  const filters: Filter[] = [{kinds: [ROOM_ADMINS], "#d": [h]}]
+
+  return derived(deriveEventsForUrl(url, filters), $events => {
+    const adminsEvent = first($events)
+
+    if (adminsEvent) {
+      return getPubkeyTagValues(adminsEvent.tags)
     }
 
-    const pubkeys = getPubkeyTagValues(event.tags)
-
-    if (event.kind === RELAY_ADD_MEMBER) {
-      for (const pubkey of pubkeys) {
-        members.add(pubkey)
-      }
-    }
-
-    if (event.kind === RELAY_REMOVE_MEMBER) {
-      for (const pubkey of pubkeys) {
-        members.delete(pubkey)
-      }
-    }
-  }
-
-  return Array.from(members)
+    return []
+  })
 }
 
 const getRoomMembers = (_url: string, h: string, events: TrustedEvent[]) => {
@@ -874,53 +887,6 @@ const getRoomMembers = (_url: string, h: string, events: TrustedEvent[]) => {
   }
 
   return Array.from(members)
-}
-
-export const deriveSpaceMembers = (url: string) =>
-  derived(
-    deriveRelaySignedEvents(url, [{kinds: [RELAY_ADD_MEMBER, RELAY_REMOVE_MEMBER, RELAY_MEMBERS]}]),
-    $events => getSpaceMembers(url, $events),
-  )
-
-export type BannedPubkeyItem = {
-  pubkey: string
-  reason: string
-}
-
-export const spaceBannedPubkeyItems = new Map<string, BannedPubkeyItem[]>()
-
-export const deriveSpaceBannedPubkeyItems = (url: string) => {
-  const store = writable(spaceBannedPubkeyItems.get(url) || [])
-
-  manageRelay(url, {method: ManagementMethod.ListBannedPubkeys, params: []}).then(res => {
-    spaceBannedPubkeyItems.set(url, res.result)
-    store.set(res.result)
-  })
-
-  return store
-}
-
-export const deriveRoomMembers = (url: string, h: string) => {
-  const filters: Filter[] = [
-    {kinds: [ROOM_MEMBERS], "#d": [h]},
-    {kinds: [ROOM_ADD_MEMBER, ROOM_REMOVE_MEMBER], "#h": [h]},
-  ]
-
-  return derived(deriveEventsForUrl(url, filters), $events => getRoomMembers(url, h, $events))
-}
-
-export const deriveRoomAdmins = (url: string, h: string) => {
-  const filters: Filter[] = [{kinds: [ROOM_ADMINS], "#d": [h]}]
-
-  return derived(deriveEventsForUrl(url, filters), $events => {
-    const adminsEvent = first($events)
-
-    if (adminsEvent) {
-      return getPubkeyTagValues(adminsEvent.tags)
-    }
-
-    return []
-  })
 }
 
 // Action items (admin review queue)
@@ -1019,19 +985,49 @@ export const deriveUserIsSpaceAdmin = memoize((url?: string) => {
 })
 
 export const deriveUserSpaceMembershipStatus = (url: string) => {
-  const filters: Filter[] = [{kinds: [RELAY_JOIN, RELAY_LEAVE]}]
+  // Fetch member list and user add/remove events directly in this derivation.
+  const memberListFilters: Filter[] = [{kinds: [RELAY_MEMBERS]}]
+  const userEventFilters: Filter[] = [{kinds: [RELAY_ADD_MEMBER, RELAY_REMOVE_MEMBER]}]
 
   return derived(
     [
       pubkey,
-      deriveSpaceMembers(url),
-      deriveEventsForUrl(url, filters),
+      deriveRelaySignedEvents(url, memberListFilters),
+      deriveRelaySignedEvents(url, userEventFilters),
+      deriveEventsForUrl(url, [{kinds: [RELAY_JOIN, RELAY_LEAVE]}]),
       deriveUserIsSpaceAdmin(url),
     ],
-    ([$pubkey, $members, $events, $isAdmin]) => {
-      const isMember = $members.includes($pubkey!) || $isAdmin
+    ([$pubkey, $memberListEvents, $userAddRemoveEvents, $joinLeaveEvents, $isAdmin]) => {
+      // If admin, always granted.
+      if ($isAdmin) {
+        return MembershipStatus.Granted
+      }
 
-      for (const event of $events) {
+      const membersEvent = $memberListEvents.find(spec({kind: RELAY_MEMBERS}))
+      const memberList = membersEvent ? uniq(getTagValues("member", membersEvent.tags)) : undefined
+
+      let isMember = false
+
+      if (memberList) {
+        // Member list exists - check if user is in it.
+        isMember = memberList.includes($pubkey!)
+      } else {
+        // No member list available - replay the user's add/remove history.
+        for (const event of sortBy(e => e.created_at, $userAddRemoveEvents)) {
+          if (event.pubkey !== $pubkey) {
+            continue
+          }
+
+          if (event.kind === RELAY_ADD_MEMBER) {
+            isMember = true
+          } else if (event.kind === RELAY_REMOVE_MEMBER) {
+            isMember = false
+          }
+        }
+      }
+
+      for (const event of $joinLeaveEvents) {
+        // Join events indicate pending or granted status, leave resets to initial.
         if (event.pubkey !== $pubkey) {
           continue
         }
@@ -1057,19 +1053,46 @@ export const deriveUserIsRoomAdmin = (url: string, h: string) =>
   )
 
 export const deriveUserRoomMembershipStatus = (url: string, h: string) => {
-  const filters: Filter[] = [{kinds: [ROOM_JOIN, ROOM_LEAVE], "#h": [h]}]
+  // Fetch the room member list and the current user's add/remove events.
+  const userEventFilters: Filter[] = [{kinds: [ROOM_ADD_MEMBER, ROOM_REMOVE_MEMBER], "#h": [h]}]
+  const joinLeaveFilters: Filter[] = [{kinds: [ROOM_JOIN, ROOM_LEAVE], "#h": [h]}]
 
   return derived(
     [
       pubkey,
       deriveRoomMembers(url, h),
-      deriveEventsForUrl(url, filters),
+      deriveEventsForUrl(url, userEventFilters),
+      deriveEventsForUrl(url, joinLeaveFilters),
       deriveUserIsRoomAdmin(url, h),
     ],
-    ([$pubkey, $members, $events, $isAdmin]) => {
-      const isMember = $members.includes($pubkey!) || $isAdmin
+    ([$pubkey, $memberList, $userAddRemoveEvents, $joinLeaveEvents, $isAdmin]) => {
+      // If admin of this room's space, always granted.
+      if ($isAdmin) {
+        return MembershipStatus.Granted
+      }
 
-      for (const event of $events) {
+      let isMember = false
+
+      if ($memberList) {
+        // Member list exists - check if user is in it.
+        isMember = $memberList.includes($pubkey!)
+      } else {
+        // No member list available - replay the user's add/remove history.
+        for (const event of sortEventsAsc($userAddRemoveEvents)) {
+          if (event.pubkey !== $pubkey) {
+            continue
+          }
+
+          if (event.kind === ROOM_ADD_MEMBER) {
+            isMember = true
+          } else if (event.kind === ROOM_REMOVE_MEMBER) {
+            isMember = false
+          }
+        }
+      }
+
+      for (const event of $joinLeaveEvents) {
+        // Join events indicate pending or granted status, leave resets to initial.
         if (event.pubkey !== $pubkey) {
           continue
         }

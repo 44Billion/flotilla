@@ -79,7 +79,7 @@ export const makeEditor = async ({
         getValue: (profile: PublishedProfile) => profile.event.pubkey,
         sortFn: ({score = 1, item}) => {
           const wotScore = getWotGraph().get(item.event.pubkey) || 0
-          const membershipScale = $spaceMembers.includes(item.event.pubkey) ? 2 : 1
+          const membershipScale = $spaceMembers?.includes(item.event.pubkey) ? 2 : 1
 
           return dec(score) * inc(wotScore / getMaxWot()) * membershipScale
         },
