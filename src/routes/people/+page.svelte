@@ -40,7 +40,7 @@
 <Page>
   <ContentSearch>
     {#snippet input()}
-      <label class="row-2 input input-bordered">
+      <label class="row-2 input input-bordered w-full">
         <Icon icon={Magnifier} />
         <!-- svelte-ignore a11y_autofocus -->
         <input

@@ -279,7 +279,7 @@
   </div>
 </PageBar>
 
-<PageContent class="flex flex-col-reverse gap-2 pt-4">
+<PageContent class="flex flex-col-reverse gap-2 py-4">
   {#if missingRelayLists.length > 0}
     <div class="py-12">
       <div class="card2 col-2 m-auto max-w-md items-center text-center">
