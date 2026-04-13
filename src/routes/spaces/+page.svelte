@@ -1,5 +1,7 @@
 <script lang="ts">
   import {onMount, tick} from "svelte"
+  import {flip} from "svelte/animate"
+  import {cubicOut} from "svelte/easing"
   import {derived as _derived} from "svelte/store"
   import {dec, insertAt, removeAt, sleep} from "@welshman/lib"
   import type {RelayProfile} from "@welshman/util"
@@ -7,6 +9,7 @@
   import {relays, createSearch} from "@welshman/app"
   import {createScroller} from "@lib/html"
   import {fly} from "@lib/transition"
+  import DragHandle from "@assets/icons/drag-handle.svg?dataurl"
   import Widget from "@assets/icons/widget-4.svg?dataurl"
   import AddCircle from "@assets/icons/add-circle.svg?dataurl"
   import Magnifier from "@assets/icons/magnifier.svg?dataurl"
@@ -98,6 +101,8 @@
   const onDragStart = (e: DragEvent, url: string) => {
     draggedUrl = url
     dragStartOrder = [...orderedSpaceUrls]
+    lastDragTarget = undefined
+    didDrop = false
 
     if (e.dataTransfer) {
       e.dataTransfer.effectAllowed = "move"
@@ -105,15 +110,25 @@
     }
   }
 
-  const onDragOver = (e: DragEvent, targetUrl: string) => {
+  const onDragOver = (e: DragEvent) => {
     e.preventDefault()
+  }
+
+  const onDragEnter = (e: DragEvent, targetUrl: string) => {
+    e.preventDefault()
+
+    if (lastDragTarget === targetUrl) return
+
+    lastDragTarget = targetUrl
     reorderSpaceUrls(targetUrl)
   }
 
   const onDrop = (e: DragEvent, targetUrl: string) => {
     e.preventDefault()
     reorderSpaceUrls(targetUrl)
+    didDrop = true
     draggedUrl = undefined
+    lastDragTarget = undefined
 
     if (dragStartOrder && !isSameOrder(dragStartOrder, orderedSpaceUrls)) {
       void setSpaceMembershipOrder(orderedSpaceUrls).catch(console.error)
@@ -123,8 +138,14 @@
   }
 
   const onDragEnd = () => {
+    if (!didDrop && dragStartOrder && !isSameOrder(dragStartOrder, orderedSpaceUrls)) {
+      orderedSpaceUrls = dragStartOrder
+    }
+
     draggedUrl = undefined
     dragStartOrder = undefined
+    lastDragTarget = undefined
+    didDrop = false
   }
 
   $effect(() => {
@@ -143,6 +164,8 @@
   let orderedSpaceUrls = $state<string[]>([])
   let draggedUrl = $state<string | undefined>()
   let dragStartOrder = $state<string[] | undefined>()
+  let lastDragTarget = $state<string | undefined>()
+  let didDrop = $state(false)
 
   const openSearch = () => {
     showSearch = true
@@ -247,17 +270,25 @@
             <Divider>Your spaces</Divider>
             {#each filteredUserUrls as url (url)}
               <div
-                class:opacity-60={draggedUrl === url}
+                animate:flip={{duration: 300, easing: cubicOut}}
+                class="transition-opacity duration-200 {draggedUrl === url ? 'opacity-50' : ''}"
                 draggable="true"
                 role="listitem"
                 ondragstart={e => onDragStart(e, url)}
-                ondragover={e => onDragOver(e, url)}
+                ondragover={onDragOver}
+                ondragenter={e => onDragEnter(e, url)}
                 ondrop={e => onDrop(e, url)}
                 ondragend={onDragEnd}>
                 <Button
-                  class="card2 bg-alt shadow-md transition-all hover:shadow-lg hover:dark:brightness-[1.1] w-full relative"
+                  class="group card2 bg-alt shadow-md transition-all hover:shadow-lg hover:dark:brightness-[1.1] w-full relative min-w-0"
                   onclick={() => openSpace(url)}>
-                  <RelaySummary hideFavorites {url} />
+                  <div class="flex w-full items-start gap-2">
+                    <div
+                      class="mt-4 flex cursor-grab p-1 text-base-content/30 transition-colors group-hover:text-base-content/60">
+                      <Icon icon={DragHandle} />
+                    </div>
+                    <RelaySummary hideFavorites {url} />
+                  </div>
                   {#if $notifications.has(makeSpacePath(url))}
                     <div class="absolute right-3 top-3 h-2 w-2 rounded-full bg-primary"></div>
                   {/if}
