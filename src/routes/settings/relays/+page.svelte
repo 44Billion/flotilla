@@ -58,14 +58,14 @@
     <RelaySettingsItem
       icon={Inbox}
       title="Inbox Relays"
-      subtitle="Where you send your public notes. Be sure to select relays that will accept your notes, and which will let people who follow you read them."
+      subtitle="Where other people should send notes intended for you. Be sure to select relays that will accept notes that tag you."
       relays={readRelayUrls}
       addRelay={addReadRelay}
       removeRelay={removeReadRelay} />
     <RelaySettingsItem
       icon={Plane}
       title="Outbox Relays"
-      subtitle="Where other people should send notes intended for you. Be sure to select relays that will accept notes that tag you."
+      subtitle="Where you send your public notes. Be sure to select relays that will accept your notes, and which will let people who follow you read them."
       relays={writeRelayUrls}
       addRelay={addWriteRelay}
       removeRelay={removeWriteRelay} />
