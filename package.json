@@ -55,6 +55,7 @@
     "@capacitor/keyboard": "^8.0.0",
     "@capacitor/preferences": "^8.0.0",
     "@capacitor/push-notifications": "^8.0.0",
+    "@capacitor/share": "^8.0.1",
     "@capawesome/capacitor-android-dark-mode-support": "^8.0.0",
     "@capawesome/capacitor-badge": "^8.0.0",
     "@getalby/lightning-tools": "^6.1.0",

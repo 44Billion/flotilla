@@ -47,6 +47,9 @@ importers:
       '@capacitor/push-notifications':
         specifier: ^8.0.0
         version: 8.0.0(@capacitor/core@8.0.1)
+      '@capacitor/share':
+        specifier: ^8.0.1
+        version: 8.0.1(@capacitor/core@8.0.1)
       '@capawesome/capacitor-android-dark-mode-support':
         specifier: ^8.0.0
         version: 8.0.0(@capacitor/core@8.0.1)
@@ -835,6 +838,11 @@ packages:
 
   '@capacitor/push-notifications@8.0.0':
     resolution: {integrity: sha512-xJWQLqAfC8b2ETqAPmwDnkKB4t/lVrbYc2D8VpA2fSu10JFSL/R722Vk0Lfl9Lo9WusmyIiQbVfILNQ3iFNGKw==}
+    peerDependencies:
+      '@capacitor/core': '>=8.0.0'
+
+  '@capacitor/share@8.0.1':
+    resolution: {integrity: sha512-3cSBKBCJVon54rKDROP2rqGyeGks4pBh9TbaEk9S375Kbek/ZHe72N50zIa0Vn9Eac/SuhwgehO/mmA4CsUOiw==}
     peerDependencies:
       '@capacitor/core': '>=8.0.0'
 
@@ -6018,6 +6026,10 @@ snapshots:
       '@capacitor/core': 8.0.1
 
   '@capacitor/push-notifications@8.0.0(@capacitor/core@8.0.1)':
+    dependencies:
+      '@capacitor/core': 8.0.1
+
+  '@capacitor/share@8.0.1(@capacitor/core@8.0.1)':
     dependencies:
       '@capacitor/core': 8.0.1
 

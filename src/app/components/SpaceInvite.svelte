@@ -3,7 +3,9 @@
   import {sleep} from "@welshman/lib"
   import {request} from "@welshman/net"
   import {displayRelayUrl, getTagValue, RELAY_INVITE} from "@welshman/util"
+  import {Share} from "@capacitor/share"
   import LinkRound from "@assets/icons/link-round.svg?dataurl"
+  import Upload from "@assets/icons/upload.svg?dataurl"
   import Copy from "@assets/icons/copy.svg?dataurl"
   import Spinner from "@lib/components/Spinner.svelte"
   import Field from "@lib/components/Field.svelte"
@@ -27,6 +29,17 @@
   const back = () => history.back()
   const copyInvite = () => clip(invite)
 
+  const shareInvite = async () => {
+    if (!canShare) return
+
+    try {
+      await Share.share({url: invite})
+    } catch (e) {
+      console.error(e)
+    }
+  }
+
+  let canShare = $state(false)
   let claim = $state("")
   let loading = $state(true)
   let invite = $state("")
@@ -38,6 +51,13 @@
   })
 
   onMount(async () => {
+    try {
+      const {value} = await Share.canShare()
+      canShare = value
+    } catch {
+      canShare = false
+    }
+
     try {
       const [[event]] = await Promise.all([
         request({
@@ -76,16 +96,28 @@
         <p class="center">Oops! It looks like you're not a member of this relay.</p>
       {:else}
         <div class="flex flex-col items-center gap-6">
-          <QRCode code={invite} />
+          <div class="w-48">
+            <QRCode code={invite} />
+          </div>
           <Field>
             {#snippet input()}
-              <label class="input input-bordered flex w-full items-center gap-2">
-                <Icon icon={LinkRound} />
-                <input bind:value={invite} class="grow" type="text" />
-                <Button onclick={copyInvite}>
-                  <Icon icon={Copy} />
-                </Button>
-              </label>
+              <div class="flex w-full gap-2">
+                {#if canShare}
+                  <Button
+                    class="input input-bordered flex shrink-0 w-12 items-center justify-center p-0"
+                    onclick={shareInvite}>
+                    <Icon icon={Upload} />
+                  </Button>
+                {/if}
+
+                <label class="input input-bordered flex min-w-0 flex-1 items-center gap-2">
+                  <Icon icon={LinkRound} class="shrink-0" />
+                  <input bind:value={invite} class="min-w-0 flex-1 truncate" type="text" readonly />
+                  <Button class="shrink-0" onclick={copyInvite}>
+                    <Icon icon={Copy} />
+                  </Button>
+                </label>
+              </div>
             {/snippet}
             {#snippet info()}
               <p>
