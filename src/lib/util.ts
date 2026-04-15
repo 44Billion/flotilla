@@ -46,7 +46,9 @@ export const whenAborted = (signal?: AbortSignal) => {
 
 /** Returns a promise that rejects with TimeoutError after ms. Use with Promise.race. */
 export const whenTimeout = (ms: number, opts: {message?: string} = {}) => {
-  return new Promise<never>((_, reject) => setTimeout(() => reject(new TimeoutError()), ms))
+  return new Promise<never>((_, reject) =>
+    setTimeout(() => reject(new TimeoutError(opts.message)), ms),
+  )
 }
 
 export const buildUrl = (base: string | URL, ...pathname: string[]) => {

@@ -277,7 +277,7 @@ export const joinVoiceRoom = async (
     try {
       await Promise.race([
         liveKitRoom.connect(server_url, participant_token, {maxRetries: 0}),
-        whenTimeout(5_000, {
+        whenTimeout(15_000, {
           message: "Connection timed out. Please check your network and try again.",
         }),
         whenAborted(signal),
