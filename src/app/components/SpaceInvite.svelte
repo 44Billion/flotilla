@@ -25,34 +25,36 @@
   const authError = deriveRelayAuthError(url)
 
   const back = () => history.back()
-
   const copyInvite = () => clip(invite)
 
   let claim = $state("")
   let loading = $state(true)
-
   let invite = $state("")
 
   $effect(() => {
     const relay = displayRelayUrl(url)
     const params = new URLSearchParams({r: relay, c: claim}).toString()
-
     invite = PLATFORM_URL + "/join?" + params
   })
 
   onMount(async () => {
-    const [[event]] = await Promise.all([
-      request({
-        relays: [url],
-        autoClose: true,
-        signal: AbortSignal.timeout(3000),
-        filters: [{kinds: [RELAY_INVITE]}],
-      }),
-      sleep(2000),
-    ])
+    try {
+      const [[event]] = await Promise.all([
+        request({
+          relays: [url],
+          autoClose: true,
+          signal: AbortSignal.timeout(10000),
+          filters: [{kinds: [RELAY_INVITE]}],
+        }),
+        sleep(2000),
+      ])
 
-    claim = getTagValue("claim", event?.tags || []) || ""
-    loading = false
+      claim = getTagValue("claim", event?.tags || []) || ""
+    } catch {
+      claim = ""
+    } finally {
+      loading = false
+    }
   })
 </script>
 
