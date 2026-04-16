@@ -3,7 +3,6 @@ import {context as pomadeContext} from "@pomade/core"
 import {Capacitor} from "@capacitor/core"
 import {derived, readable, writable} from "svelte/store"
 import * as nip19 from "nostr-tools/nip19"
-import {Poll} from "nostr-tools/kinds"
 import {
   on,
   gt,
@@ -93,6 +92,7 @@ import {
   THREAD,
   CLASSIFIED,
   WRAP,
+  POLL,
   PROFILE,
   ZAP_GOAL,
   ZAP_REQUEST,
@@ -327,7 +327,7 @@ if (ENABLE_ZAPS) {
   REACTION_KINDS.push(ZAP_RESPONSE)
 }
 
-export const CONTENT_KINDS = [ZAP_GOAL, EVENT_TIME, THREAD, CLASSIFIED, Poll]
+export const CONTENT_KINDS = [ZAP_GOAL, EVENT_TIME, THREAD, CLASSIFIED, POLL]
 
 export const DM_KINDS = [DIRECT_MESSAGE, DIRECT_MESSAGE_FILE]
 

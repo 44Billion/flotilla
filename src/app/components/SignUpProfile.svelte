@@ -17,7 +17,7 @@
 
   const profile = getKey<Profile>("signup.profile")!
 
-  const initialValues = {profile, shouldBroadcast: false}
+  const initialValues = {profile}
 
   const back = () => history.back()
 

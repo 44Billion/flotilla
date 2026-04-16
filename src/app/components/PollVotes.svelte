@@ -1,8 +1,8 @@
 <script lang="ts">
   import {onDestroy} from "svelte"
   import type {TrustedEvent} from "@welshman/util"
+  import {POLL_RESPONSE} from "@welshman/util"
   import {pubkey, publishThunk, abortThunk} from "@welshman/app"
-  import {PollResponse} from "nostr-tools/kinds"
   import {formatTimestampRelative} from "@welshman/lib"
   import {deriveEvents} from "@app/core/state"
   import {pushToast} from "@app/util/toast"
@@ -24,7 +24,7 @@
 
   const {url, event}: Props = $props()
 
-  const responses = deriveEvents([{kinds: [PollResponse], "#e": [event.id]}])
+  const responses = deriveEvents([{kinds: [POLL_RESPONSE], "#e": [event.id]}])
 
   const pollType = getPollType(event)
   const options = getPollOptions(event)

@@ -1,14 +1,14 @@
 <script lang="ts">
   import type {ComponentProps} from "svelte"
   import {derived} from "svelte/store"
-  import {PollResponse} from "nostr-tools/kinds"
+  import {POLL_RESPONSE} from "@welshman/util"
   import ContentMinimal from "@app/components/ContentMinimal.svelte"
   import {deriveEvents} from "@app/core/state"
   import {getPollResults} from "@app/util/polls"
 
   const props: ComponentProps<typeof ContentMinimal> = $props()
 
-  const responses = deriveEvents([{kinds: [PollResponse], "#e": [props.event.id]}])
+  const responses = deriveEvents([{kinds: [POLL_RESPONSE], "#e": [props.event.id]}])
 
   const results = derived(responses, $responses => getPollResults(props.event, $responses))
 </script>

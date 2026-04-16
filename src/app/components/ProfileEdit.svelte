@@ -1,6 +1,6 @@
 <script lang="ts">
   import type {Profile} from "@welshman/util"
-  import {getTag, makeProfile} from "@welshman/util"
+  import {makeProfile} from "@welshman/util"
   import {pubkey, profilesByPubkey, waitForThunkError} from "@welshman/app"
   import AltArrowLeft from "@assets/icons/alt-arrow-left.svg?dataurl"
   import {errorMessage} from "@lib/util"
@@ -10,26 +10,18 @@
   import ProfileEditForm from "@app/components/ProfileEditForm.svelte"
   import {clearModals} from "@app/util/modal"
   import {pushToast} from "@app/util/toast"
-  import {PROTECTED} from "@app/core/state"
   import {updateProfile} from "@app/core/commands"
 
   const profile = $profilesByPubkey.get($pubkey!) || makeProfile()
-  const shouldBroadcast = !getTag(PROTECTED, profile.event?.tags || [])
-  const initialValues = {profile, shouldBroadcast}
+  const initialValues = {profile}
 
   const back = () => history.back()
 
-  const onsubmit = async ({
-    profile,
-    shouldBroadcast,
-  }: {
-    profile: Profile
-    shouldBroadcast: boolean
-  }) => {
+  const onsubmit = async ({profile}: {profile: Profile}) => {
     loading = true
 
     try {
-      const error = await waitForThunkError(updateProfile({profile, shouldBroadcast}))
+      const error = await waitForThunkError(updateProfile({profile}))
 
       if (error) {
         pushToast({

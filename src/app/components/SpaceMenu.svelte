@@ -1,7 +1,6 @@
 <script lang="ts">
   import {derived} from "svelte/store"
-  import {displayRelayUrl, EVENT_TIME, ZAP_GOAL, THREAD, CLASSIFIED} from "@welshman/util"
-  import {Poll} from "nostr-tools/kinds"
+  import {displayRelayUrl, EVENT_TIME, ZAP_GOAL, THREAD, CLASSIFIED, POLL} from "@welshman/util"
   import {deriveRelay, deriveRelayDisplay, createSearch, pubkey} from "@welshman/app"
   import {fly} from "@lib/transition"
   import Magnifier from "@assets/icons/magnifier.svg?dataurl"
@@ -267,7 +266,7 @@
           <Icon icon={CalendarMinimalistic} /> Calendar
         </SecondaryNavItem>
       {/if}
-      {#if $spaceKinds.has(Poll)}
+      {#if $spaceKinds.has(POLL)}
         <SecondaryNavItem href={pollsPath}>
           <Icon icon={Revote} /> Polls
         </SecondaryNavItem>

@@ -3,7 +3,7 @@
   import {page} from "$app/stores"
   import {sleep} from "@welshman/lib"
   import type {MakeNonOptional} from "@welshman/lib"
-  import {COMMENT} from "@welshman/util"
+  import {COMMENT, POLL, POLL_RESPONSE} from "@welshman/util"
   import {repository} from "@welshman/app"
   import {request} from "@welshman/net"
   import {deriveEventsById, deriveEventsAsc} from "@welshman/store"
@@ -18,7 +18,6 @@
   import CommentActions from "@app/components/CommentActions.svelte"
   import EventReply from "@app/components/EventReply.svelte"
   import {deriveEvent, decodeRelay} from "@app/core/state"
-  import {Poll, PollResponse} from "nostr-tools/kinds"
 
   const {relay, id} = $page.params as MakeNonOptional<typeof $page.params>
   const url = decodeRelay(relay)
@@ -48,7 +47,7 @@
 
     request({
       relays: [url],
-      filters: [{kinds: [Poll], ids: [id]}, {kinds: [PollResponse], "#e": [id]}, ...filters],
+      filters: [{kinds: [POLL], ids: [id]}, {kinds: [POLL_RESPONSE], "#e": [id]}, ...filters],
       signal: controller.signal,
     })
 

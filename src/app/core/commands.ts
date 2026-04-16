@@ -18,7 +18,6 @@ import {
 import {Nip01Signer} from "@welshman/signer"
 import type {UploadTask} from "@welshman/editor"
 import type {TrustedEvent, EventContent, Profile, PublishedRoomMeta} from "@welshman/util"
-import {PollResponse} from "nostr-tools/kinds"
 import {
   DELETE,
   REPORT,
@@ -33,6 +32,7 @@ import {
   ROOMS,
   COMMENT,
   APP_DATA,
+  POLL_RESPONSE,
   isSignedEvent,
   makeEvent,
   normalizeRelayUrl,
@@ -53,7 +53,6 @@ import {
   isPublishedProfile,
   editProfile,
   createProfile,
-  uniqTags,
   ManagementMethod,
 } from "@welshman/util"
 import {Pool, AuthStatus, SocketStatus} from "@welshman/net"
@@ -85,6 +84,7 @@ import {
   SETTINGS,
   PROTECTED,
   INDEXER_RELAYS,
+  DEFAULT_RELAYS,
   DEFAULT_BLOSSOM_SERVERS,
   userSpaceUrls,
   userSettingsValues,
@@ -389,7 +389,7 @@ export type PollResponseParams = {
 }
 
 export const makePollResponse = ({event, selectedIds}: PollResponseParams) =>
-  makeEvent(PollResponse, {
+  makeEvent(POLL_RESPONSE, {
     content: "",
     tags: [["e", event.id], ...selectedIds.map(selectedId => ["response", selectedId])],
   })
@@ -724,34 +724,18 @@ export const uploadFile = async (file: File, options: UploadFileOptions = {}) =>
 // Update Profile
 
 export const initProfile = (profile: Profile) => {
-  const template = createProfile(profile)
+  const event = makeEvent(PROFILE, createProfile(profile))
 
-  // Start out protected by default
-  template.tags.push(PROTECTED)
-
-  const event = makeEvent(PROFILE, template)
-
-  // Don't publish anywhere yet, wait until they join a space
-  return publishThunk({event, relays: []})
+  return publishThunk({event, relays: DEFAULT_RELAYS})
 }
 
-export const updateProfile = ({
-  profile,
-  shouldBroadcast = !getTag(PROTECTED, profile.event?.tags || []),
-}: {
-  profile: Profile
-  shouldBroadcast?: boolean
-}) => {
+export const updateProfile = ({profile}: {profile: Profile}) => {
   const router = Router.get()
   const template = isPublishedProfile(profile) ? editProfile(profile) : createProfile(profile)
-  const scenarios = [router.FromRelays(get(userSpaceUrls))]
+  const scenarios = [router.FromRelays(get(userSpaceUrls)), router.FromUser(), router.Index()]
 
-  if (shouldBroadcast) {
-    scenarios.push(router.FromUser(), router.Index())
-    template.tags = template.tags.filter(nthNe(0, "-"))
-  } else {
-    template.tags = uniqTags([...template.tags, PROTECTED])
-  }
+  // Remove protected tag, we used to add it
+  template.tags = template.tags.filter(nthNe(0, "-"))
 
   const event = makeEvent(template.kind, template)
   const relays = router.merge(scenarios).getUrls()

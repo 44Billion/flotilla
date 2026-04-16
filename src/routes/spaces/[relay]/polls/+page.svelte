@@ -5,7 +5,7 @@
   import {page} from "$app/stores"
   import {sortBy, partition, spec, pushToMapKey, max} from "@welshman/lib"
   import type {TrustedEvent} from "@welshman/util"
-  import {getTagValue} from "@welshman/util"
+  import {getTagValue, POLL} from "@welshman/util"
   import {fly} from "@lib/transition"
   import PollIcon from "@assets/icons/revote.svg?dataurl"
   import Add from "@assets/icons/add.svg?dataurl"
@@ -16,7 +16,6 @@
   import SpaceBar from "@app/components/SpaceBar.svelte"
   import PollItem from "@app/components/PollItem.svelte"
   import PollCreate from "@app/components/PollCreate.svelte"
-  import {Poll} from "nostr-tools/kinds"
   import {decodeRelay, makeCommentFilter} from "@app/core/state"
   import {makeFeed} from "@app/core/requests"
   import {pushModal} from "@app/util/modal"
@@ -31,7 +30,7 @@
 
   const items = $derived.by(() => {
     const scores = new Map<string, number[]>()
-    const [polls, comments] = partition(spec({kind: Poll}), $events)
+    const [polls, comments] = partition(spec({kind: POLL}), $events)
 
     for (const comment of comments) {
       const id = getTagValue("E", comment.tags)
@@ -48,7 +47,7 @@
     const feed = makeFeed({
       url,
       element: element!,
-      filters: [{kinds: [Poll]}, makeCommentFilter([Poll])],
+      filters: [{kinds: [POLL]}, makeCommentFilter([POLL])],
       onBackwardExhausted: () => {
         loading = false
       },

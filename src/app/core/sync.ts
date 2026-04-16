@@ -1,7 +1,6 @@
 import {page} from "$app/stores"
 import type {Unsubscriber} from "svelte/store"
 import {last, call, assoc, chunk, WEEK, ago} from "@welshman/lib"
-import {PollResponse} from "nostr-tools/kinds"
 import {merged} from "@welshman/store"
 import {
   getListTags,
@@ -20,6 +19,7 @@ import {
   RELAY_ADD_MEMBER,
   RELAY_REMOVE_MEMBER,
   MESSAGE,
+  POLL_RESPONSE,
   isSignedEvent,
   unionFilters,
 } from "@welshman/util"
@@ -280,7 +280,7 @@ const syncSpace = (url: string) => {
     filters: [
       {kinds: [...relayKinds, ...roomMetaKinds, ...roomDeleteKinds, ...CONTENT_KINDS, MESSAGE]},
       makeCommentFilter(CONTENT_KINDS, {since}),
-      {kinds: [...REACTION_KINDS, PollResponse], since},
+      {kinds: [...REACTION_KINDS, POLL_RESPONSE], since},
     ],
   })
 

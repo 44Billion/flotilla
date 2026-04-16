@@ -6,7 +6,6 @@
   import MapPoint from "@assets/icons/map-point.svg?dataurl"
   import Icon from "@lib/components/Icon.svelte"
   import Field from "@lib/components/Field.svelte"
-  import FieldInline from "@lib/components/FieldInline.svelte"
   import Button from "@lib/components/Button.svelte"
   import Modal from "@lib/components/Modal.svelte"
   import ModalBody from "@lib/components/ModalBody.svelte"
@@ -17,7 +16,6 @@
 
   type Values = {
     profile: Profile
-    shouldBroadcast: boolean
   }
 
   type Props = {
@@ -77,7 +75,7 @@
       {/snippet}
       {#snippet input()}
         <textarea
-          class="textarea textarea-bordered leading-4"
+          class="textarea textarea-bordered leading-4 w-full"
           rows="5"
           bind:value={values.profile.about}></textarea>
       {/snippet}
@@ -103,25 +101,6 @@
           </p>
         {/snippet}
       </Field>
-    {/if}
-    {#if !isSignup}
-      <FieldInline>
-        {#snippet label()}
-          <p>Broadcast Profile</p>
-        {/snippet}
-        {#snippet input()}
-          <input
-            type="checkbox"
-            class="toggle toggle-primary"
-            bind:checked={values.shouldBroadcast} />
-        {/snippet}
-        {#snippet info()}
-          <p>
-            If enabled, changes will be published to the broader nostr network in addition to spaces
-            you are a member of.
-          </p>
-        {/snippet}
-      </FieldInline>
     {/if}
   </ModalBody>
   <ModalFooter>

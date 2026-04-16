@@ -2,7 +2,7 @@
   import type {ComponentProps} from "svelte"
   import {onMount} from "svelte"
   import {request} from "@welshman/net"
-  import {PollResponse} from "nostr-tools/kinds"
+  import {POLL_RESPONSE} from "@welshman/util"
   import PollVotes from "@app/components/PollVotes.svelte"
   import Content from "@app/components/Content.svelte"
 
@@ -15,7 +15,7 @@
 
     request({
       relays: [props.url],
-      filters: [{kinds: [PollResponse], "#e": [props.event.id]}],
+      filters: [{kinds: [POLL_RESPONSE], "#e": [props.event.id]}],
     })
   })
 </script>

@@ -25,6 +25,7 @@
     ZAP_GOAL,
     EVENT_TIME,
     COMMENT,
+    POLL,
     getTagValue,
     getTagValues,
     getIdAndAddress,
@@ -50,7 +51,6 @@
   import RecentConversation from "@app/components/RecentConversation.svelte"
   import {decodeRelay, deriveEventsForUrl, CONTENT_KINDS} from "@app/core/state"
   import {goToEvent} from "@app/util/routes"
-  import {Poll} from "nostr-tools/kinds"
 
   const url = decodeRelay($page.params.relay!)
   const since = ago(3, MONTH)
@@ -305,7 +305,7 @@
         <GoalItem {url} {event} />
       {:else if event.kind === EVENT_TIME}
         <CalendarEventItem {url} {event} />
-      {:else if event.kind === Poll}
+      {:else if event.kind === POLL}
         <PollItem {url} {event} />
       {:else}
         <NoteItem {url} {event} />

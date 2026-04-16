@@ -1,8 +1,7 @@
 <script lang="ts">
   import {insertAt, now, randomId, removeAt, removeUndefined} from "@welshman/lib"
-  import {makeEvent} from "@welshman/util"
+  import {makeEvent, POLL} from "@welshman/util"
   import {publishThunk, waitForThunkError} from "@welshman/app"
-  import {Poll} from "nostr-tools/kinds"
   import {isMobile, preventDefault} from "@lib/html"
   import AltArrowLeft from "@assets/icons/alt-arrow-left.svg?dataurl"
   import HamburgerMenu from "@assets/icons/hamburger-menu.svg?dataurl"
@@ -145,7 +144,7 @@
 
       const pollThunk = publishThunk({
         relays: [url],
-        event: makeEvent(Poll, {content: title.trim(), tags}),
+        event: makeEvent(POLL, {content: title.trim(), tags}),
       })
 
       const error = await waitForThunkError(pollThunk)

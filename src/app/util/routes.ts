@@ -6,7 +6,6 @@ import {page} from "$app/stores"
 import {nthEq} from "@welshman/lib"
 import type {TrustedEvent} from "@welshman/util"
 import {getAddress} from "@welshman/util"
-import {Poll} from "nostr-tools/kinds"
 import {tracker, userMessagingRelayList} from "@welshman/app"
 import {identity} from "@welshman/lib"
 import {
@@ -16,6 +15,7 @@ import {
   CLASSIFIED,
   ZAP_GOAL,
   EVENT_TIME,
+  POLL,
   getPubkeyTagValues,
   getRelaysFromList,
 } from "@welshman/util"
@@ -149,7 +149,7 @@ export const getEventPath = (event: TrustedEvent, urls: string[]) => {
       return makeCalendarPath(url, getAddress(event))
     }
 
-    if (event.kind === Poll) {
+    if (event.kind === POLL) {
       return makePollPath(url, event.id)
     }
 
@@ -199,7 +199,7 @@ export const getRoomItemPath = (url: string, event: TrustedEvent) => {
       return makeGoalPath(url, event.id)
     case EVENT_TIME:
       return makeCalendarPath(url, getAddress(event))
-    case Poll:
+    case POLL:
       return makePollPath(url, event.id)
   }
 }
