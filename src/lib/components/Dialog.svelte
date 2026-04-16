@@ -37,9 +37,9 @@
   )
 
   const buttonClass = $derived(
-    cx("absolute right-3 btn btn-circle btn-neutral btn-sm", {
+    cx("absolute right-3 z-tooltip btn btn-circle btn-neutral btn-sm", {
       "top-3": fullscreen,
-      "-top-4": !fullscreen,
+      "-top-4 mr-sai": !fullscreen,
     }),
   )
 </script>
