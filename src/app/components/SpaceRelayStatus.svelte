@@ -46,7 +46,7 @@
         </div>
       {/if}
       {#if Array.isArray(supported_nips)}
-        <p class="badge badge-neutral">
+        <p class="badge badge-neutral text-wrap h-auto">
           <span class="ellipsize">Supported NIPs: {supported_nips.join(", ")}</span>
         </p>
       {/if}
