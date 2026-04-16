@@ -68,22 +68,23 @@
   })
 </script>
 
-<div class="relative grid grid-cols-2 gap-2" bind:this={element}>
-  <div class="relative">
+<div class="relative focus-within:z-modal grid grid-cols-2 gap-2" bind:this={element}>
+  <div class="relative group z-popover">
     <DateInput format="yyyy-MM-dd" placeholder="" bind:value={date} />
-    <div class="absolute right-2 top-0 flex h-12 cursor-pointer items-center gap-2">
+    <div
+      class="absolute right-2 top-0 flex h-12 cursor-pointer items-center gap-2 opacity-100 group-focus-within:opacity-0 group-focus-within:pointer-events-none transition-opacity pointer-events-none">
       {#if date}
-        <Button onclick={clear} class="h-5">
+        <Button onclick={clear} class="h-5 pointer-events-auto">
           <Icon icon={CloseCircle} />
         </Button>
       {:else}
-        <Button onclick={focusDate} class="h-5">
+        <Button onclick={focusDate} class="h-5 pointer-events-auto">
           <Icon icon={CalendarMinimalistic} />
         </Button>
       {/if}
     </div>
   </div>
-  <label class="input input-bordered flex items-center">
+  <label class="input input-bordered flex items-center relative">
     <input
       list="time-options"
       class="grow"
