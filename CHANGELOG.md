@@ -1,5 +1,9 @@
 # Changelog
 
+# 1.7.4
+
+* Fix safe area inset for FAB
+
 # 1.7.3
 
 * Add native share support for space invites
