@@ -1,6 +1,6 @@
 import {page} from "$app/stores"
 import type {Unsubscriber} from "svelte/store"
-import {last, call, ifLet, assoc, chunk, WEEK, ago} from "@welshman/lib"
+import {last, call, assoc, chunk, WEEK, ago} from "@welshman/lib"
 import {PollResponse} from "nostr-tools/kinds"
 import {merged} from "@welshman/store"
 import {
@@ -22,7 +22,6 @@ import {
   MESSAGE,
   isSignedEvent,
   unionFilters,
-  getTagValue,
 } from "@welshman/util"
 import type {Filter, List, PublishedList, TrustedEvent} from "@welshman/util"
 import {request, requestOne, Difference, DifferenceEvent} from "@welshman/net"
@@ -270,29 +269,7 @@ const syncUserData = () => {
 
 const syncSpace = (url: string) => {
   const since = ago(WEEK)
-  const seen = new Set<string>()
   const controller = new AbortController()
-
-  const pullRoomContent = (room: string) => {
-    if (!seen.has(room)) {
-      seen.add(room)
-      pullAndListen({
-        url,
-        signal: controller.signal,
-        filters: [
-          {kinds: [ROOM_META, ROOM_ADMINS, ROOM_MEMBERS], "#d": [room]},
-          {kinds: [MESSAGE, ...CONTENT_KINDS], since, "#h": [room]},
-          makeCommentFilter(CONTENT_KINDS, {since, "#h": [room]}),
-          {
-            kinds: [ROOM_DELETE, ROOM_JOIN, ROOM_LEAVE],
-            "#h": [room],
-          },
-          {kinds: [PollResponse], since},
-        ],
-      })
-    }
-  }
-
   const relayKinds = [RELAY_MEMBERS]
   const roomMetaKinds = [ROOM_META, ROOM_ADMINS, ROOM_MEMBERS, LIVEKIT_PARTICIPANTS]
   const roomDeleteKinds = [ROOM_DELETE, ROOM_JOIN, ROOM_LEAVE]
@@ -303,19 +280,8 @@ const syncSpace = (url: string) => {
     filters: [
       {kinds: [...relayKinds, ...roomMetaKinds, ...roomDeleteKinds, ...CONTENT_KINDS, MESSAGE]},
       makeCommentFilter(CONTENT_KINDS, {since}),
-      {kinds: [PollResponse], since},
+      {kinds: [...REACTION_KINDS, PollResponse], since},
     ],
-    onEvent: event => {
-      if (event.kind === ROOM_META) {
-        ifLet(getTagValue("d", event.tags), pullRoomContent)
-      }
-    },
-  })
-
-  listen({
-    url,
-    signal: controller.signal,
-    filters: [{kinds: REACTION_KINDS}, {kinds: [PollResponse]}],
   })
 
   return () => controller.abort()
