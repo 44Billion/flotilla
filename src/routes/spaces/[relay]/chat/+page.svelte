@@ -4,6 +4,7 @@
   import {goto} from "$app/navigation"
   import type {Readable} from "svelte/store"
   import {readable} from "svelte/store"
+  import {debounce} from "throttle-debounce"
   import {now, int, ifLet, formatTimestampAsDate, MINUTE, ago} from "@welshman/lib"
   import type {TrustedEvent, EventContent} from "@welshman/util"
   import {makeEvent, MESSAGE, RELAY_ADD_MEMBER} from "@welshman/util"
@@ -139,6 +140,8 @@
   const onScroll = () => {
     if (!isProgrammaticScroll) {
       userHasScrolled = true
+      isUserScrolling = true
+      clearIsUserScrolling()
       manageScrollPosition()
     }
 
@@ -160,6 +163,7 @@
   let loadingForward = $state(true)
   let userHasScrolled = $state(false)
   let isProgrammaticScroll = $state(false)
+  let isUserScrolling = $state(false)
   let share = $state(popKey<TrustedEvent | undefined>("share"))
   let parent: TrustedEvent | undefined = $state()
   let element: HTMLElement | undefined = $state()
@@ -170,6 +174,10 @@
   let events: Readable<TrustedEvent[]> = $state(readable([]))
   let compose: RoomCompose | undefined = $state()
   let eventToEdit: TrustedEvent | undefined = $state()
+
+  const clearIsUserScrolling = debounce(150, () => {
+    isUserScrolling = false
+  })
 
   const elements = $derived.by(() => {
     const elements = []
@@ -244,7 +252,7 @@
   })
 
   $effect(() => {
-    if (elements.length > 0) {
+    if (elements.length > 0 && !isUserScrolling) {
       requestAnimationFrame(manageScrollPosition)
     }
   })
