@@ -1,5 +1,32 @@
 # Changelog
 
+# 1.7.3
+
+* Add native share support for space invites
+* Stop sending duplicate requests per room
+* Add more robust thumbnail url generation
+* Make space reordering discoverable with smoother drag animation
+* Improve relay member list
+* Add room mentions and clickable room/relay refs
+* Support native clipboard image paste on mobile
+* publish kind 9 quote after room content creation for cross-client interoperability
+* Improve feed pagination logic and performance
+* Support Aegis URL scheme for NIP-46 login
+* Various UI and bug fixes
+* Raise message size limit in chat
+* Fix realtime updates for room members and admins
+* Add video to calls
+* Remove follow graph building
+* Add start chat FAB
+* Add drafts
+* Redesign toast notifications
+* Remove room/space leave indications
+* Hide report badge for non-admin users
+* Add polls
+* Add search to recent activity page
+* Fix notification badge on mobile nav
+* Change audio devices in call
+
 # 1.7.2
 
 * Fix race condition in nip 46

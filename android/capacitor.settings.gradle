@@ -11,6 +11,9 @@ project(':capacitor-community-safe-area').projectDir = new File('../node_modules
 include ':capacitor-app'
 project(':capacitor-app').projectDir = new File('../node_modules/.pnpm/@capacitor+app@8.0.0_@capacitor+core@8.0.1/node_modules/@capacitor/app/android')
 
+include ':capacitor-clipboard'
+project(':capacitor-clipboard').projectDir = new File('../node_modules/.pnpm/@capacitor+clipboard@8.0.1_@capacitor+core@8.0.1/node_modules/@capacitor/clipboard/android')
+
 include ':capacitor-filesystem'
 project(':capacitor-filesystem').projectDir = new File('../node_modules/.pnpm/@capacitor+filesystem@8.1.0_@capacitor+core@8.0.1/node_modules/@capacitor/filesystem/android')
 
@@ -22,6 +25,9 @@ project(':capacitor-preferences').projectDir = new File('../node_modules/.pnpm/@
 
 include ':capacitor-push-notifications'
 project(':capacitor-push-notifications').projectDir = new File('../node_modules/.pnpm/@capacitor+push-notifications@8.0.0_@capacitor+core@8.0.1/node_modules/@capacitor/push-notifications/android')
+
+include ':capacitor-share'
+project(':capacitor-share').projectDir = new File('../node_modules/.pnpm/@capacitor+share@8.0.1_@capacitor+core@8.0.1/node_modules/@capacitor/share/android')
 
 include ':capawesome-capacitor-android-dark-mode-support'
 project(':capawesome-capacitor-android-dark-mode-support').projectDir = new File('../node_modules/.pnpm/@capawesome+capacitor-android-dark-mode-support@8.0.0_@capacitor+core@8.0.1/node_modules/@capawesome/capacitor-android-dark-mode-support/android')

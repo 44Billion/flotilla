@@ -14,10 +14,12 @@ def capacitor_pods
   pod 'AparajitaCapacitorSecureStorage', :path => '../../node_modules/.pnpm/@aparajita+capacitor-secure-storage@8.0.0/node_modules/@aparajita/capacitor-secure-storage'
   pod 'CapacitorCommunitySafeArea', :path => '../../node_modules/.pnpm/@capacitor-community+safe-area@8.0.1_@capacitor+core@8.0.1/node_modules/@capacitor-community/safe-area'
   pod 'CapacitorApp', :path => '../../node_modules/.pnpm/@capacitor+app@8.0.0_@capacitor+core@8.0.1/node_modules/@capacitor/app'
+  pod 'CapacitorClipboard', :path => '../../node_modules/.pnpm/@capacitor+clipboard@8.0.1_@capacitor+core@8.0.1/node_modules/@capacitor/clipboard'
   pod 'CapacitorFilesystem', :path => '../../node_modules/.pnpm/@capacitor+filesystem@8.1.0_@capacitor+core@8.0.1/node_modules/@capacitor/filesystem'
   pod 'CapacitorKeyboard', :path => '../../node_modules/.pnpm/@capacitor+keyboard@8.0.0_@capacitor+core@8.0.1/node_modules/@capacitor/keyboard'
   pod 'CapacitorPreferences', :path => '../../node_modules/.pnpm/@capacitor+preferences@8.0.0_@capacitor+core@8.0.1/node_modules/@capacitor/preferences'
   pod 'CapacitorPushNotifications', :path => '../../node_modules/.pnpm/@capacitor+push-notifications@8.0.0_@capacitor+core@8.0.1/node_modules/@capacitor/push-notifications'
+  pod 'CapacitorShare', :path => '../../node_modules/.pnpm/@capacitor+share@8.0.1_@capacitor+core@8.0.1/node_modules/@capacitor/share'
   pod 'CapawesomeCapacitorBadge', :path => '../../node_modules/.pnpm/@capawesome+capacitor-badge@8.0.0_@capacitor+core@8.0.1/node_modules/@capawesome/capacitor-badge'
   pod 'NostrSignerCapacitorPlugin', :path => '../../node_modules/.pnpm/nostr-signer-capacitor-plugin@https+++codeload.github.com+coracle-social+nostr-signer-c_2704ecccfd05fcfb1ad8852744422b7c/node_modules/nostr-signer-capacitor-plugin'
 end
