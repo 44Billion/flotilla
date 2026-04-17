@@ -11,6 +11,7 @@
   import {Router} from "@welshman/router"
   import {userMuteList, tagPubkey, publishThunk, userBlossomServerList} from "@welshman/app"
   import NotesMinimalistic from "@assets/icons/notes-minimalistic.svg?dataurl"
+  import AddCircle from "@assets/icons/add-circle.svg?dataurl"
   import {preventDefault} from "@lib/html"
   import Field from "@lib/components/Field.svelte"
   import FieldInline from "@lib/components/FieldInline.svelte"
@@ -26,6 +27,10 @@
     settings = {...$userSettingsValues}
     mutedPubkeys = getPubkeyTagValues(getListTags($userMuteList))
     blossomServers = getTagValues("server", getListTags($userBlossomServerList))
+  }
+
+  const addServer = () => {
+    blossomServers = [...blossomServers, ""]
   }
 
   const onsubmit = preventDefault(async () => {
@@ -104,7 +109,7 @@
       {/snippet}
       {#snippet input()}
         <input
-          class="range range-primary"
+          class="range range-primary w-full"
           type="range"
           min="0.8"
           max="1.3"
@@ -115,13 +120,13 @@
   </div>
   <div class="card2 bg-alt col-4 shadow-md">
     <strong class="text-lg">Editor Settings</strong>
-    <FieldInline>
+    <Field>
       {#snippet label()}
         <p>Send Delay</p>
       {/snippet}
       {#snippet input()}
         <input
-          class="range range-primary"
+          class="range range-primary w-full"
           type="range"
           min="0"
           max="10000"
@@ -134,17 +139,21 @@
           {settings.send_delay === 1000 ? "second" : "seconds"}.
         </p>
       {/snippet}
-    </FieldInline>
+    </Field>
     <Field>
       {#snippet label()}
         <p>Media Server</p>
       {/snippet}
+      {#snippet secondary()}
+        <Button
+          class="btn btn-link w-fit px-0 decoration-solid underline text-[#7161ff] h-auto min-h-0 flex items-center gap-[5px]"
+          onclick={addServer}>
+          <Icon icon={AddCircle} size={4} />
+          Add Server
+        </Button>
+      {/snippet}
       {#snippet input()}
-        <InputList bind:value={blossomServers}>
-          {#snippet addLabel()}
-            Add Server
-          {/snippet}
-        </InputList>
+        <InputList allowAdd={false} bind:value={blossomServers} />
       {/snippet}
       {#snippet info()}
         <p>Choose a media server type and url for files you upload to {PLATFORM_NAME}.</p>

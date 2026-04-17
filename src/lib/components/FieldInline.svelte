@@ -9,16 +9,22 @@
   const {...props}: Props = $props()
 </script>
 
-<div class="grid grid-cols-1 gap-2 lg:gap-6 lg:grid-cols-3 {props.class}">
-  <label class="flex items-center gap-2 font-bold">
-    {@render props.label?.()}
-  </label>
-  <div class="col-span-2 flex items-center gap-2">
-    {@render props.input?.()}
-  </div>
-  <p class="flex-end text-sm opacity-50 lg:col-span-3">
-    {#if props.info}
-      {@render props.info?.()}
+<div class="flex flex-col gap-2 {props.class}">
+  <div class="flex items-center justify-between w-full gap-2">
+    {#if props.label}
+      <label class="flex items-center gap-2 max-w-[80%] md:max-w-none">
+        {@render props.label()}
+      </label>
     {/if}
-  </p>
+    <div class="flex items-center gap-2 justify-end shrink-0">
+      {#if props.input}
+        {@render props.input()}
+      {/if}
+    </div>
+  </div>
+  {#if props.info}
+    <p class="text-sm opacity-50">
+      {@render props.info()}
+    </p>
+  {/if}
 </div>

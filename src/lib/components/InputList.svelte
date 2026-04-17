@@ -13,7 +13,12 @@
     placeholder?: string
   }
 
-  let {value = $bindable(), addLabel, placeholder = "Enter text..."}: Props = $props()
+  let {
+    value = $bindable(),
+    addLabel,
+    placeholder = "Enter text...",
+    allowAdd = true,
+  }: Props & {allowAdd?: boolean} = $props()
   let draggedIndex: number | null = $state(null)
 
   const onChange = (newValue: string[]) => {
@@ -72,12 +77,14 @@
       </div>
     </div>
   {/each}
-  <Button onclick={addItem} class="btn btn-link w-fit px-0">
-    <Icon icon={AddCircle} size={5} />
-    {#if addLabel}
-      {@render addLabel?.()}
-    {:else}
-      Add Item
-    {/if}
-  </Button>
+  {#if allowAdd}
+    <Button onclick={addItem} class="btn btn-link w-fit px-0">
+      <Icon icon={AddCircle} size={5} />
+      {#if addLabel}
+        {@render addLabel?.()}
+      {:else}
+        Add Item
+      {/if}
+    </Button>
+  {/if}
 </div>

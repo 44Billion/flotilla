@@ -5,6 +5,7 @@
   import {Badge} from "@capawesome/capacitor-badge"
   import Bell from "@assets/icons/bell.svg?dataurl"
   import {preventDefault} from "@lib/html"
+  import FieldInline from "@lib/components/FieldInline.svelte"
   import Spinner from "@lib/components/Spinner.svelte"
   import Icon from "@lib/components/Icon.svelte"
   import Button from "@lib/components/Button.svelte"
@@ -63,40 +64,64 @@
       <!-- pass -->
     {:then { isSupported }}
       {#if isSupported}
-        <div class="flex justify-between">
-          <p>Show badge for unread alerts</p>
-          <input type="checkbox" class="toggle toggle-primary" bind:checked={settings.badge} />
-        </div>
+        <FieldInline>
+          {#snippet label()}
+            <p>Show badge for unread alerts</p>
+          {/snippet}
+          {#snippet input()}
+            <input type="checkbox" class="toggle toggle-primary" bind:checked={settings.badge} />
+          {/snippet}
+        </FieldInline>
       {/if}
     {/await}
     {#if !Capacitor.isNativePlatform()}
-      <div class="flex justify-between">
-        <p>Play sound for new activity</p>
-        <input type="checkbox" class="toggle toggle-primary" bind:checked={settings.sound} />
-      </div>
+      <FieldInline>
+        {#snippet label()}
+          <p>Play sound for new activity</p>
+        {/snippet}
+        {#snippet input()}
+          <input type="checkbox" class="toggle toggle-primary" bind:checked={settings.sound} />
+        {/snippet}
+      </FieldInline>
     {/if}
-    <div class="flex justify-between">
-      <p>Enable push notifications</p>
-      <input type="checkbox" class="toggle toggle-primary" bind:checked={settings.push} />
-    </div>
+    <FieldInline>
+      {#snippet label()}
+        <p>Enable push notifications</p>
+      {/snippet}
+      {#snippet input()}
+        <input type="checkbox" class="toggle toggle-primary" bind:checked={settings.push} />
+      {/snippet}
+    </FieldInline>
   </div>
   <div
     class={cx("card2 bg-alt col-4 shadow-md", {
       "pointer-events-none opacity-50": !settings.badge && !settings.sound && !settings.push,
     })}>
     <strong class="text-lg">Alert Types</strong>
-    <div class="flex justify-between">
-      <p>Notify me about new activity</p>
-      <input type="checkbox" class="toggle toggle-primary" bind:checked={settings.spaces} />
-    </div>
-    <div class="flex justify-between">
-      <p>Always notify me when mentioned</p>
-      <input type="checkbox" class="toggle toggle-primary" checked={settings.mentions} />
-    </div>
-    <div class="flex justify-between">
-      <p>Notify me about new messages</p>
-      <input type="checkbox" class="toggle toggle-primary" bind:checked={settings.messages} />
-    </div>
+    <FieldInline>
+      {#snippet label()}
+        <p>Notify me about new activity</p>
+      {/snippet}
+      {#snippet input()}
+        <input type="checkbox" class="toggle toggle-primary" bind:checked={settings.spaces} />
+      {/snippet}
+    </FieldInline>
+    <FieldInline>
+      {#snippet label()}
+        <p>Always notify me when mentioned</p>
+      {/snippet}
+      {#snippet input()}
+        <input type="checkbox" class="toggle toggle-primary" checked={settings.mentions} />
+      {/snippet}
+    </FieldInline>
+    <FieldInline>
+      {#snippet label()}
+        <p>Notify me about new messages</p>
+      {/snippet}
+      {#snippet input()}
+        <input type="checkbox" class="toggle toggle-primary" bind:checked={settings.messages} />
+      {/snippet}
+    </FieldInline>
   </div>
   <div
     class="card2 bg-alt sticky -bottom-3 shadow-md flex flex-row items-center justify-between gap-4">
