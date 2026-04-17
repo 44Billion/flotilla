@@ -15,6 +15,7 @@
   import ModalSubtitle from "@lib/components/ModalSubtitle.svelte"
   import ModalFooter from "@lib/components/ModalFooter.svelte"
   import LogInOTPConfirm from "@app/components/LogInOTPConfirm.svelte"
+  import {POMADE_NETWORK_ERROR_MESSAGE} from "@app/util/pomadeErrors"
   import {pushModal} from "@app/util/modal"
   import {pushToast} from "@app/util/toast"
 
@@ -35,11 +36,20 @@
       if (ok) {
         pushModal(LogInOTPConfirm, {email, peersByPrefix})
       } else {
+        console.error("Pomade challenge request failed during OTP login")
+
         pushToast({
           theme: "error",
-          message: "Sorry, we were unable to request a login code.",
+          message: POMADE_NETWORK_ERROR_MESSAGE,
         })
       }
+    } catch (error) {
+      console.error(error)
+
+      pushToast({
+        theme: "error",
+        message: POMADE_NETWORK_ERROR_MESSAGE,
+      })
     } finally {
       loading = false
     }

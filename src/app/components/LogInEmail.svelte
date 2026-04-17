@@ -19,6 +19,7 @@
   import LogInOTP from "@app/components/LogInOTP.svelte"
   import LogInSelect from "@app/components/LogInSelect.svelte"
   import {deleteDeactivatedPomadeSessions, loginWithPomade} from "@app/util/pomade"
+  import {getPomadeLoginFailureMessage, POMADE_NETWORK_ERROR_MESSAGE} from "@app/util/pomadeErrors"
   import {pushModal, clearModals} from "@app/util/modal"
   import {setChecked} from "@app/util/notifications"
   import {pushToast} from "@app/util/toast"
@@ -44,7 +45,7 @@
 
         return pushToast({
           theme: "error",
-          message: "Sorry, we were unable to log you in.",
+          message: getPomadeLoginFailureMessage(messages),
         })
       }
 
@@ -64,10 +65,17 @@
 
           pushToast({
             theme: "error",
-            message: "Sorry, we were unable to log you in.",
+            message: getPomadeLoginFailureMessage(res.messages),
           })
         }
       }
+    } catch (error) {
+      console.error("Login error:", error)
+
+      pushToast({
+        theme: "error",
+        message: POMADE_NETWORK_ERROR_MESSAGE,
+      })
     } finally {
       loading = false
     }

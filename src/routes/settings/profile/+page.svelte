@@ -27,6 +27,7 @@
   import PasswordReset from "@app/components/PasswordReset.svelte"
   import InfoKeys from "@app/components/InfoKeys.svelte"
   import {pushModal} from "@app/util/modal"
+  import {POMADE_NETWORK_ERROR_MESSAGE} from "@app/util/pomadeErrors"
   import {clip, pushToast} from "@app/util/toast"
 
   const npub = nip19.npubEncode($pubkey!)
@@ -48,13 +49,24 @@
       const {ok, peersByPrefix} = await Client.requestChallenge($session!.email)
 
       if (!ok) {
+        console.error("Pomade challenge request failed during password reset initiation")
+
         pushToast({
           theme: "error",
-          message: "Failed to initiate password reset!",
+          message: POMADE_NETWORK_ERROR_MESSAGE,
         })
+
+        return
       }
 
       pushModal(PasswordReset, {peersByPrefix})
+    } catch (error) {
+      console.error(error)
+
+      pushToast({
+        theme: "error",
+        message: POMADE_NETWORK_ERROR_MESSAGE,
+      })
     } finally {
       loading = false
     }
