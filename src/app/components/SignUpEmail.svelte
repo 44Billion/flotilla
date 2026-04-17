@@ -134,6 +134,9 @@
           <input type="password" bind:value={password} />
         </label>
       {/snippet}
+      {#snippet info()}
+        Must be at least 12 characters long.
+      {/snippet}
     </FieldInline>
   </ModalBody>
   <ModalFooter>
