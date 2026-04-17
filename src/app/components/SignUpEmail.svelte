@@ -120,7 +120,7 @@
       {#snippet input()}
         <label class="input input-bordered flex w-full items-center gap-2">
           <Icon icon={Letter} />
-          <input bind:value={email} />
+          <input type="email" bind:value={email} />
         </label>
       {/snippet}
     </FieldInline>
