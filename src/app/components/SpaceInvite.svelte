@@ -25,6 +25,16 @@
   const {url} = $props()
 
   const authError = deriveRelayAuthError(url)
+  let networkError = $state(false)
+  const isExplicitAuthError = $derived(
+    $authError &&
+      !(
+        $authError.toLowerCase().includes("failed") ||
+        $authError.toLowerCase().includes("timeout") ||
+        $authError.toLowerCase().includes("network")
+      ),
+  )
+  const isGenericError = $derived(networkError || ($authError && !isExplicitAuthError))
 
   const back = () => history.back()
   const copyInvite = () => clip(invite)
@@ -70,8 +80,14 @@
       ])
 
       claim = getTagValue("claim", event?.tags || []) || ""
-    } catch {
+    } catch (err) {
       claim = ""
+      if (
+        (err instanceof Error && (err.name === "AbortError" || err.name === "TimeoutError")) ||
+        !navigator.onLine
+      ) {
+        networkError = true
+      }
     } finally {
       loading = false
     }
@@ -92,7 +108,11 @@
         <p class="center">
           <Spinner {loading}>Requesting an invite link...</Spinner>
         </p>
-      {:else if $authError}
+      {:else if isGenericError}
+        <p class="center text-center">
+          Unable to reach the relay. Please check your connection and try again.
+        </p>
+      {:else if isExplicitAuthError}
         <p class="center">Oops! It looks like you're not a member of this relay.</p>
       {:else}
         <div class="flex flex-col items-center gap-6">
