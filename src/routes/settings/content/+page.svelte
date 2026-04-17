@@ -145,9 +145,7 @@
         <p>Media Server</p>
       {/snippet}
       {#snippet secondary()}
-        <Button
-          class="btn btn-link w-fit px-0 decoration-solid underline text-[#7161ff] h-auto min-h-0 flex items-center gap-[5px]"
-          onclick={addServer}>
+        <Button class="link text-sm underline flex items-center gap-1" onclick={addServer}>
           <Icon icon={AddCircle} size={4} />
           Add Server
         </Button>
