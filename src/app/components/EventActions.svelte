@@ -42,7 +42,7 @@
   let popover: Instance | undefined = $state()
 </script>
 
-<Button class="join rounded-full">
+<div class="join items-center rounded-full">
   {#if ENABLE_ZAPS && !hideZap}
     <ZapButton {url} {event} class="btn join-item btn-neutral btn-xs">
       <Icon icon={Bolt} size={4} />
@@ -52,6 +52,7 @@
     <Icon icon={SmileCircle} size={4} />
   </EmojiButton>
   <Tippy
+    class="flex"
     bind:popover
     component={EventMenu}
     props={{url, noun, event, customActions, onClick: hidePopover}}
@@ -60,4 +61,4 @@
       <Icon icon={MenuDots} size={4} />
     </Button>
   </Tippy>
-</Button>
+</div>
