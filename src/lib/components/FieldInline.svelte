@@ -12,11 +12,11 @@
 <div class="flex flex-col gap-2 {props.class}">
   <div class="flex items-center justify-between w-full gap-2">
     {#if props.label}
-      <label class="flex items-center gap-2 max-w-[80%] md:max-w-none">
+      <label class="flex items-center gap-2 min-w-[30%] max-w-[80%] md:max-w-none">
         {@render props.label()}
       </label>
     {/if}
-    <div class="flex items-center gap-2 justify-end shrink-0">
+    <div class="flex items-center gap-2 justify-end grow">
       {#if props.input}
         {@render props.input()}
       {/if}
