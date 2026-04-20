@@ -12,8 +12,10 @@
     settings = {...$userSettingsValues}
   }
 
-  const onAuthModeChange = (e: any) => {
-    settings.auth_mode = e.target.checked ? RelayAuthMode.Aggressive : RelayAuthMode.Conservative
+  const onAuthModeChange = (e: Event) => {
+    const target = e.currentTarget as HTMLInputElement
+
+    settings.relay_auth = target.checked ? RelayAuthMode.Aggressive : RelayAuthMode.Conservative
   }
 
   const onsubmit = preventDefault(async () => {
@@ -40,7 +42,7 @@
           type="checkbox"
           class="toggle toggle-primary"
           onchange={onAuthModeChange}
-          checked={settings.auth_mode === RelayAuthMode.Aggressive} />
+          checked={settings.relay_auth === RelayAuthMode.Aggressive} />
       {/snippet}
       {#snippet info()}
         <p>Controls whether {PLATFORM_NAME} will identify you to relays not in your lists.</p>
