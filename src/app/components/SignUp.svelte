@@ -62,9 +62,10 @@
 
   const flows = {
     email: {
-      start: () => pushModal(SignUpEmail, {next: flows.email.profile}),
-      profile: () => pushModal(SignUpProfile, {next: flows.email.complete}),
-      complete: () => pushModal(SignUpComplete, {next: flows.email.finalize}),
+      start: () => pushModal(SignUpEmail, {next: flows.email.profile, step: 1, totalSteps: 3}),
+      profile: () => pushModal(SignUpProfile, {next: flows.email.complete, step: 2, totalSteps: 3}),
+      complete: () =>
+        pushModal(SignUpComplete, {next: flows.email.finalize, step: 3, totalSteps: 3}),
       finalize: () => {
         const email = getKey<string>("signup.email")!
         const clientOptions = getKey<ClientOptions>("signup.clientOptions")!
@@ -74,9 +75,10 @@
       },
     },
     nostr: {
-      start: () => pushModal(SignUpProfile, {next: flows.nostr.key}),
-      key: () => pushModal(SignUpKey, {next: flows.nostr.complete}),
-      complete: () => pushModal(SignUpComplete, {next: flows.nostr.finalize}),
+      start: () => pushModal(SignUpProfile, {next: flows.nostr.key, step: 1, totalSteps: 3}),
+      key: () => pushModal(SignUpKey, {next: flows.nostr.complete, step: 2, totalSteps: 3}),
+      complete: () =>
+        pushModal(SignUpComplete, {next: flows.nostr.finalize, step: 3, totalSteps: 3}),
       finalize: () => {
         const secret = getKey<string>("signup.secret")!
 

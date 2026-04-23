@@ -23,9 +23,10 @@
     onsubmit: (values: Values) => void
     isSignup?: boolean
     footer: Snippet
+    progressBar?: Snippet
   }
 
-  const {initialValues, isSignup, onsubmit, footer}: Props = $props()
+  const {initialValues, isSignup, onsubmit, footer, progressBar}: Props = $props()
 
   const values = $state(initialValues)
 
@@ -103,6 +104,9 @@
       </Field>
     {/if}
   </ModalBody>
+  {#if progressBar}
+    {@render progressBar()}
+  {/if}
   <ModalFooter>
     {@render footer()}
   </ModalFooter>

@@ -9,12 +9,15 @@
   import ModalHeader from "@lib/components/ModalHeader.svelte"
   import ModalTitle from "@lib/components/ModalTitle.svelte"
   import ModalFooter from "@lib/components/ModalFooter.svelte"
+  import ProgressBar from "@app/components/ProgressBar.svelte"
 
   type Props = {
     next: () => void
+    step?: number
+    totalSteps?: number
   }
 
-  const {next}: Props = $props()
+  const {next, step, totalSteps}: Props = $props()
 
   const back = () => history.back()
 </script>
@@ -33,6 +36,9 @@
       on groups you've already joined. Click below to get started!
     </p>
   </ModalBody>
+  {#if step && totalSteps}
+    <ProgressBar current={step} total={totalSteps} />
+  {/if}
   <ModalFooter>
     <Button class="btn btn-link" onclick={back}>
       <Icon icon={AltArrowLeft} />

@@ -4,11 +4,13 @@
 
   type Props = {
     next: () => void
+    step?: number
+    totalSteps?: number
   }
 
-  const {next}: Props = $props()
+  const {next, step, totalSteps}: Props = $props()
 
   const secret = getKey<string>("signup.secret")!
 </script>
 
-<KeyDownload {secret} {next} />
+<KeyDownload {secret} {next} {step} {totalSteps} />

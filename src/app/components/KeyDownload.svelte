@@ -15,6 +15,7 @@
   import ModalHeader from "@lib/components/ModalHeader.svelte"
   import ModalTitle from "@lib/components/ModalTitle.svelte"
   import ModalFooter from "@lib/components/ModalFooter.svelte"
+  import ProgressBar from "@app/components/ProgressBar.svelte"
   import {pushToast} from "@app/util/toast"
   import {PLATFORM_NAME} from "@app/core/state"
 
@@ -22,9 +23,11 @@
     secret: string
     next: () => unknown
     submitText?: string
+    step?: number
+    totalSteps?: number
   }
 
-  const {secret, next, submitText = "Continue"}: Props = $props()
+  const {secret, next, submitText = "Continue", step, totalSteps}: Props = $props()
 
   const back = () => history.back()
 
@@ -150,6 +153,9 @@
       </Button>
     </div>
   </ModalBody>
+  {#if step && totalSteps}
+    <ProgressBar current={step} total={totalSteps} />
+  {/if}
   <ModalFooter>
     <Button class="btn btn-link" onclick={back}>
       <Icon icon={AltArrowLeft} />

@@ -18,14 +18,17 @@
   import ModalSubtitle from "@lib/components/ModalSubtitle.svelte"
   import ModalFooter from "@lib/components/ModalFooter.svelte"
   import SignUpEmailConfirm from "@app/components/SignUpEmailConfirm.svelte"
+  import ProgressBar from "@app/components/ProgressBar.svelte"
   import {pushToast, popToast} from "@app/util/toast"
   import {pushModal} from "@app/util/modal"
 
   type Props = {
     next: () => void
+    step?: number
+    totalSteps?: number
   }
 
-  const {next}: Props = $props()
+  const {next, step, totalSteps}: Props = $props()
 
   const back = () => history.back()
 
@@ -81,7 +84,7 @@
       setKey("signup.clientOptions", clientOptions)
 
       popToast(toastId)
-      pushModal(SignUpEmailConfirm, {next})
+      pushModal(SignUpEmailConfirm, {next, step, totalSteps})
     } catch (e) {
       console.error(e)
 
@@ -139,6 +142,9 @@
       {/snippet}
     </FieldInline>
   </ModalBody>
+  {#if step && totalSteps}
+    <ProgressBar current={step} total={totalSteps} />
+  {/if}
   <ModalFooter>
     <Button class="btn btn-link" onclick={back}>
       <Icon icon={AltArrowLeft} />

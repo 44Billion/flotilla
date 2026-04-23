@@ -15,12 +15,15 @@
   import ModalTitle from "@lib/components/ModalTitle.svelte"
   import ModalSubtitle from "@lib/components/ModalSubtitle.svelte"
   import ModalFooter from "@lib/components/ModalFooter.svelte"
+  import ProgressBar from "@app/components/ProgressBar.svelte"
 
   type Props = {
     next: () => void
+    step?: number
+    totalSteps?: number
   }
 
-  const {next}: Props = $props()
+  const {next, step, totalSteps}: Props = $props()
 
   const email = getKey<string>("signup.email")
 
@@ -61,6 +64,9 @@
       above.
     </p>
   </ModalBody>
+  {#if step && totalSteps}
+    <ProgressBar current={step} total={totalSteps} />
+  {/if}
   <ModalFooter>
     <Button class="btn btn-link" onclick={back} disabled={loading}>
       <Icon icon={AltArrowLeft} />
