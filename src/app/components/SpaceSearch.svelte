@@ -2,9 +2,10 @@
   import {tick} from "svelte"
   import {debounce} from "throttle-debounce"
   import {request} from "@welshman/net"
-  import {formatTimestampAsDate, groupBy, now, MINUTE, HOUR, DAY, WEEK} from "@welshman/lib"
+  import {repository, tracker} from "@welshman/app"
+  import {formatTimestampAsDate, groupBy, uniqBy, now, MINUTE, HOUR, DAY, WEEK} from "@welshman/lib"
   import type {TrustedEvent, Filter} from "@welshman/util"
-  import {sortEventsDesc} from "@welshman/util"
+  import {MESSAGE, sortEventsDesc} from "@welshman/util"
   import CloseCircle from "@assets/icons/close-circle.svg?dataurl"
   import Magnifier from "@assets/icons/magnifier.svg?dataurl"
   import {fly} from "@lib/transition"
@@ -53,8 +54,11 @@
 
   const getFilter = (searchTerm: string): Filter =>
     h
-      ? {kinds: CONTENT_KINDS, "#h": [h], search: searchTerm}
-      : {kinds: CONTENT_KINDS, search: searchTerm}
+      ? {kinds: [MESSAGE, ...CONTENT_KINDS], "#h": [h], search: searchTerm}
+      : {kinds: [MESSAGE, ...CONTENT_KINDS], search: searchTerm}
+
+  const getLocalResults = (filter: Filter) =>
+    repository.query([filter]).filter(event => tracker.getRelays(event.id).has(url))
 
   const search = debounce(300, async (searchTerm: string) => {
     controller?.abort()
@@ -68,18 +72,23 @@
     controller = new AbortController()
     loading = true
 
+    const filter = getFilter(searchTerm.trim())
+    const localResults = getLocalResults(filter)
+
+    results = sortEventsDesc(localResults)
+
     try {
       const events = await request({
         relays: getRelayUrls(),
         autoClose: true,
         signal: controller.signal,
-        filters: [getFilter(searchTerm.trim())],
+        filters: [filter],
       })
 
-      results = sortEventsDesc(events)
+      results = sortEventsDesc(uniqBy((e: TrustedEvent) => e.id, [...events, ...localResults]))
     } catch (error) {
       if (!(error instanceof DOMException && error.name === "AbortError")) {
-        results = []
+        results = sortEventsDesc(localResults)
       }
     } finally {
       loading = false
