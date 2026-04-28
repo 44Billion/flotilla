@@ -10,6 +10,7 @@
 
 <script lang="ts">
   import "emoji-picker-element"
+  import emojiDataUrl from "emoji-picker-element-data/en/emojibase/data.json?url"
   import type {Emoji} from "emoji-picker-element/shared"
   import {onMount} from "svelte"
 
@@ -26,4 +27,4 @@
   })
 </script>
 
-<emoji-picker bind:this={element} class="m-auto"></emoji-picker>
+<emoji-picker bind:this={element} data-source={emojiDataUrl} class="m-auto"></emoji-picker>
