@@ -1,5 +1,4 @@
 <script lang="ts">
-  import Server from "@assets/icons/server.svg?dataurl"
   import CloudCheck from "@assets/icons/cloud-check.svg?dataurl"
   import CheckCircle from "@assets/icons/check-circle.svg?dataurl"
   import ArrowRight from "@assets/icons/arrow-right.svg?dataurl"
