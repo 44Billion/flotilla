@@ -25,6 +25,7 @@
     cx(
       "flex h-full w-full cursor-pointer items-center justify-center rounded-full transition-colors hover:bg-base-300",
       restProps.class,
+      {"bg-base-300 border border-solid border-base-content/20": active},
     ),
   )
 </script>
