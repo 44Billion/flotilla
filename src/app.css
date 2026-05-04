@@ -332,7 +332,7 @@
 
 .input-editor .tiptap {
   --tiptap-object-bg: var(--color-base-200);
-  @apply input h-auto p-[.65rem];
+  @apply input block h-auto p-[.65rem];
 }
 
 /* link-content, based on tiptap */
