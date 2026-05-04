@@ -26,7 +26,15 @@ FROM node:20-alpine
 
 WORKDIR /app
 
-# Copy only the built output - no source, no .env, no dev deps
-COPY --from=builder /app/build ./build
+# Install production dependencies needed by the Node server runtime
+RUN npm install -g pnpm@10.33.0
+COPY package.json pnpm-lock.yaml ./
+RUN pnpm i --prod --frozen-lockfile --ignore-scripts
 
-CMD ["npx", "serve", "-s", "build"]
+# Copy only the built output and server source - no app source, no .env, no dev deps
+COPY --from=builder /app/build ./build
+COPY --from=builder /app/server.js ./server.js
+
+EXPOSE 3000
+
+CMD ["node", "server.js"]
