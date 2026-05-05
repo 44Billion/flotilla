@@ -26,22 +26,22 @@
     {@const {pubkey, software, version, supported_nips, limitation} = $relay}
     <div class="flex flex-wrap gap-1">
       {#if pubkey}
-        <div class="badge badge-neutral">
+        <div class="badge badge-neutral text-wrap h-auto">
           <span class="ellipsize">Administrator: <ProfileLink unstyled {pubkey} /></span>
         </div>
       {/if}
       {#if $relay?.contact}
-        <div class="badge badge-neutral">
+        <div class="badge badge-neutral text-wrap h-auto">
           <span class="ellipsize">Contact: {$relay.contact}</span>
         </div>
       {/if}
       {#if software}
-        <div class="badge badge-neutral">
+        <div class="badge badge-neutral text-wrap h-auto">
           <span class="ellipsize">Software: {software}</span>
         </div>
       {/if}
       {#if version}
-        <div class="badge badge-neutral">
+        <div class="badge badge-neutral text-wrap h-auto">
           <span class="ellipsize">Version: {version}</span>
         </div>
       {/if}
@@ -61,7 +61,7 @@
         </p>
       {/if}
       {#if limitation?.min_pow_difficulty}
-        <p class="badge badge-warning">
+        <p class="badge badge-warning text-wrap h-auto">
           <span class="ellipsize">Min PoW: {limitation?.min_pow_difficulty}</span>
         </p>
       {/if}
