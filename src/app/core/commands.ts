@@ -73,7 +73,6 @@ import {
   waitForThunkError,
   getPubkeyRelays,
   userBlossomServerList,
-  getThunkError,
   addRoomMember,
   manageRelay,
   getRelay,
@@ -264,32 +263,18 @@ export const attemptRelayAccess = async (url: string, claim = "") => {
   return stripPrefix(error)
 }
 
-export const deriveRelayAuthError = (url: string, claim = "") => {
-  // Kick off the auth process
+export const deriveRelayAuthError = (url: string) => {
   Pool.get().get(url).auth.attemptAuth(sign)
 
-  // Attempt to join the relay
-  const thunk = publishJoinRequest({url, claim})
-
   return derived(
-    [thunk, relaysMostlyRestricted, deriveSocket(url)],
-    ([$thunk, $relaysMostlyRestricted, $socket]) => {
+    [relaysMostlyRestricted, deriveSocket(url)],
+    ([$relaysMostlyRestricted, $socket]) => {
       if ($socket.auth.status === AuthStatus.Forbidden && $socket.auth.details) {
         return stripPrefix($socket.auth.details)
       }
 
       if ($relaysMostlyRestricted[url]) {
         return stripPrefix($relaysMostlyRestricted[url])
-      }
-
-      const error = getThunkError($thunk)
-
-      if (error) {
-        const isEmptyInvite = !claim && error.includes("invite code")
-
-        if (!shouldIgnoreError(error) && !isEmptyInvite) {
-          return stripPrefix(error) || "join request rejected"
-        }
       }
     },
   )
