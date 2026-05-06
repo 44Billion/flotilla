@@ -404,7 +404,8 @@
   onMount(() => {
     start()
 
-    return cleanup
+    // Wrap in a closure to avoid calling a stale cleanup function
+    return () => cleanup?.()
   })
 </script>
 
