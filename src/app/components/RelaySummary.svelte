@@ -19,12 +19,12 @@
 
 <div class="col-4 text-left">
   <div class="col-2">
-    <div class="relative flex gap-4">
+    <div class="relative flex gap-2 sm:gap-4">
       <div class="relative">
         <div class="avatar relative">
           <div
             class="center flex! h-12 w-12 min-w-12 rounded-full border-2 border-solid border-base-300 bg-base-300">
-            <RelayIcon {url} />
+            <RelayIcon {url} size={10} />
           </div>
         </div>
         {#if $rooms.includes(url)}
@@ -36,13 +36,11 @@
         {/if}
       </div>
       <div class="min-w-0">
-        <h2 class="ellipsize whitespace-nowrap text-xl">
-          <RelayName {url} />
-        </h2>
-        <p class="text-sm opacity-75">{url}</p>
+        <RelayName {url} class="ellipsize whitespace-nowrap text-lg sm:text-xl" />
+        <p class="text-xs sm:text-sm opacity-75">{url}</p>
       </div>
     </div>
-    <RelayDescription {url} />
+    <RelayDescription {url} class="text-sm sm:text-md" />
   </div>
   {#if !hideFavorites && $favorited.size > 0}
     <div class="row-2 card2 card2-sm bg-alt">
