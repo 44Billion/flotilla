@@ -70,7 +70,7 @@ importers:
         version: 1.9.7
       '@pomade/core':
         specifier: ^0.2.3
-        version: 0.2.3(@frostr/bifrost@1.0.7(typescript@5.9.3))(@noble/hashes@2.0.1)(@welshman/lib@0.8.13)(@welshman/net@0.8.13(@welshman/lib@0.8.13)(@welshman/util@0.8.13(@noble/curves@1.9.7)(@welshman/lib@0.8.13)(nostr-tools@2.20.0(typescript@5.9.3)))(ws@8.18.3))(@welshman/signer@0.8.13(@noble/curves@1.9.7)(@noble/hashes@2.0.1)(@welshman/lib@0.8.13)(@welshman/net@0.8.13(@welshman/lib@0.8.13)(@welshman/util@0.8.13(@noble/curves@1.9.7)(@welshman/lib@0.8.13)(nostr-tools@2.20.0(typescript@5.9.3)))(ws@8.18.3))(@welshman/util@0.8.13(@noble/curves@1.9.7)(@welshman/lib@0.8.13)(nostr-tools@2.20.0(typescript@5.9.3)))(nostr-signer-capacitor-plugin@https://codeload.github.com/coracle-social/nostr-signer-capacitor-plugin/tar.gz/be4bb90a1a15c8eec0934f2f66ce9e82ecc72d51(@capacitor/core@8.0.1))(nostr-tools@2.20.0(typescript@5.9.3)))(@welshman/util@0.8.13(@noble/curves@1.9.7)(@welshman/lib@0.8.13)(nostr-tools@2.20.0(typescript@5.9.3)))(nostr-tools@2.20.0(typescript@5.9.3))
+        version: 0.2.3(@frostr/bifrost@1.0.7(typescript@5.9.3))(@noble/hashes@2.0.1)(@welshman/lib@0.8.14)(@welshman/net@0.8.14(@welshman/lib@0.8.14)(@welshman/util@0.8.14(@noble/curves@1.9.7)(@welshman/lib@0.8.14)(nostr-tools@2.20.0(typescript@5.9.3)))(ws@8.18.3))(@welshman/signer@0.8.14(@noble/curves@1.9.7)(@noble/hashes@2.0.1)(@welshman/lib@0.8.14)(@welshman/net@0.8.14(@welshman/lib@0.8.14)(@welshman/util@0.8.14(@noble/curves@1.9.7)(@welshman/lib@0.8.14)(nostr-tools@2.20.0(typescript@5.9.3)))(ws@8.18.3))(@welshman/util@0.8.14(@noble/curves@1.9.7)(@welshman/lib@0.8.14)(nostr-tools@2.20.0(typescript@5.9.3)))(nostr-signer-capacitor-plugin@https://codeload.github.com/coracle-social/nostr-signer-capacitor-plugin/tar.gz/be4bb90a1a15c8eec0934f2f66ce9e82ecc72d51(@capacitor/core@8.0.1))(nostr-tools@2.20.0(typescript@5.9.3)))(@welshman/util@0.8.14(@noble/curves@1.9.7)(@welshman/lib@0.8.14)(nostr-tools@2.20.0(typescript@5.9.3)))(nostr-tools@2.20.0(typescript@5.9.3))
       '@poppanator/sveltekit-svg':
         specifier: ^4.2.1
         version: 4.2.1(rollup@2.80.0)(svelte@5.48.0)(svgo@3.3.2)(vite@5.4.21(@types/node@25.0.10)(lightningcss@1.32.0)(terser@5.46.0))
@@ -96,35 +96,35 @@ importers:
         specifier: ^0.6.8
         version: 0.6.8(@sveltejs/kit@2.50.1(@sveltejs/vite-plugin-svelte@4.0.4(svelte@5.48.0)(vite@5.4.21(@types/node@25.0.10)(lightningcss@1.32.0)(terser@5.46.0)))(svelte@5.48.0)(typescript@5.9.3)(vite@5.4.21(@types/node@25.0.10)(lightningcss@1.32.0)(terser@5.46.0)))(@vite-pwa/assets-generator@0.2.6)(vite-plugin-pwa@0.21.2(@vite-pwa/assets-generator@0.2.6)(vite@5.4.21(@types/node@25.0.10)(lightningcss@1.32.0)(terser@5.46.0))(workbox-build@7.3.0)(workbox-window@7.3.0))
       '@welshman/app':
-        specifier: ^0.8.13
-        version: 0.8.13(ed9ee8a79a580bcb9fa9bb6eb1a69558)
+        specifier: ^0.8.14
+        version: 0.8.14(338c6f404a4f62c0150ba21fa340805c)
       '@welshman/content':
-        specifier: ^0.8.13
-        version: 0.8.13(nostr-tools@2.20.0(typescript@5.9.3))
+        specifier: ^0.8.14
+        version: 0.8.14(nostr-tools@2.20.0(typescript@5.9.3))
       '@welshman/editor':
-        specifier: ^0.8.13
-        version: 0.8.13(@welshman/lib@0.8.13)(@welshman/util@0.8.13(@noble/curves@1.9.7)(@welshman/lib@0.8.13)(nostr-tools@2.20.0(typescript@5.9.3)))(nostr-editor@1.1.1(@tiptap/core@2.27.2(@tiptap/pm@2.27.2))(@tiptap/extension-image@2.27.1(@tiptap/core@2.27.2(@tiptap/pm@2.27.2)))(@tiptap/extension-link@2.27.1(@tiptap/core@2.27.2(@tiptap/pm@2.27.2))(@tiptap/pm@2.27.2))(@tiptap/pm@2.27.2)(linkifyjs@4.3.2)(nostr-tools@2.20.0(typescript@5.9.3))(prosemirror-markdown@1.13.3)(prosemirror-model@1.25.4)(prosemirror-state@1.4.4)(prosemirror-view@1.41.5)(tiptap-markdown@0.8.10(@tiptap/core@2.27.2(@tiptap/pm@2.27.2))))(nostr-tools@2.20.0(typescript@5.9.3))
+        specifier: ^0.8.14
+        version: 0.8.14(@welshman/lib@0.8.14)(@welshman/util@0.8.14(@noble/curves@1.9.7)(@welshman/lib@0.8.14)(nostr-tools@2.20.0(typescript@5.9.3)))(nostr-editor@1.1.1(@tiptap/core@2.27.2(@tiptap/pm@2.27.2))(@tiptap/extension-image@2.27.1(@tiptap/core@2.27.2(@tiptap/pm@2.27.2)))(@tiptap/extension-link@2.27.1(@tiptap/core@2.27.2(@tiptap/pm@2.27.2))(@tiptap/pm@2.27.2))(@tiptap/pm@2.27.2)(linkifyjs@4.3.2)(nostr-tools@2.20.0(typescript@5.9.3))(prosemirror-markdown@1.13.3)(prosemirror-model@1.25.4)(prosemirror-state@1.4.4)(prosemirror-view@1.41.5)(tiptap-markdown@0.8.10(@tiptap/core@2.27.2(@tiptap/pm@2.27.2))))(nostr-tools@2.20.0(typescript@5.9.3))
       '@welshman/feeds':
-        specifier: ^0.8.13
-        version: 0.8.13(29451a19e278ea4a9cf66616f05d5557)
+        specifier: ^0.8.14
+        version: 0.8.14(eb51c9a484135f71aa8ae8e6a6e51522)
       '@welshman/lib':
-        specifier: ^0.8.13
-        version: 0.8.13
+        specifier: ^0.8.14
+        version: 0.8.14
       '@welshman/net':
-        specifier: ^0.8.13
-        version: 0.8.13(@welshman/lib@0.8.13)(@welshman/util@0.8.13(@noble/curves@1.9.7)(@welshman/lib@0.8.13)(nostr-tools@2.20.0(typescript@5.9.3)))(ws@8.18.3)
+        specifier: ^0.8.14
+        version: 0.8.14(@welshman/lib@0.8.14)(@welshman/util@0.8.14(@noble/curves@1.9.7)(@welshman/lib@0.8.14)(nostr-tools@2.20.0(typescript@5.9.3)))(ws@8.18.3)
       '@welshman/router':
-        specifier: ^0.8.13
-        version: 0.8.13(@welshman/lib@0.8.13)(@welshman/net@0.8.13(@welshman/lib@0.8.13)(@welshman/util@0.8.13(@noble/curves@1.9.7)(@welshman/lib@0.8.13)(nostr-tools@2.20.0(typescript@5.9.3)))(ws@8.18.3))(@welshman/util@0.8.13(@noble/curves@1.9.7)(@welshman/lib@0.8.13)(nostr-tools@2.20.0(typescript@5.9.3)))
+        specifier: ^0.8.14
+        version: 0.8.14(@welshman/lib@0.8.14)(@welshman/net@0.8.14(@welshman/lib@0.8.14)(@welshman/util@0.8.14(@noble/curves@1.9.7)(@welshman/lib@0.8.14)(nostr-tools@2.20.0(typescript@5.9.3)))(ws@8.18.3))(@welshman/util@0.8.14(@noble/curves@1.9.7)(@welshman/lib@0.8.14)(nostr-tools@2.20.0(typescript@5.9.3)))
       '@welshman/signer':
-        specifier: ^0.8.13
-        version: 0.8.13(@noble/curves@1.9.7)(@noble/hashes@2.0.1)(@welshman/lib@0.8.13)(@welshman/net@0.8.13(@welshman/lib@0.8.13)(@welshman/util@0.8.13(@noble/curves@1.9.7)(@welshman/lib@0.8.13)(nostr-tools@2.20.0(typescript@5.9.3)))(ws@8.18.3))(@welshman/util@0.8.13(@noble/curves@1.9.7)(@welshman/lib@0.8.13)(nostr-tools@2.20.0(typescript@5.9.3)))(nostr-signer-capacitor-plugin@https://codeload.github.com/coracle-social/nostr-signer-capacitor-plugin/tar.gz/be4bb90a1a15c8eec0934f2f66ce9e82ecc72d51(@capacitor/core@8.0.1))(nostr-tools@2.20.0(typescript@5.9.3))
+        specifier: ^0.8.14
+        version: 0.8.14(@noble/curves@1.9.7)(@noble/hashes@2.0.1)(@welshman/lib@0.8.14)(@welshman/net@0.8.14(@welshman/lib@0.8.14)(@welshman/util@0.8.14(@noble/curves@1.9.7)(@welshman/lib@0.8.14)(nostr-tools@2.20.0(typescript@5.9.3)))(ws@8.18.3))(@welshman/util@0.8.14(@noble/curves@1.9.7)(@welshman/lib@0.8.14)(nostr-tools@2.20.0(typescript@5.9.3)))(nostr-signer-capacitor-plugin@https://codeload.github.com/coracle-social/nostr-signer-capacitor-plugin/tar.gz/be4bb90a1a15c8eec0934f2f66ce9e82ecc72d51(@capacitor/core@8.0.1))(nostr-tools@2.20.0(typescript@5.9.3))
       '@welshman/store':
-        specifier: ^0.8.13
-        version: 0.8.13(@welshman/lib@0.8.13)(@welshman/net@0.8.13(@welshman/lib@0.8.13)(@welshman/util@0.8.13(@noble/curves@1.9.7)(@welshman/lib@0.8.13)(nostr-tools@2.20.0(typescript@5.9.3)))(ws@8.18.3))(@welshman/util@0.8.13(@noble/curves@1.9.7)(@welshman/lib@0.8.13)(nostr-tools@2.20.0(typescript@5.9.3)))(svelte@5.48.0)
+        specifier: ^0.8.14
+        version: 0.8.14(@welshman/lib@0.8.14)(@welshman/net@0.8.14(@welshman/lib@0.8.14)(@welshman/util@0.8.14(@noble/curves@1.9.7)(@welshman/lib@0.8.14)(nostr-tools@2.20.0(typescript@5.9.3)))(ws@8.18.3))(@welshman/util@0.8.14(@noble/curves@1.9.7)(@welshman/lib@0.8.14)(nostr-tools@2.20.0(typescript@5.9.3)))(svelte@5.48.0)
       '@welshman/util':
-        specifier: ^0.8.13
-        version: 0.8.13(@noble/curves@1.9.7)(@welshman/lib@0.8.13)(nostr-tools@2.20.0(typescript@5.9.3))
+        specifier: ^0.8.14
+        version: 0.8.14(@noble/curves@1.9.7)(@welshman/lib@0.8.14)(nostr-tools@2.20.0(typescript@5.9.3))
       cheerio:
         specifier: ^1.2.0
         version: 1.2.0
@@ -2168,83 +2168,83 @@ packages:
       '@vite-pwa/assets-generator':
         optional: true
 
-  '@welshman/app@0.8.13':
-    resolution: {integrity: sha512-+mUMtt5ibotBk/susPFKXnb9jRjqvIQgWMF28poCIzse08V4kfVClJJlzepvgjqRn6Ma/takr6tNkL6eV4rlRQ==}
+  '@welshman/app@0.8.14':
+    resolution: {integrity: sha512-+XC6Df/YzxQ/AtxFo2sw4Smunnyom2qb7byVA8WJfYwlVmtfSmGNbp8SZOyJSJIaTNTTzEiNtaKAL2uolOuKKw==}
     peerDependencies:
       '@pomade/core': ^0.2.1
-      '@welshman/feeds': 0.8.13
-      '@welshman/lib': 0.8.13
-      '@welshman/net': 0.8.13
-      '@welshman/router': 0.8.13
-      '@welshman/signer': 0.8.13
-      '@welshman/store': 0.8.13
-      '@welshman/util': 0.8.13
+      '@welshman/feeds': 0.8.14
+      '@welshman/lib': 0.8.14
+      '@welshman/net': 0.8.14
+      '@welshman/router': 0.8.14
+      '@welshman/signer': 0.8.14
+      '@welshman/store': 0.8.14
+      '@welshman/util': 0.8.14
       svelte: ^4.0.0 || ^5.0.0
 
-  '@welshman/content@0.8.13':
-    resolution: {integrity: sha512-6ZDKCJ2GKczAULD7P7NZ5DmxFYKw6vfxJ1jpwbQj+0l7alr2IBh8kmaQ8wM1r6n0qOhfcNqeGaaREQxC4VnuHA==}
+  '@welshman/content@0.8.14':
+    resolution: {integrity: sha512-3F8AB5GtSCvJv2Lsu/Ut+1IE1ViOm6ynZFOMK0nAihr5wGnwVD0P5BDwzEzNEAO6fQLmZthoOU+72JwufaFtbw==}
     peerDependencies:
       nostr-tools: ^2.19.4
 
-  '@welshman/editor@0.8.13':
-    resolution: {integrity: sha512-kr4pSjQ/TZnlyIeGo0UNNAQrTGpp0yMRUFD/LwORVLnC8UGNLwGRmFwOz0WNtCxGxFGquTlX1AkNfViWdkfXHw==}
+  '@welshman/editor@0.8.14':
+    resolution: {integrity: sha512-Y6uuLY+G5ZQP87NJY1S5VE+UR9zFoWGF36GArmPLVr8Tc0cy3yAg2wgN/E3+qpxMEvzzNgZ72sqY2Wsf8yJKcg==}
     peerDependencies:
-      '@welshman/lib': 0.8.13
-      '@welshman/util': 0.8.13
+      '@welshman/lib': 0.8.14
+      '@welshman/util': 0.8.14
       nostr-editor: ^1.1.1
       nostr-tools: ^2.19.4
 
-  '@welshman/feeds@0.8.13':
-    resolution: {integrity: sha512-zjjKbGG8wQyyuTtm7/7lAGEFbreTp7IO5Y+DZXwBBu/h2/TP/C/v0J0XrshFBqs/wOOURv7vYZlf/bs2En8UIg==}
+  '@welshman/feeds@0.8.14':
+    resolution: {integrity: sha512-ordUVhGDCQGIGAv9X8Q4lN73PgY234tL0gY2ndhlC5Z03vXAdcFhaIsf31SV9yDSc7Hrw4Zhf0rIhyPrfGsBKQ==}
     peerDependencies:
-      '@welshman/lib': 0.8.13
-      '@welshman/net': 0.8.13
-      '@welshman/router': 0.8.13
-      '@welshman/signer': 0.8.13
-      '@welshman/util': 0.8.13
+      '@welshman/lib': 0.8.14
+      '@welshman/net': 0.8.14
+      '@welshman/router': 0.8.14
+      '@welshman/signer': 0.8.14
+      '@welshman/util': 0.8.14
 
-  '@welshman/lib@0.8.13':
-    resolution: {integrity: sha512-fXVoe7zx+jPnqZdRMXLNOJvW+N6E708HSpNGfyBGlu1/OXg70wkEK3r9E67HsBg7pLxnl22tcOYq7r11GhpeFA==}
+  '@welshman/lib@0.8.14':
+    resolution: {integrity: sha512-BIuf6jtv49C48Poot/PL2uRBsQWPlZSr+pFSTKht7z0Gr+b3IVZu3b6ddnsEShQVF5sJbslGOy8FA7DsOQb/tQ==}
     engines: {node: '>=12.0.0'}
 
-  '@welshman/net@0.8.13':
-    resolution: {integrity: sha512-k9BQA2lJI1mnQrf3pR8e3QhCluPtWSSPz2ywTDKq+/pdVXXIjrnsblHA/62d6SjCCSV/n5fONQ08YMivPzgtGA==}
+  '@welshman/net@0.8.14':
+    resolution: {integrity: sha512-tOh+rp8A7G7/2dCxmfEk2zG5o4n4AsRXnPL/vCEqQON0DgaO8/sR6orLbBk8TBLMdk6sbqBCUTKs/xGrtpDN8Q==}
     peerDependencies:
-      '@welshman/lib': 0.8.13
-      '@welshman/util': 0.8.13
+      '@welshman/lib': 0.8.14
+      '@welshman/util': 0.8.14
 
-  '@welshman/router@0.8.13':
-    resolution: {integrity: sha512-MJh8YfHpoSsRUI96OnqxnBDoQwjqIMh8N57US0id9cd6iOlkYlVPEUeicJK8Kcl5oT0zmN13UT/4o3d7nZrqcA==}
+  '@welshman/router@0.8.14':
+    resolution: {integrity: sha512-J6lX/d+cpShvoGKy3MYSeao6XD5QELG1UPPEWZB42Y0fHZlTazOg4TF3Q8kM0kAm7xacSmDrVilq+6xH7xzzcg==}
     peerDependencies:
-      '@welshman/lib': 0.8.13
-      '@welshman/net': 0.8.13
-      '@welshman/util': 0.8.13
+      '@welshman/lib': 0.8.14
+      '@welshman/net': 0.8.14
+      '@welshman/util': 0.8.14
 
-  '@welshman/signer@0.8.13':
-    resolution: {integrity: sha512-VgyKxZhJ/Br0q4H8KPfRWAa8WC0EVUc69dxq/Bt1cl7MTBg1EbzolUJhgOgGDOVO0gAKmWYMCnjNochaQy/Wpg==}
-    version: 0.8.13
+  '@welshman/signer@0.8.14':
+    resolution: {integrity: sha512-TUM8glWJ2LV8PgLgXO1OAVkpZcoz+KoyraNRS8iPL2J8Fz0x7yYn2SVC5V8/HG2l9JeM/weBUeMjwSA7BzgF4Q==}
+    version: 0.8.14
     peerDependencies:
       '@noble/curves': ^1.9.7
       '@noble/hashes': ^2.0.1
-      '@welshman/lib': 0.8.13
-      '@welshman/net': 0.8.13
-      '@welshman/util': 0.8.13
+      '@welshman/lib': 0.8.14
+      '@welshman/net': 0.8.14
+      '@welshman/util': 0.8.14
       nostr-signer-capacitor-plugin: '*'
       nostr-tools: ^2.19.4
 
-  '@welshman/store@0.8.13':
-    resolution: {integrity: sha512-tnmbaNa8aqFVbklsMZ5y4h9xlHnbwo7o1l6xxJI0hqZnTuXD3IvN5/V58qhfZveUN/Y5Gz2MWQHFWyRBQ71ANg==}
+  '@welshman/store@0.8.14':
+    resolution: {integrity: sha512-+vqqhhmRbWtUMzncm/pyqG6EmvJ8kc2W1IUPy+Fz33ibgF8yRLUc2LCytPqnbTjbg/6LpxESSlTsza0DdZFwBg==}
     peerDependencies:
-      '@welshman/lib': 0.8.13
-      '@welshman/net': 0.8.13
-      '@welshman/util': 0.8.13
+      '@welshman/lib': 0.8.14
+      '@welshman/net': 0.8.14
+      '@welshman/util': 0.8.14
       svelte: ^4.0.0 || ^5.0.0
 
-  '@welshman/util@0.8.13':
-    resolution: {integrity: sha512-3+CNqJjiHGXKzLOniDqAN4Oe038fV1RRjKiVP0++FDVbq8lShtdcliR7FDg/NTjhhmzivhYqdflNvqjAqOxekA==}
+  '@welshman/util@0.8.14':
+    resolution: {integrity: sha512-tiRdrqb23DtiW2nU/jAyjfR6NiQAqcJf6qCUNjaa7NvI+gL3Omip+Qdn96WuxT1vQCUo5jyP8+rkgE8Z9TizJQ==}
     peerDependencies:
       '@noble/curves': ^1.9.7
-      '@welshman/lib': 0.8.13
+      '@welshman/lib': 0.8.14
       nostr-tools: ^2.19.4
 
   '@xml-tools/parser@1.0.11':
@@ -6716,15 +6716,15 @@ snapshots:
 
   '@polka/url@1.0.0-next.29': {}
 
-  '@pomade/core@0.2.3(@frostr/bifrost@1.0.7(typescript@5.9.3))(@noble/hashes@2.0.1)(@welshman/lib@0.8.13)(@welshman/net@0.8.13(@welshman/lib@0.8.13)(@welshman/util@0.8.13(@noble/curves@1.9.7)(@welshman/lib@0.8.13)(nostr-tools@2.20.0(typescript@5.9.3)))(ws@8.18.3))(@welshman/signer@0.8.13(@noble/curves@1.9.7)(@noble/hashes@2.0.1)(@welshman/lib@0.8.13)(@welshman/net@0.8.13(@welshman/lib@0.8.13)(@welshman/util@0.8.13(@noble/curves@1.9.7)(@welshman/lib@0.8.13)(nostr-tools@2.20.0(typescript@5.9.3)))(ws@8.18.3))(@welshman/util@0.8.13(@noble/curves@1.9.7)(@welshman/lib@0.8.13)(nostr-tools@2.20.0(typescript@5.9.3)))(nostr-signer-capacitor-plugin@https://codeload.github.com/coracle-social/nostr-signer-capacitor-plugin/tar.gz/be4bb90a1a15c8eec0934f2f66ce9e82ecc72d51(@capacitor/core@8.0.1))(nostr-tools@2.20.0(typescript@5.9.3)))(@welshman/util@0.8.13(@noble/curves@1.9.7)(@welshman/lib@0.8.13)(nostr-tools@2.20.0(typescript@5.9.3)))(nostr-tools@2.20.0(typescript@5.9.3))':
+  '@pomade/core@0.2.3(@frostr/bifrost@1.0.7(typescript@5.9.3))(@noble/hashes@2.0.1)(@welshman/lib@0.8.14)(@welshman/net@0.8.14(@welshman/lib@0.8.14)(@welshman/util@0.8.14(@noble/curves@1.9.7)(@welshman/lib@0.8.14)(nostr-tools@2.20.0(typescript@5.9.3)))(ws@8.18.3))(@welshman/signer@0.8.14(@noble/curves@1.9.7)(@noble/hashes@2.0.1)(@welshman/lib@0.8.14)(@welshman/net@0.8.14(@welshman/lib@0.8.14)(@welshman/util@0.8.14(@noble/curves@1.9.7)(@welshman/lib@0.8.14)(nostr-tools@2.20.0(typescript@5.9.3)))(ws@8.18.3))(@welshman/util@0.8.14(@noble/curves@1.9.7)(@welshman/lib@0.8.14)(nostr-tools@2.20.0(typescript@5.9.3)))(nostr-signer-capacitor-plugin@https://codeload.github.com/coracle-social/nostr-signer-capacitor-plugin/tar.gz/be4bb90a1a15c8eec0934f2f66ce9e82ecc72d51(@capacitor/core@8.0.1))(nostr-tools@2.20.0(typescript@5.9.3)))(@welshman/util@0.8.14(@noble/curves@1.9.7)(@welshman/lib@0.8.14)(nostr-tools@2.20.0(typescript@5.9.3)))(nostr-tools@2.20.0(typescript@5.9.3))':
     dependencies:
       '@frostr/bifrost': 1.0.7(typescript@5.9.3)
       '@noble/hashes': 2.0.1
       '@peculiar/x509': 1.14.3
-      '@welshman/lib': 0.8.13
-      '@welshman/net': 0.8.13(@welshman/lib@0.8.13)(@welshman/util@0.8.13(@noble/curves@1.9.7)(@welshman/lib@0.8.13)(nostr-tools@2.20.0(typescript@5.9.3)))(ws@8.18.3)
-      '@welshman/signer': 0.8.13(@noble/curves@1.9.7)(@noble/hashes@2.0.1)(@welshman/lib@0.8.13)(@welshman/net@0.8.13(@welshman/lib@0.8.13)(@welshman/util@0.8.13(@noble/curves@1.9.7)(@welshman/lib@0.8.13)(nostr-tools@2.20.0(typescript@5.9.3)))(ws@8.18.3))(@welshman/util@0.8.13(@noble/curves@1.9.7)(@welshman/lib@0.8.13)(nostr-tools@2.20.0(typescript@5.9.3)))(nostr-signer-capacitor-plugin@https://codeload.github.com/coracle-social/nostr-signer-capacitor-plugin/tar.gz/be4bb90a1a15c8eec0934f2f66ce9e82ecc72d51(@capacitor/core@8.0.1))(nostr-tools@2.20.0(typescript@5.9.3))
-      '@welshman/util': 0.8.13(@noble/curves@1.9.7)(@welshman/lib@0.8.13)(nostr-tools@2.20.0(typescript@5.9.3))
+      '@welshman/lib': 0.8.14
+      '@welshman/net': 0.8.14(@welshman/lib@0.8.14)(@welshman/util@0.8.14(@noble/curves@1.9.7)(@welshman/lib@0.8.14)(nostr-tools@2.20.0(typescript@5.9.3)))(ws@8.18.3)
+      '@welshman/signer': 0.8.14(@noble/curves@1.9.7)(@noble/hashes@2.0.1)(@welshman/lib@0.8.14)(@welshman/net@0.8.14(@welshman/lib@0.8.14)(@welshman/util@0.8.14(@noble/curves@1.9.7)(@welshman/lib@0.8.14)(nostr-tools@2.20.0(typescript@5.9.3)))(ws@8.18.3))(@welshman/util@0.8.14(@noble/curves@1.9.7)(@welshman/lib@0.8.14)(nostr-tools@2.20.0(typescript@5.9.3)))(nostr-signer-capacitor-plugin@https://codeload.github.com/coracle-social/nostr-signer-capacitor-plugin/tar.gz/be4bb90a1a15c8eec0934f2f66ce9e82ecc72d51(@capacitor/core@8.0.1))(nostr-tools@2.20.0(typescript@5.9.3))
+      '@welshman/util': 0.8.14(@noble/curves@1.9.7)(@welshman/lib@0.8.14)(nostr-tools@2.20.0(typescript@5.9.3))
       cbor-x: 1.6.0
       hash-wasm: 4.12.0
       nostr-tools: 2.20.0(typescript@5.9.3)
@@ -7382,26 +7382,26 @@ snapshots:
     optionalDependencies:
       '@vite-pwa/assets-generator': 0.2.6
 
-  '@welshman/app@0.8.13(ed9ee8a79a580bcb9fa9bb6eb1a69558)':
+  '@welshman/app@0.8.14(338c6f404a4f62c0150ba21fa340805c)':
     dependencies:
-      '@pomade/core': 0.2.3(@frostr/bifrost@1.0.7(typescript@5.9.3))(@noble/hashes@2.0.1)(@welshman/lib@0.8.13)(@welshman/net@0.8.13(@welshman/lib@0.8.13)(@welshman/util@0.8.13(@noble/curves@1.9.7)(@welshman/lib@0.8.13)(nostr-tools@2.20.0(typescript@5.9.3)))(ws@8.18.3))(@welshman/signer@0.8.13(@noble/curves@1.9.7)(@noble/hashes@2.0.1)(@welshman/lib@0.8.13)(@welshman/net@0.8.13(@welshman/lib@0.8.13)(@welshman/util@0.8.13(@noble/curves@1.9.7)(@welshman/lib@0.8.13)(nostr-tools@2.20.0(typescript@5.9.3)))(ws@8.18.3))(@welshman/util@0.8.13(@noble/curves@1.9.7)(@welshman/lib@0.8.13)(nostr-tools@2.20.0(typescript@5.9.3)))(nostr-signer-capacitor-plugin@https://codeload.github.com/coracle-social/nostr-signer-capacitor-plugin/tar.gz/be4bb90a1a15c8eec0934f2f66ce9e82ecc72d51(@capacitor/core@8.0.1))(nostr-tools@2.20.0(typescript@5.9.3)))(@welshman/util@0.8.13(@noble/curves@1.9.7)(@welshman/lib@0.8.13)(nostr-tools@2.20.0(typescript@5.9.3)))(nostr-tools@2.20.0(typescript@5.9.3))
-      '@welshman/feeds': 0.8.13(29451a19e278ea4a9cf66616f05d5557)
-      '@welshman/lib': 0.8.13
-      '@welshman/net': 0.8.13(@welshman/lib@0.8.13)(@welshman/util@0.8.13(@noble/curves@1.9.7)(@welshman/lib@0.8.13)(nostr-tools@2.20.0(typescript@5.9.3)))(ws@8.18.3)
-      '@welshman/router': 0.8.13(@welshman/lib@0.8.13)(@welshman/net@0.8.13(@welshman/lib@0.8.13)(@welshman/util@0.8.13(@noble/curves@1.9.7)(@welshman/lib@0.8.13)(nostr-tools@2.20.0(typescript@5.9.3)))(ws@8.18.3))(@welshman/util@0.8.13(@noble/curves@1.9.7)(@welshman/lib@0.8.13)(nostr-tools@2.20.0(typescript@5.9.3)))
-      '@welshman/signer': 0.8.13(@noble/curves@1.9.7)(@noble/hashes@2.0.1)(@welshman/lib@0.8.13)(@welshman/net@0.8.13(@welshman/lib@0.8.13)(@welshman/util@0.8.13(@noble/curves@1.9.7)(@welshman/lib@0.8.13)(nostr-tools@2.20.0(typescript@5.9.3)))(ws@8.18.3))(@welshman/util@0.8.13(@noble/curves@1.9.7)(@welshman/lib@0.8.13)(nostr-tools@2.20.0(typescript@5.9.3)))(nostr-signer-capacitor-plugin@https://codeload.github.com/coracle-social/nostr-signer-capacitor-plugin/tar.gz/be4bb90a1a15c8eec0934f2f66ce9e82ecc72d51(@capacitor/core@8.0.1))(nostr-tools@2.20.0(typescript@5.9.3))
-      '@welshman/store': 0.8.13(@welshman/lib@0.8.13)(@welshman/net@0.8.13(@welshman/lib@0.8.13)(@welshman/util@0.8.13(@noble/curves@1.9.7)(@welshman/lib@0.8.13)(nostr-tools@2.20.0(typescript@5.9.3)))(ws@8.18.3))(@welshman/util@0.8.13(@noble/curves@1.9.7)(@welshman/lib@0.8.13)(nostr-tools@2.20.0(typescript@5.9.3)))(svelte@5.48.0)
-      '@welshman/util': 0.8.13(@noble/curves@1.9.7)(@welshman/lib@0.8.13)(nostr-tools@2.20.0(typescript@5.9.3))
+      '@pomade/core': 0.2.3(@frostr/bifrost@1.0.7(typescript@5.9.3))(@noble/hashes@2.0.1)(@welshman/lib@0.8.14)(@welshman/net@0.8.14(@welshman/lib@0.8.14)(@welshman/util@0.8.14(@noble/curves@1.9.7)(@welshman/lib@0.8.14)(nostr-tools@2.20.0(typescript@5.9.3)))(ws@8.18.3))(@welshman/signer@0.8.14(@noble/curves@1.9.7)(@noble/hashes@2.0.1)(@welshman/lib@0.8.14)(@welshman/net@0.8.14(@welshman/lib@0.8.14)(@welshman/util@0.8.14(@noble/curves@1.9.7)(@welshman/lib@0.8.14)(nostr-tools@2.20.0(typescript@5.9.3)))(ws@8.18.3))(@welshman/util@0.8.14(@noble/curves@1.9.7)(@welshman/lib@0.8.14)(nostr-tools@2.20.0(typescript@5.9.3)))(nostr-signer-capacitor-plugin@https://codeload.github.com/coracle-social/nostr-signer-capacitor-plugin/tar.gz/be4bb90a1a15c8eec0934f2f66ce9e82ecc72d51(@capacitor/core@8.0.1))(nostr-tools@2.20.0(typescript@5.9.3)))(@welshman/util@0.8.14(@noble/curves@1.9.7)(@welshman/lib@0.8.14)(nostr-tools@2.20.0(typescript@5.9.3)))(nostr-tools@2.20.0(typescript@5.9.3))
+      '@welshman/feeds': 0.8.14(eb51c9a484135f71aa8ae8e6a6e51522)
+      '@welshman/lib': 0.8.14
+      '@welshman/net': 0.8.14(@welshman/lib@0.8.14)(@welshman/util@0.8.14(@noble/curves@1.9.7)(@welshman/lib@0.8.14)(nostr-tools@2.20.0(typescript@5.9.3)))(ws@8.18.3)
+      '@welshman/router': 0.8.14(@welshman/lib@0.8.14)(@welshman/net@0.8.14(@welshman/lib@0.8.14)(@welshman/util@0.8.14(@noble/curves@1.9.7)(@welshman/lib@0.8.14)(nostr-tools@2.20.0(typescript@5.9.3)))(ws@8.18.3))(@welshman/util@0.8.14(@noble/curves@1.9.7)(@welshman/lib@0.8.14)(nostr-tools@2.20.0(typescript@5.9.3)))
+      '@welshman/signer': 0.8.14(@noble/curves@1.9.7)(@noble/hashes@2.0.1)(@welshman/lib@0.8.14)(@welshman/net@0.8.14(@welshman/lib@0.8.14)(@welshman/util@0.8.14(@noble/curves@1.9.7)(@welshman/lib@0.8.14)(nostr-tools@2.20.0(typescript@5.9.3)))(ws@8.18.3))(@welshman/util@0.8.14(@noble/curves@1.9.7)(@welshman/lib@0.8.14)(nostr-tools@2.20.0(typescript@5.9.3)))(nostr-signer-capacitor-plugin@https://codeload.github.com/coracle-social/nostr-signer-capacitor-plugin/tar.gz/be4bb90a1a15c8eec0934f2f66ce9e82ecc72d51(@capacitor/core@8.0.1))(nostr-tools@2.20.0(typescript@5.9.3))
+      '@welshman/store': 0.8.14(@welshman/lib@0.8.14)(@welshman/net@0.8.14(@welshman/lib@0.8.14)(@welshman/util@0.8.14(@noble/curves@1.9.7)(@welshman/lib@0.8.14)(nostr-tools@2.20.0(typescript@5.9.3)))(ws@8.18.3))(@welshman/util@0.8.14(@noble/curves@1.9.7)(@welshman/lib@0.8.14)(nostr-tools@2.20.0(typescript@5.9.3)))(svelte@5.48.0)
+      '@welshman/util': 0.8.14(@noble/curves@1.9.7)(@welshman/lib@0.8.14)(nostr-tools@2.20.0(typescript@5.9.3))
       fuse.js: 7.1.0
       svelte: 5.48.0
       throttle-debounce: 5.0.2
 
-  '@welshman/content@0.8.13(nostr-tools@2.20.0(typescript@5.9.3))':
+  '@welshman/content@0.8.14(nostr-tools@2.20.0(typescript@5.9.3))':
     dependencies:
       '@braintree/sanitize-url': 7.1.1
       nostr-tools: 2.20.0(typescript@5.9.3)
 
-  '@welshman/editor@0.8.13(@welshman/lib@0.8.13)(@welshman/util@0.8.13(@noble/curves@1.9.7)(@welshman/lib@0.8.13)(nostr-tools@2.20.0(typescript@5.9.3)))(nostr-editor@1.1.1(@tiptap/core@2.27.2(@tiptap/pm@2.27.2))(@tiptap/extension-image@2.27.1(@tiptap/core@2.27.2(@tiptap/pm@2.27.2)))(@tiptap/extension-link@2.27.1(@tiptap/core@2.27.2(@tiptap/pm@2.27.2))(@tiptap/pm@2.27.2))(@tiptap/pm@2.27.2)(linkifyjs@4.3.2)(nostr-tools@2.20.0(typescript@5.9.3))(prosemirror-markdown@1.13.3)(prosemirror-model@1.25.4)(prosemirror-state@1.4.4)(prosemirror-view@1.41.5)(tiptap-markdown@0.8.10(@tiptap/core@2.27.2(@tiptap/pm@2.27.2))))(nostr-tools@2.20.0(typescript@5.9.3))':
+  '@welshman/editor@0.8.14(@welshman/lib@0.8.14)(@welshman/util@0.8.14(@noble/curves@1.9.7)(@welshman/lib@0.8.14)(nostr-tools@2.20.0(typescript@5.9.3)))(nostr-editor@1.1.1(@tiptap/core@2.27.2(@tiptap/pm@2.27.2))(@tiptap/extension-image@2.27.1(@tiptap/core@2.27.2(@tiptap/pm@2.27.2)))(@tiptap/extension-link@2.27.1(@tiptap/core@2.27.2(@tiptap/pm@2.27.2))(@tiptap/pm@2.27.2))(@tiptap/pm@2.27.2)(linkifyjs@4.3.2)(nostr-tools@2.20.0(typescript@5.9.3))(prosemirror-markdown@1.13.3)(prosemirror-model@1.25.4)(prosemirror-state@1.4.4)(prosemirror-view@1.41.5)(tiptap-markdown@0.8.10(@tiptap/core@2.27.2(@tiptap/pm@2.27.2))))(nostr-tools@2.20.0(typescript@5.9.3))':
     dependencies:
       '@tiptap/core': 2.27.2(@tiptap/pm@2.27.2)
       '@tiptap/extension-code': 2.27.2(@tiptap/core@2.27.2(@tiptap/pm@2.27.2))
@@ -7416,64 +7416,64 @@ snapshots:
       '@tiptap/extension-text': 2.27.2(@tiptap/core@2.27.2(@tiptap/pm@2.27.2))
       '@tiptap/pm': 2.27.2
       '@tiptap/suggestion': 2.27.2(@tiptap/core@2.27.2(@tiptap/pm@2.27.2))(@tiptap/pm@2.27.2)
-      '@welshman/lib': 0.8.13
-      '@welshman/util': 0.8.13(@noble/curves@1.9.7)(@welshman/lib@0.8.13)(nostr-tools@2.20.0(typescript@5.9.3))
+      '@welshman/lib': 0.8.14
+      '@welshman/util': 0.8.14(@noble/curves@1.9.7)(@welshman/lib@0.8.14)(nostr-tools@2.20.0(typescript@5.9.3))
       nostr-editor: 1.1.1(@tiptap/core@2.27.2(@tiptap/pm@2.27.2))(@tiptap/extension-image@2.27.1(@tiptap/core@2.27.2(@tiptap/pm@2.27.2)))(@tiptap/extension-link@2.27.1(@tiptap/core@2.27.2(@tiptap/pm@2.27.2))(@tiptap/pm@2.27.2))(@tiptap/pm@2.27.2)(linkifyjs@4.3.2)(nostr-tools@2.20.0(typescript@5.9.3))(prosemirror-markdown@1.13.3)(prosemirror-model@1.25.4)(prosemirror-state@1.4.4)(prosemirror-view@1.41.5)(tiptap-markdown@0.8.10(@tiptap/core@2.27.2(@tiptap/pm@2.27.2)))
       nostr-tools: 2.20.0(typescript@5.9.3)
       tippy.js: 6.3.7
 
-  '@welshman/feeds@0.8.13(29451a19e278ea4a9cf66616f05d5557)':
+  '@welshman/feeds@0.8.14(eb51c9a484135f71aa8ae8e6a6e51522)':
     dependencies:
-      '@welshman/lib': 0.8.13
-      '@welshman/net': 0.8.13(@welshman/lib@0.8.13)(@welshman/util@0.8.13(@noble/curves@1.9.7)(@welshman/lib@0.8.13)(nostr-tools@2.20.0(typescript@5.9.3)))(ws@8.18.3)
-      '@welshman/router': 0.8.13(@welshman/lib@0.8.13)(@welshman/net@0.8.13(@welshman/lib@0.8.13)(@welshman/util@0.8.13(@noble/curves@1.9.7)(@welshman/lib@0.8.13)(nostr-tools@2.20.0(typescript@5.9.3)))(ws@8.18.3))(@welshman/util@0.8.13(@noble/curves@1.9.7)(@welshman/lib@0.8.13)(nostr-tools@2.20.0(typescript@5.9.3)))
-      '@welshman/signer': 0.8.13(@noble/curves@1.9.7)(@noble/hashes@2.0.1)(@welshman/lib@0.8.13)(@welshman/net@0.8.13(@welshman/lib@0.8.13)(@welshman/util@0.8.13(@noble/curves@1.9.7)(@welshman/lib@0.8.13)(nostr-tools@2.20.0(typescript@5.9.3)))(ws@8.18.3))(@welshman/util@0.8.13(@noble/curves@1.9.7)(@welshman/lib@0.8.13)(nostr-tools@2.20.0(typescript@5.9.3)))(nostr-signer-capacitor-plugin@https://codeload.github.com/coracle-social/nostr-signer-capacitor-plugin/tar.gz/be4bb90a1a15c8eec0934f2f66ce9e82ecc72d51(@capacitor/core@8.0.1))(nostr-tools@2.20.0(typescript@5.9.3))
-      '@welshman/util': 0.8.13(@noble/curves@1.9.7)(@welshman/lib@0.8.13)(nostr-tools@2.20.0(typescript@5.9.3))
+      '@welshman/lib': 0.8.14
+      '@welshman/net': 0.8.14(@welshman/lib@0.8.14)(@welshman/util@0.8.14(@noble/curves@1.9.7)(@welshman/lib@0.8.14)(nostr-tools@2.20.0(typescript@5.9.3)))(ws@8.18.3)
+      '@welshman/router': 0.8.14(@welshman/lib@0.8.14)(@welshman/net@0.8.14(@welshman/lib@0.8.14)(@welshman/util@0.8.14(@noble/curves@1.9.7)(@welshman/lib@0.8.14)(nostr-tools@2.20.0(typescript@5.9.3)))(ws@8.18.3))(@welshman/util@0.8.14(@noble/curves@1.9.7)(@welshman/lib@0.8.14)(nostr-tools@2.20.0(typescript@5.9.3)))
+      '@welshman/signer': 0.8.14(@noble/curves@1.9.7)(@noble/hashes@2.0.1)(@welshman/lib@0.8.14)(@welshman/net@0.8.14(@welshman/lib@0.8.14)(@welshman/util@0.8.14(@noble/curves@1.9.7)(@welshman/lib@0.8.14)(nostr-tools@2.20.0(typescript@5.9.3)))(ws@8.18.3))(@welshman/util@0.8.14(@noble/curves@1.9.7)(@welshman/lib@0.8.14)(nostr-tools@2.20.0(typescript@5.9.3)))(nostr-signer-capacitor-plugin@https://codeload.github.com/coracle-social/nostr-signer-capacitor-plugin/tar.gz/be4bb90a1a15c8eec0934f2f66ce9e82ecc72d51(@capacitor/core@8.0.1))(nostr-tools@2.20.0(typescript@5.9.3))
+      '@welshman/util': 0.8.14(@noble/curves@1.9.7)(@welshman/lib@0.8.14)(nostr-tools@2.20.0(typescript@5.9.3))
       trava: 1.2.1
 
-  '@welshman/lib@0.8.13':
+  '@welshman/lib@0.8.14':
     dependencies:
       '@scure/base': 1.2.6
       '@types/events': 3.0.3
       events: 3.3.0
 
-  '@welshman/net@0.8.13(@welshman/lib@0.8.13)(@welshman/util@0.8.13(@noble/curves@1.9.7)(@welshman/lib@0.8.13)(nostr-tools@2.20.0(typescript@5.9.3)))(ws@8.18.3)':
+  '@welshman/net@0.8.14(@welshman/lib@0.8.14)(@welshman/util@0.8.14(@noble/curves@1.9.7)(@welshman/lib@0.8.14)(nostr-tools@2.20.0(typescript@5.9.3)))(ws@8.18.3)':
     dependencies:
-      '@welshman/lib': 0.8.13
-      '@welshman/util': 0.8.13(@noble/curves@1.9.7)(@welshman/lib@0.8.13)(nostr-tools@2.20.0(typescript@5.9.3))
+      '@welshman/lib': 0.8.14
+      '@welshman/util': 0.8.14(@noble/curves@1.9.7)(@welshman/lib@0.8.14)(nostr-tools@2.20.0(typescript@5.9.3))
       events: 3.3.0
       isomorphic-ws: 5.0.0(ws@8.18.3)
     transitivePeerDependencies:
       - ws
 
-  '@welshman/router@0.8.13(@welshman/lib@0.8.13)(@welshman/net@0.8.13(@welshman/lib@0.8.13)(@welshman/util@0.8.13(@noble/curves@1.9.7)(@welshman/lib@0.8.13)(nostr-tools@2.20.0(typescript@5.9.3)))(ws@8.18.3))(@welshman/util@0.8.13(@noble/curves@1.9.7)(@welshman/lib@0.8.13)(nostr-tools@2.20.0(typescript@5.9.3)))':
+  '@welshman/router@0.8.14(@welshman/lib@0.8.14)(@welshman/net@0.8.14(@welshman/lib@0.8.14)(@welshman/util@0.8.14(@noble/curves@1.9.7)(@welshman/lib@0.8.14)(nostr-tools@2.20.0(typescript@5.9.3)))(ws@8.18.3))(@welshman/util@0.8.14(@noble/curves@1.9.7)(@welshman/lib@0.8.14)(nostr-tools@2.20.0(typescript@5.9.3)))':
     dependencies:
-      '@welshman/lib': 0.8.13
-      '@welshman/net': 0.8.13(@welshman/lib@0.8.13)(@welshman/util@0.8.13(@noble/curves@1.9.7)(@welshman/lib@0.8.13)(nostr-tools@2.20.0(typescript@5.9.3)))(ws@8.18.3)
-      '@welshman/util': 0.8.13(@noble/curves@1.9.7)(@welshman/lib@0.8.13)(nostr-tools@2.20.0(typescript@5.9.3))
+      '@welshman/lib': 0.8.14
+      '@welshman/net': 0.8.14(@welshman/lib@0.8.14)(@welshman/util@0.8.14(@noble/curves@1.9.7)(@welshman/lib@0.8.14)(nostr-tools@2.20.0(typescript@5.9.3)))(ws@8.18.3)
+      '@welshman/util': 0.8.14(@noble/curves@1.9.7)(@welshman/lib@0.8.14)(nostr-tools@2.20.0(typescript@5.9.3))
 
-  '@welshman/signer@0.8.13(@noble/curves@1.9.7)(@noble/hashes@2.0.1)(@welshman/lib@0.8.13)(@welshman/net@0.8.13(@welshman/lib@0.8.13)(@welshman/util@0.8.13(@noble/curves@1.9.7)(@welshman/lib@0.8.13)(nostr-tools@2.20.0(typescript@5.9.3)))(ws@8.18.3))(@welshman/util@0.8.13(@noble/curves@1.9.7)(@welshman/lib@0.8.13)(nostr-tools@2.20.0(typescript@5.9.3)))(nostr-signer-capacitor-plugin@https://codeload.github.com/coracle-social/nostr-signer-capacitor-plugin/tar.gz/be4bb90a1a15c8eec0934f2f66ce9e82ecc72d51(@capacitor/core@8.0.1))(nostr-tools@2.20.0(typescript@5.9.3))':
+  '@welshman/signer@0.8.14(@noble/curves@1.9.7)(@noble/hashes@2.0.1)(@welshman/lib@0.8.14)(@welshman/net@0.8.14(@welshman/lib@0.8.14)(@welshman/util@0.8.14(@noble/curves@1.9.7)(@welshman/lib@0.8.14)(nostr-tools@2.20.0(typescript@5.9.3)))(ws@8.18.3))(@welshman/util@0.8.14(@noble/curves@1.9.7)(@welshman/lib@0.8.14)(nostr-tools@2.20.0(typescript@5.9.3)))(nostr-signer-capacitor-plugin@https://codeload.github.com/coracle-social/nostr-signer-capacitor-plugin/tar.gz/be4bb90a1a15c8eec0934f2f66ce9e82ecc72d51(@capacitor/core@8.0.1))(nostr-tools@2.20.0(typescript@5.9.3))':
     dependencies:
       '@noble/curves': 1.9.7
       '@noble/hashes': 2.0.1
-      '@welshman/lib': 0.8.13
-      '@welshman/net': 0.8.13(@welshman/lib@0.8.13)(@welshman/util@0.8.13(@noble/curves@1.9.7)(@welshman/lib@0.8.13)(nostr-tools@2.20.0(typescript@5.9.3)))(ws@8.18.3)
-      '@welshman/util': 0.8.13(@noble/curves@1.9.7)(@welshman/lib@0.8.13)(nostr-tools@2.20.0(typescript@5.9.3))
+      '@welshman/lib': 0.8.14
+      '@welshman/net': 0.8.14(@welshman/lib@0.8.14)(@welshman/util@0.8.14(@noble/curves@1.9.7)(@welshman/lib@0.8.14)(nostr-tools@2.20.0(typescript@5.9.3)))(ws@8.18.3)
+      '@welshman/util': 0.8.14(@noble/curves@1.9.7)(@welshman/lib@0.8.14)(nostr-tools@2.20.0(typescript@5.9.3))
       nostr-signer-capacitor-plugin: https://codeload.github.com/coracle-social/nostr-signer-capacitor-plugin/tar.gz/be4bb90a1a15c8eec0934f2f66ce9e82ecc72d51(@capacitor/core@8.0.1)
       nostr-tools: 2.20.0(typescript@5.9.3)
 
-  '@welshman/store@0.8.13(@welshman/lib@0.8.13)(@welshman/net@0.8.13(@welshman/lib@0.8.13)(@welshman/util@0.8.13(@noble/curves@1.9.7)(@welshman/lib@0.8.13)(nostr-tools@2.20.0(typescript@5.9.3)))(ws@8.18.3))(@welshman/util@0.8.13(@noble/curves@1.9.7)(@welshman/lib@0.8.13)(nostr-tools@2.20.0(typescript@5.9.3)))(svelte@5.48.0)':
+  '@welshman/store@0.8.14(@welshman/lib@0.8.14)(@welshman/net@0.8.14(@welshman/lib@0.8.14)(@welshman/util@0.8.14(@noble/curves@1.9.7)(@welshman/lib@0.8.14)(nostr-tools@2.20.0(typescript@5.9.3)))(ws@8.18.3))(@welshman/util@0.8.14(@noble/curves@1.9.7)(@welshman/lib@0.8.14)(nostr-tools@2.20.0(typescript@5.9.3)))(svelte@5.48.0)':
     dependencies:
-      '@welshman/lib': 0.8.13
-      '@welshman/net': 0.8.13(@welshman/lib@0.8.13)(@welshman/util@0.8.13(@noble/curves@1.9.7)(@welshman/lib@0.8.13)(nostr-tools@2.20.0(typescript@5.9.3)))(ws@8.18.3)
-      '@welshman/util': 0.8.13(@noble/curves@1.9.7)(@welshman/lib@0.8.13)(nostr-tools@2.20.0(typescript@5.9.3))
+      '@welshman/lib': 0.8.14
+      '@welshman/net': 0.8.14(@welshman/lib@0.8.14)(@welshman/util@0.8.14(@noble/curves@1.9.7)(@welshman/lib@0.8.14)(nostr-tools@2.20.0(typescript@5.9.3)))(ws@8.18.3)
+      '@welshman/util': 0.8.14(@noble/curves@1.9.7)(@welshman/lib@0.8.14)(nostr-tools@2.20.0(typescript@5.9.3))
       svelte: 5.48.0
 
-  '@welshman/util@0.8.13(@noble/curves@1.9.7)(@welshman/lib@0.8.13)(nostr-tools@2.20.0(typescript@5.9.3))':
+  '@welshman/util@0.8.14(@noble/curves@1.9.7)(@welshman/lib@0.8.14)(nostr-tools@2.20.0(typescript@5.9.3))':
     dependencies:
       '@noble/curves': 1.9.7
       '@types/ws': 8.18.1
-      '@welshman/lib': 0.8.13
+      '@welshman/lib': 0.8.14
       js-base64: 3.7.8
       nostr-tools: 2.20.0(typescript@5.9.3)
       nostr-wasm: 0.1.0

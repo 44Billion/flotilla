@@ -6,6 +6,7 @@
     truncate,
     renderAsHtml,
     isText,
+    isEmail,
     isEmoji,
     isTopic,
     isCode,
@@ -26,6 +27,7 @@
   import Button from "@lib/components/Button.svelte"
   import ContentToken from "@app/components/ContentToken.svelte"
   import ContentEmoji from "@app/components/ContentEmoji.svelte"
+  import ContentEmail from "@app/components/ContentEmail.svelte"
   import ContentCode from "@app/components/ContentCode.svelte"
   import ContentLinkInline from "@app/components/ContentLinkInline.svelte"
   import ContentLinkBlock from "@app/components/ContentLinkBlock.svelte"
@@ -159,6 +161,8 @@
           <ContentTopic value={parsed.value} />
         {:else if isEmoji(parsed)}
           <ContentEmoji value={parsed.value} />
+        {:else if isEmail(parsed)}
+          <ContentEmail value={parsed.value} />
         {:else if isCode(parsed)}
           <ContentCode
             value={parsed.value}
