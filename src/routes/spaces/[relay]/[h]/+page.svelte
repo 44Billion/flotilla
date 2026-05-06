@@ -447,9 +447,8 @@
       bind:element
       onscroll={onScroll}
       class={cx(
-        showMobileVideoPanel
-          ? "hidden flex-col-reverse pt-4 md:flex md:flex-col-reverse"
-          : "flex flex-col-reverse pt-4",
+        "flex-col-reverse pb-0! pt-4",
+        showMobileVideoPanel ? "hidden md:flex md:flex-col-reverse" : "flex",
         pageContentHiddenDesktopVideoOnly && "md:hidden",
       )}>
       {#if $room.isPrivate && $membershipStatus !== MembershipStatus.Granted}

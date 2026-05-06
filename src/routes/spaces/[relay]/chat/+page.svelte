@@ -311,7 +311,7 @@
   {/snippet}
 </SpaceBar>
 
-<PageContent bind:element onscroll={onScroll} class="flex flex-col-reverse pt-4 mb-14 md:mb-0">
+<PageContent bind:element onscroll={onScroll} class="flex flex-col-reverse pt-4 pb-0!">
   {#if loadingForward}
     <p class="py-20 flex justify-center">
       <Spinner loading={loadingForward}>Looking for messages...</Spinner>
