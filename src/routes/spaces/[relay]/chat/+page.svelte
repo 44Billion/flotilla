@@ -334,16 +334,14 @@
       {#if event.kind === RELAY_ADD_MEMBER}
         <RoomItemAddMember {url} {event} />
       {:else}
-        <div>
-          <RoomItem
-            {url}
-            {event}
-            {replyTo}
-            {showPubkey}
-            canEdit={canEditEvent}
-            onEdit={onEditEvent}
-            {addSpaceBelow} />
-        </div>
+        <RoomItem
+          {url}
+          {event}
+          {replyTo}
+          {showPubkey}
+          canEdit={canEditEvent}
+          onEdit={onEditEvent}
+          {addSpaceBelow} />
       {/if}
     {/if}
   {/each}

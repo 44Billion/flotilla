@@ -15,7 +15,7 @@
   import InfoCircle from "@assets/icons/info-circle.svg?dataurl"
   import Login2 from "@assets/icons/login-3.svg?dataurl"
   import cx from "classnames"
-  import {slide, fade, fly} from "@lib/transition"
+  import {fade, fly} from "@lib/transition"
   import Button from "@lib/components/Button.svelte"
   import Divider from "@lib/components/Divider.svelte"
   import Icon from "@lib/components/Icon.svelte"
@@ -495,16 +495,14 @@
             {#if event.kind === ROOM_ADD_MEMBER}
               <RoomItemAddMember {url} {event} />
             {:else}
-              <div in:slide class="cv">
-                <RoomItem
-                  {url}
-                  {event}
-                  {replyTo}
-                  {showPubkey}
-                  {addSpaceBelow}
-                  canEdit={canEditEvent}
-                  onEdit={onEditEvent} />
-              </div>
+              <RoomItem
+                {url}
+                {event}
+                {replyTo}
+                {showPubkey}
+                {addSpaceBelow}
+                canEdit={canEditEvent}
+                onEdit={onEditEvent} />
             {/if}
           {/if}
         {/each}
