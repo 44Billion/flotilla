@@ -53,7 +53,7 @@
   import ChatComposeEdit from "@app/components/ChatComposeEdit.svelte"
   import ChatComposeParent from "@app/components/ChatComposeParent.svelte"
   import ThunkToast from "@app/components/ThunkToast.svelte"
-  import {userSettingsValues, deriveChat} from "@app/core/state"
+  import {userSettingsValues, deriveChat, makeChatId} from "@app/core/state"
   import {pushModal} from "@app/util/modal"
   import {DraftKey} from "@app/util/drafts"
   import {makeDelete, prependParent} from "@app/core/commands"
@@ -66,8 +66,9 @@
 
   const {pubkeys, info}: Props = $props()
 
-  const chat = deriveChat(pubkeys)
-  const draftKey = new DraftKey<{content?: string | object}>(`dm:${$chat?.id}`)
+  const chatId = makeChatId(pubkeys)
+  const chat = deriveChat(chatId)
+  const draftKey = new DraftKey<{content?: string | object}>(`dm:${chatId}`)
   const others = remove($pubkey!, pubkeys)
   const missingRelayLists = $derived(others.filter(pk => !$messagingRelayListsByPubkey.has(pk)))
 

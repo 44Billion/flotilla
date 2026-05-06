@@ -560,11 +560,7 @@ export const chatsById = call(() => {
   })
 })
 
-export const deriveChat = call(() => {
-  const _deriveChat = makeDeriveItem(chatsById)
-
-  return (pubkeys: string[]) => _deriveChat(makeChatId(pubkeys))
-})
+export const deriveChat = makeDeriveItem(chatsById)
 
 export const chatSearch = derived(throttled(1500, chatsById), $chatsByPubkey => {
   return createSearch(
