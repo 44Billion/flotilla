@@ -68,8 +68,6 @@
     const content = ed.getText({blockSeparator: "\n"}).trim()
     const tags = ed.storage.nostr.getEditorTags()
 
-    if (!content) return
-
     onSubmit({content, tags})
 
     draftKey?.clear()

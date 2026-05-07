@@ -57,6 +57,10 @@
   }
 
   const onSubmit = async ({content, tags}: EventContent) => {
+    if (!content && !share) {
+      return
+    }
+
     try {
       let template: EventContent & {created_at?: number} = {content, tags}
 

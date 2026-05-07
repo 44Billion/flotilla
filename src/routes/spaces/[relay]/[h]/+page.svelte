@@ -156,6 +156,10 @@
   }
 
   const onSubmit = async ({content, tags}: EventContent) => {
+    if (!content && !share) {
+      return
+    }
+
     try {
       tags.push(["h", h])
 
