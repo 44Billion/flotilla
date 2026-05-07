@@ -19,15 +19,17 @@
   const end = $derived(parseInt(meta.end))
 </script>
 
-<div class="flex grow flex-wrap justify-between gap-2">
-  <p class="text-xl">{meta.title || meta.name}</p>
+<div class="flex flex-col justify-between gap-1">
+  <p class="text-lg">{meta.title || meta.name}</p>
   {#if !isNaN(start) && !isNaN(end)}
     {@const startDateDisplay = formatTimestampAsDate(start)}
     {@const endDateDisplay = formatTimestampAsDate(end)}
     {@const isSingleDay = startDateDisplay === endDateDisplay}
-    <div class="flex items-center gap-2 text-sm">
-      <Icon icon={ClockCircle} size={4} />
-      <span class="hidden sm:block">{formatTimestampAsDate(start)}</span>
+    <div class="flex flex-wrap gap-2 text-xs">
+      <div class="flex items-center gap-2">
+        <Icon icon={ClockCircle} size={4} />
+        {formatTimestampAsDate(start)}
+      </div>
       {formatTimestampAsTime(start)} — {isSingleDay
         ? formatTimestampAsTime(end)
         : formatTimestamp(end)}
