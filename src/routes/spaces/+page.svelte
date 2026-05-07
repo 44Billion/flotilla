@@ -5,8 +5,9 @@
   import {derived as _derived} from "svelte/store"
   import {dec, insertAt, removeAt, sleep} from "@welshman/lib"
   import type {RelayProfile} from "@welshman/util"
+  import {ROOMS} from "@welshman/util"
   import {throttled} from "@welshman/store"
-  import {relays, createSearch} from "@welshman/app"
+  import {pull, relays, createSearch} from "@welshman/app"
   import {createScroller} from "@lib/html"
   import {fly} from "@lib/transition"
   import DragHandle from "@assets/icons/drag-handle.svg?dataurl"
@@ -29,7 +30,9 @@
     userSpaceUrls,
     loadUserGroupList,
     PLATFORM_RELAYS,
+    DEFAULT_RELAYS,
     groupListPubkeysByUrl,
+    bootstrapPubkeys,
     parseInviteLink,
   } from "@app/core/state"
   import {setSpaceMembershipOrder} from "@app/core/commands"
@@ -197,6 +200,11 @@
       },
     })
 
+    pull({
+      filters: [{kinds: [ROOMS], authors: $bootstrapPubkeys}],
+      relays: DEFAULT_RELAYS,
+    })
+
     return () => {
       scroller.stop()
     }
@@ -205,41 +213,46 @@
 
 <Page>
   <PageBar>
-    {#if showSearch}
-      <label class="input input-bordered input-sm flex flex-1 items-center gap-2" in:fly>
-        <Icon icon={Magnifier} />
-        <input
-          bind:this={searchInput}
-          bind:value={term}
-          class="min-w-0 grow"
-          type="text"
-          placeholder="Search for spaces..." />
-        <Button onclick={closeSearch} class="flex items-center">
-          <Icon icon={CloseCircle} />
-        </Button>
-      </label>
-    {:else}
-      <div class="flex items-center justify-between gap-4" in:fly>
-        <div class="ellipsize flex items-center gap-2 whitespace-nowrap">
-          <Icon icon={Widget} size={6} />
-          <strong>Spaces</strong>
-        </div>
-        <div class="flex items-center gap-2">
-          <button
-            class="btn btn-neutral btn-sm btn-square"
-            aria-label="Search"
-            onclick={openSearch}>
-            <Icon size={4} icon={Magnifier} />
-          </button>
-          {#if PLATFORM_RELAYS.length === 0}
-            <Button class="btn btn-primary btn-sm" onclick={addSpace}>
-              <Icon icon={AddCircle} />
-              Add Space
-            </Button>
-          {/if}
-        </div>
+    <div class="flex items-center justify-between gap-4" in:fly>
+      <div class="ellipsize flex items-center gap-2 whitespace-nowrap">
+        <Icon icon={Widget} size={6} />
+        <strong>Spaces</strong>
       </div>
-    {/if}
+      <div class="flex items-center gap-2">
+        <button class="btn btn-neutral btn-sm btn-square" aria-label="Search" onclick={openSearch}>
+          <Icon size={4} icon={Magnifier} />
+        </button>
+        {#if showSearch}
+          <button class="fixed inset-0 z-feature" aria-label="Close search" onclick={closeSearch}
+          ></button>
+          <div class="fixed top-sai right-sai left-content-full z-feature p-2">
+            <div
+              class="card2 card2-sm p-2! bg-alt flex flex-col shadow-md"
+              transition:fly={{y: -40, duration: 150}}>
+              <label class="input input-sm input-bordered flex w-full items-center gap-2">
+                <Icon size={4} icon={Magnifier} />
+                <input
+                  bind:this={searchInput}
+                  bind:value={term}
+                  class="min-w-0 grow"
+                  type="text"
+                  placeholder="Search for spaces..."
+                  onkeydown={e => e.key === "Escape" && closeSearch()} />
+                <Button onclick={closeSearch} class="flex items-center">
+                  <Icon icon={CloseCircle} />
+                </Button>
+              </label>
+            </div>
+          </div>
+        {/if}
+        {#if PLATFORM_RELAYS.length === 0}
+          <Button class="btn btn-primary btn-sm" onclick={addSpace}>
+            <Icon icon={AddCircle} />
+            Add Space
+          </Button>
+        {/if}
+      </div>
+    </div>
   </PageBar>
   <PageContent class="flex flex-col gap-2 p-2 pt-4">
     <div class="flex flex-col gap-2" bind:this={element}>
