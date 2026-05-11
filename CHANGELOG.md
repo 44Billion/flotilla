@@ -1,5 +1,31 @@
 # Changelog
 
+# 1.8.0
+
+* Fix relay badge overflow
+* Suppress programmatic scroll when user is scrolling
+* Fix vertical alignment of emoji and overflow buttons in shared event action row
+* Use type=email for signup/login email inputs, validate password
+* Improve toggle switch placement on settings screens
+* Fix relay auth privacy toggle
+* Improve field layout
+* Add progress bar to signup flow
+* Bundle emojis properly
+* Rework hosting page
+* Fix padding on pages on small screens
+* Add richer link preview support
+* Fix pasting into event summary
+* Publish fewer join/claim requests
+* Fix new messages not rendering in safari
+* Avoid capturing stale cleanup function in chat
+* Hide keyboard on app resume
+* Add email rendering support
+* Fix bunker login
+* Fix undefined chat draft key
+* Allow sharing to chat without a message
+* Make sure to show date on calendar events when embedded
+* Improve space search
+
 # 1.7.4
 
 * Fix safe area inset for FAB
