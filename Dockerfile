@@ -1,39 +1,26 @@
-# Stage 1: Build
-# Uses .env from build context for config (logo, branding, etc.)
-# Optional: docker build --build-arg VITE_BUILD_HASH=$(git rev-parse --short HEAD) -t flotilla .
+# Build and run the Flotilla web server.
+#
+#   docker build -t flotilla .
+#   docker run -p 3000:3000 flotilla
+#
+# Pass --build-arg VITE_BUILD_HASH=$(git rev-parse --short HEAD) to stamp the build.
+# A .env in the build context is picked up by build.sh for branding config.
 
-FROM node:22-bookworm AS builder
-
-RUN apt-get update && apt-get install -y --no-install-recommends curl
+FROM node:22-bookworm
 
 RUN npm install -g pnpm@10.33.0
 
 WORKDIR /app
 
 COPY package.json pnpm-lock.yaml ./
-RUN pnpm i
 
-# Copy everything (including .env when present) - build.sh will source it
-COPY . .
-
-ARG VITE_BUILD_HASH
-ENV VITE_BUILD_HASH=${VITE_BUILD_HASH}
+RUN pnpm i --frozen-lockfile
 
 ENV NODE_OPTIONS=--max_old_space_size=16384
+
+COPY . .
+
 RUN pnpm run build
-
-FROM node:22-alpine
-
-WORKDIR /app
-
-# Install production dependencies needed by the Node server runtime
-RUN npm install -g pnpm@10.33.0
-COPY package.json pnpm-lock.yaml ./
-RUN pnpm i --prod --frozen-lockfile --ignore-scripts
-
-# Copy only the built output and server source - no app source, no .env, no dev deps
-COPY --from=builder /app/build ./build
-COPY --from=builder /app/server.js ./server.js
 
 EXPOSE 3000
 
