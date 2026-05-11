@@ -2,11 +2,11 @@
 # Uses .env from build context for config (logo, branding, etc.)
 # Optional: docker build --build-arg VITE_BUILD_HASH=$(git rev-parse --short HEAD) -t flotilla .
 
-FROM node:20-bookworm AS builder
+FROM node:22-bookworm AS builder
 
 RUN apt-get update && apt-get install -y --no-install-recommends curl
 
-RUN npm install -g pnpm@latest
+RUN npm install -g pnpm@10.33.0
 
 WORKDIR /app
 
@@ -22,7 +22,7 @@ ENV VITE_BUILD_HASH=${VITE_BUILD_HASH}
 ENV NODE_OPTIONS=--max_old_space_size=16384
 RUN pnpm run build
 
-FROM node:20-alpine
+FROM node:22-alpine
 
 WORKDIR /app
 
