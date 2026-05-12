@@ -247,6 +247,14 @@ app.use(
             : "public, max-age=3600"
 
       context.header("Cache-Control", cacheControl)
+
+      // Immutable assets are content-hashed by Vite, so the filename is itself a
+      // stable content identifier. Exposing it as an ETag lets clients that
+      // revalidate explicitly (e.g. emoji-picker-element checks its data source
+      // on every load) skip re-downloading large files when nothing changed.
+      if (isImmutable) {
+        context.header("ETag", `"${path.basename(filePath)}"`)
+      }
     },
   }),
 )

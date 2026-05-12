@@ -37,12 +37,12 @@ pnpm run start
 Or, if you prefer to use a container:
 
 ```sh
-docker run -d -p 3000:3000 ghcr.io/coracle-social/flotilla:latest
+docker run -d -p 3000:3000 gitea.coracle.social/coracle/flotilla:latest
 ```
 
 Alternatively, you can copy the build files into a directory of your choice and serve it yourself:
 
 ```sh
 mkdir ./mount
-docker run -v ./mount:/app/mount ghcr.io/coracle-social/flotilla:latest bash -c 'cp -r build/* mount'
+docker run -v ./mount:/app/mount gitea.coracle.social/coracle/flotilla:latest bash -c 'cp -r build/* mount'
 ```
