@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "vite dev",
     "build": "./build.sh",
+    "build:server": "vite build --config vite.config.server.ts",
     "start": "node server.js",
     "release:android": "./build.sh && cap build android --androidreleasetype APK --signing-type apksigner",
     "tauri:dev": "tauri dev",

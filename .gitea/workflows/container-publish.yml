@@ -1,8 +1,13 @@
-name: Docker
+name: Container Image Build and Publish
 
 on:
   push:
     branches: [master]
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 env:
   REGISTRY: gitea.coracle.social
@@ -32,6 +37,7 @@ jobs:
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           tags: |
+            type=sha
             type=raw,value=latest,enable=${{ github.ref == 'refs/heads/master' }}
 
       - name: Set up Docker Buildx
@@ -45,6 +51,7 @@ jobs:
         with:
           context: .
           push: true
+          target: production
           platforms: linux/amd64,linux/arm64
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}

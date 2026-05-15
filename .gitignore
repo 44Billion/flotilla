@@ -27,6 +27,7 @@ android/app/src/main/assets/public/
 node_modules/
 .pnpm-store/
 build/
+build-server/
 .svelte-kit/
 .next/
 
