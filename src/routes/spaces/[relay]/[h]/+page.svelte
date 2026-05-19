@@ -1,5 +1,5 @@
 <script lang="ts">
-  import {onMount} from "svelte"
+  import {onDestroy, onMount} from "svelte"
   import {readable} from "svelte/store"
   import {page} from "$app/stores"
   import {goto} from "$app/navigation"
@@ -49,7 +49,8 @@
   import {VideoCallLayout, videoCallLayout, videoTileCount} from "@app/call/video"
   import {makeFeed} from "@app/core/requests"
   import {popKey} from "@lib/implicit"
-  import {checked} from "@app/util/notifications"
+  import {checked, deferredRoomPath, setChecked} from "@app/util/notifications"
+  import {makeRoomPath} from "@app/util/routes"
   import {pushModal} from "@app/util/modal"
   import {pushToast} from "@app/util/toast"
 
@@ -76,6 +77,21 @@
   const pageContentHiddenDesktopVideoOnly = $derived(
     voiceConnectedHere && $videoCallLayout === VideoCallLayout.Video,
   )
+
+  const roomPath = makeRoomPath(url, h)
+
+  const videoCallChatHidden = $derived(
+    voiceConnectedHere && $videoCallLayout === VideoCallLayout.Video,
+  )
+
+  $effect(() => {
+    deferredRoomPath.set(videoCallChatHidden ? roomPath : undefined)
+    if (voiceConnectedHere && !videoCallChatHidden) {
+      setChecked(roomPath)
+    }
+  })
+
+  onDestroy(() => deferredRoomPath.set(undefined))
 
   let prevVideoTileCount = $state(0)
 

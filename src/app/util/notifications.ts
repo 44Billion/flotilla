@@ -1,4 +1,4 @@
-import {derived} from "svelte/store"
+import {derived, get, writable} from "svelte/store"
 import {Badge} from "@capawesome/capacitor-badge"
 import {synced, throttled, withGetter} from "@welshman/store"
 import {pubkey, tracker, repository, relaysByUrl} from "@welshman/app"
@@ -36,6 +36,9 @@ export const deriveChecked = (key: string) => derived(checked, prop<number>(key)
 
 export const setChecked = (key: string) => checked.update(assoc(key, now()))
 
+/** Room path while video call UI hides chat; checked + badge stay active until chat is shown. */
+export const deferredRoomPath = writable<string | undefined>(undefined)
+
 export const syncChecked = () => {
   let prev = ""
 
@@ -57,8 +60,11 @@ export const syncChecked = () => {
 
     // Set checked when we visit a given page - but delay it a tad
     setTimeout(() => {
+      const defer = get(deferredRoomPath)
+
       checked.update($checked => {
         for (const path of getPaths($page.url.pathname)) {
+          if (defer && path === defer) continue
           $checked[path] = now()
         }
 
@@ -151,9 +157,17 @@ export const allNotifications = derived(
   },
 )
 
-export const notifications = derived([page, allNotifications], ([$page, $allNotifications]) => {
-  return new Set([...$allNotifications].filter(p => !$page.url.pathname.startsWith(p)))
-})
+export const notifications = derived(
+  [page, allNotifications, deferredRoomPath],
+  ([$page, $allNotifications, $deferredRoomPath]) =>
+    new Set(
+      [...$allNotifications].filter(p => {
+        if (!$page.url.pathname.startsWith(p)) return true
+        if ($deferredRoomPath && p === $deferredRoomPath) return true
+        return false
+      }),
+    ),
+)
 
 // Badges
 
