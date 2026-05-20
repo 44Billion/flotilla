@@ -144,6 +144,9 @@
 
   const useSpotlightLayout = $derived(primaryTile !== undefined)
   const useMultiGrid = $derived(!useSpotlightLayout && videoTiles.length > 2)
+  const multiGridClass = $derived(
+    layout === VideoCallLayout.Split ? "grid-cols-1" : "grid-cols-1 sm:grid-cols-2",
+  )
 
   $effect(() => {
     const k = $videoPrimaryTileKey
@@ -238,8 +241,7 @@
         {/if}
       </div>
     {:else if useMultiGrid}
-      <div
-        class="grid min-h-0 flex-1 grid-cols-1 content-start gap-2 overflow-y-auto sm:grid-cols-2">
+      <div class={cx("grid min-h-0 flex-1 content-start gap-2 overflow-y-auto", multiGridClass)}>
         {#each videoTiles as tile (tileKey(tile))}
           {@render videoTile(tile, "default")}
         {/each}
