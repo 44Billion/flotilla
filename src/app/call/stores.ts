@@ -6,10 +6,12 @@ export type VoiceSession = {
   url: string
   h: string
   room: LiveKitRoom
-  muted: boolean
   cameraOn: boolean
   screenShareOn: boolean
 }
+
+/** Mic mute state is separate so toggling it does not re-render video tiles. */
+export const voiceMicMuted = writable(true)
 
 export type Pubkey = string
 

@@ -13,7 +13,7 @@ import {
   type AudioCaptureOptions,
 } from "livekit-client"
 import {derived, get} from "svelte/store"
-import {map, removeUndefined, uniqBy} from "@welshman/lib"
+import {map, not, removeUndefined, uniqBy} from "@welshman/lib"
 import type {TrustedEvent} from "@welshman/util"
 import {makeHttpAuth, makeHttpAuthHeader, getTags} from "@welshman/util"
 import {signer} from "@welshman/app"
@@ -22,6 +22,7 @@ import {AbortError, whenAborted, whenTimeout} from "$lib/util"
 import {
   currentVoiceRoom,
   currentVoiceSession,
+  voiceMicMuted,
   participantFromLiveKitIdentity,
   participantKey,
   participantPubkeyMap,
@@ -173,6 +174,7 @@ const setUpMicrophone = async (
 
 const onRoomDisconnected = (reason?: DisconnectReason) => {
   videoPrimaryTileKey.set(undefined)
+  voiceMicMuted.set(true)
   currentVoiceSession.set(undefined)
   resetVideoCallLayout()
   if (reason !== undefined && reason !== DisconnectReason.CLIENT_INITIATED) {
@@ -295,11 +297,11 @@ export const joinVoiceRoom = async (
 
     const muted = await setUpMicrophone(startMuted, preferredMicId, liveKitRoom.localParticipant)
 
+    voiceMicMuted.set(muted)
     currentVoiceSession.set({
       url,
       h,
       room: liveKitRoom,
-      muted,
       cameraOn: false,
       screenShareOn: false,
     })
@@ -339,6 +341,7 @@ export const leaveVoiceRoom = async () => {
 
   voiceState.set(VoiceState.Disconnected)
   videoPrimaryTileKey.set(undefined)
+  voiceMicMuted.set(true)
   currentVoiceSession.set(undefined)
   resetVideoCallLayout()
   session.room.disconnect()
@@ -356,18 +359,17 @@ export const toggleMute = async () => {
   const session = get(currentVoiceSession)
   if (!session) return
 
-  const muted = !session.muted
-  if (muted) {
+  voiceMicMuted.update(not)
+  if (get(voiceMicMuted)) {
     // Disable and re-enable microphone to trigger permission prompt
     session.room.localParticipant.setMicrophoneEnabled(false)
-    currentVoiceSession.set({...session, muted})
     return
   }
 
   try {
     await session.room.localParticipant.setMicrophoneEnabled(true)
-    currentVoiceSession.set({...session, muted})
   } catch (e) {
+    voiceMicMuted.set(true)
     pushToast({theme: "error", message: "Could not access microphone"})
   }
 }

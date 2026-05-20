@@ -41,6 +41,7 @@
     VoiceState,
     currentVoiceSession,
     currentVoiceRoom,
+    voiceMicMuted,
     voiceState,
     isLocalSpeaking,
   } from "@app/call/stores"
@@ -183,18 +184,17 @@
         </Button>
       {:else if $voiceState === VoiceState.Connected && $currentVoiceSession}
         <Button
-          data-tip={$currentVoiceSession.muted ? "Unmute" : "Mute"}
+          data-tip={$voiceMicMuted ? "Unmute" : "Mute"}
           class={cx(
             mediaToggleClass,
             "overflow-visible",
-            !$currentVoiceSession.muted && $isLocalSpeaking && "text-primary",
-            $currentVoiceSession.muted &&
-              "text-error ring-1 ring-error/50 ring-offset-0 ring-offset-base-100",
+            !$voiceMicMuted && $isLocalSpeaking && "text-primary",
+            $voiceMicMuted && "text-error ring-1 ring-error/50 ring-offset-0 ring-offset-base-100",
           )}
           onclick={toggleMute}>
           <span class="relative inline-flex items-center justify-center overflow-visible">
             <Icon icon={Microphone} size={4} />
-            {#if $currentVoiceSession.muted}
+            {#if $voiceMicMuted}
               <span
                 class="pointer-events-none absolute inset-0 flex items-center justify-center overflow-visible"
                 aria-hidden="true">
