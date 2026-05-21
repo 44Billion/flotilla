@@ -9,11 +9,13 @@
   import {makeRoomPath} from "@app/util/routes"
   import {pushModal} from "@app/util/modal"
   import VoiceRoomJoinDialog from "@app/components/VoiceRoomJoinDialog.svelte"
+  import VoiceParticipantMediaBadges from "@app/components/VoiceParticipantMediaBadges.svelte"
   import {makeRoomId} from "@app/core/state"
   import {
     VoiceState,
     currentVoiceRoom,
     isParticipantSpeaking,
+    mediaStateByIdentity,
     participantKey,
     voiceState,
     type VoiceParticipant,
@@ -83,9 +85,17 @@
             )}>
             <ProfileCircle pubkey={p.pubkey} size={5} class="h-5 w-5" />
           </div>
-          <span class="ellipsize text-xs opacity-70">
+          <span class="ellipsize min-w-0 flex-1 text-xs opacity-70">
             {p.pubkey ? displayProfileByPubkey(p.pubkey) : "Unknown"}
           </span>
+          {#if isActive}
+            {@const media = $mediaStateByIdentity(p.identity)}
+            <VoiceParticipantMediaBadges
+              muted={media.muted}
+              cameraOn={media.cameraOn}
+              size={3}
+              class="shrink-0" />
+          {/if}
         </div>
       {/each}
     {/if}

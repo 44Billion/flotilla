@@ -6,14 +6,16 @@ import {
   DisconnectReason,
   LocalParticipant,
   LocalTrackPublication,
+  Participant,
   Room as LiveKitRoom,
   RoomEvent,
   Track,
+  TrackPublication,
   supportsAudioOutputSelection,
   type AudioCaptureOptions,
 } from "livekit-client"
 import {derived, get} from "svelte/store"
-import {map, not, removeUndefined, uniqBy} from "@welshman/lib"
+import {map, not, nthEq, reject, removeUndefined, uniqBy} from "@welshman/lib"
 import type {TrustedEvent} from "@welshman/util"
 import {makeHttpAuth, makeHttpAuthHeader, getTags} from "@welshman/util"
 import {signer} from "@welshman/app"
@@ -25,8 +27,7 @@ import {
   voiceMicMuted,
   participantFromLiveKitIdentity,
   participantKey,
-  participantPubkeyMap,
-  pubkeyFromLiveKitIdentity,
+  participantMediaState,
   speakingParticipants,
   VoiceState,
   type VoiceParticipant,
@@ -76,20 +77,23 @@ export const switchVoiceActiveDevice = async (
   }
 }
 
-const addParticipant = (identity: string) => {
-  participantPubkeyMap.update(m => {
+const deleteParticipant = (identity: string) => {
+  participantMediaState.update(m => new Map(reject(nthEq(0, identity), [...m])))
+}
+
+const syncParticipantMedia = (participant: Participant) => {
+  const state = {muted: !participant.isMicrophoneEnabled, cameraOn: participant.isCameraEnabled}
+  participantMediaState.update(m => {
+    const prev = m.get(participant.identity)
+    if (prev?.muted === state.muted && prev?.cameraOn === state.cameraOn) return m
     const next = new Map(m)
-    next.set(identity, pubkeyFromLiveKitIdentity(identity) ?? "")
+    next.set(participant.identity, state)
     return next
   })
 }
 
-const deleteParticipant = (identity: string) => {
-  participantPubkeyMap.update(m => {
-    const next = new Map(m)
-    next.delete(identity)
-    return next
-  })
+const onParticipantMediaChanged = (_publication: TrackPublication, participant: Participant) => {
+  syncParticipantMedia(participant)
 }
 
 const fetchLivekitToken = async (
@@ -125,15 +129,15 @@ export const deriveVoiceParticipants = (url: string, h: string) =>
   // We use the livekit identity list while in a call, and fall back to the list in kind 39004.
   derived(
     [
-      participantPubkeyMap,
+      participantMediaState,
       currentVoiceRoom,
       deriveLatestEventForUrl(url, [{kinds: [LIVEKIT_PARTICIPANTS], "#d": [h]}]),
     ],
-    ([$participantPubkeyMap, $currentVoiceRoom, $publishedParticipantList]) => {
-      const inCall = $participantPubkeyMap.size > 0 && $currentVoiceRoom?.id === makeRoomId(url, h)
+    ([$participantMediaState, $currentVoiceRoom, $publishedParticipantList]) => {
+      const inCall = $participantMediaState.size > 0 && $currentVoiceRoom?.id === makeRoomId(url, h)
 
       if (inCall) {
-        const participants = [...$participantPubkeyMap.keys()].map(participantFromLiveKitIdentity)
+        const participants = [...$participantMediaState.keys()].map(participantFromLiveKitIdentity)
         return uniqBy((p: VoiceParticipant) => participantKey(p), participants)
       } else {
         const latestEvent = $publishedParticipantList as TrustedEvent | undefined
@@ -186,7 +190,7 @@ const onRoomDisconnected = (reason?: DisconnectReason) => {
     pushToast({theme: "error", message})
   }
   speakingParticipants.set([])
-  participantPubkeyMap.set(new Map())
+  participantMediaState.set(new Map())
 }
 
 const onTrackSubscribed = (track: Track) => {
@@ -216,8 +220,8 @@ const playJoinSound = () => {
   audio.play().catch(() => {})
 }
 
-const onParticipantConnected = (participant: {identity: string}) => {
-  addParticipant(participant.identity)
+const onParticipantConnected = (participant: Participant) => {
+  syncParticipantMedia(participant)
   playJoinSound()
 }
 
@@ -275,6 +279,11 @@ export const joinVoiceRoom = async (
     liveKitRoom.on(RoomEvent.TrackUnsubscribed, onTrackUnsubscribed)
     liveKitRoom.on(RoomEvent.LocalTrackUnpublished, onLocalTrackUnpublished)
     liveKitRoom.on(RoomEvent.ActiveSpeakersChanged, onActiveSpeakersChanged)
+    liveKitRoom.on(RoomEvent.TrackMuted, onParticipantMediaChanged)
+    liveKitRoom.on(RoomEvent.TrackUnmuted, onParticipantMediaChanged)
+    liveKitRoom.on(RoomEvent.TrackPublished, onParticipantMediaChanged)
+    liveKitRoom.on(RoomEvent.TrackUnpublished, onParticipantMediaChanged)
+    liveKitRoom.on(RoomEvent.LocalTrackPublished, onParticipantMediaChanged)
 
     try {
       await Promise.race([
@@ -289,10 +298,10 @@ export const joinVoiceRoom = async (
       throw e
     }
 
-    participantPubkeyMap.set(new Map())
-    addParticipant(liveKitRoom.localParticipant.identity)
+    participantMediaState.set(new Map())
+    syncParticipantMedia(liveKitRoom.localParticipant)
     for (const p of liveKitRoom.remoteParticipants.values()) {
-      addParticipant(p.identity)
+      syncParticipantMedia(p)
     }
 
     const muted = await setUpMicrophone(startMuted, preferredMicId, liveKitRoom.localParticipant)
@@ -346,7 +355,7 @@ export const leaveVoiceRoom = async () => {
   resetVideoCallLayout()
   session.room.disconnect()
   speakingParticipants.set([])
-  participantPubkeyMap.set(new Map())
+  participantMediaState.set(new Map())
 }
 
 export const rejoinVoiceRoom = async (): Promise<void> => {

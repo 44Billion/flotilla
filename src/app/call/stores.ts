@@ -29,8 +29,6 @@ export const voiceState = writable<VoiceState>(VoiceState.Disconnected)
 
 export const currentVoiceRoom = writable<Room | undefined>(undefined)
 
-export const participantPubkeyMap = writable<Map<string, Pubkey>>(new Map())
-
 export const pubkeyFromLiveKitIdentity = (identity: string): string | undefined =>
   /^[a-f0-9]{64}$/.test(identity.slice(0, 64)) ? identity.slice(0, 64) : undefined
 
@@ -42,6 +40,21 @@ export const participantFromLiveKitIdentity = (identity: string): VoiceParticipa
 export const participantKey = (p: VoiceParticipant) => p.pubkey ?? p.identity
 
 export const speakingParticipants = writable<VoiceParticipant[]>([])
+
+export const participantMediaState = writable(
+  new Map<string, {muted: boolean; cameraOn: boolean}>(),
+)
+
+export const mediaStateByIdentity = derived(
+  [participantMediaState, currentVoiceSession, voiceMicMuted],
+  ([$media, $session, $micMuted]) =>
+    (identity: string) => {
+      if ($session?.room.localParticipant.identity === identity) {
+        return {muted: $micMuted, cameraOn: $session.cameraOn}
+      }
+      return $media.get(identity) ?? {muted: true, cameraOn: false}
+    },
+)
 
 export const isParticipantSpeaking = derived(
   speakingParticipants,

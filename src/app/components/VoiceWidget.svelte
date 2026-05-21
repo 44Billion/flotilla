@@ -6,7 +6,7 @@
   import cx from "classnames"
   import {displayRelayUrl} from "@welshman/util"
   import Microphone from "@assets/icons/microphone.svg?dataurl"
-  import Videocamera from "@assets/icons/videocamera.svg?dataurl"
+  import VideocameraOff from "@assets/icons/videocamera-off.svg?dataurl"
   import VideocameraRecord from "@assets/icons/videocamera-record.svg?dataurl"
   import Monitor from "@assets/icons/monitor.svg?dataurl"
   import PhoneRounded from "@assets/icons/phone-rounded.svg?dataurl"
@@ -43,7 +43,6 @@
     currentVoiceRoom,
     voiceMicMuted,
     voiceState,
-    isLocalSpeaking,
   } from "@app/call/stores"
   import {cancelJoinVoiceRoom, leaveVoiceRoom, toggleMute} from "@app/call/voice"
 
@@ -188,7 +187,6 @@
           class={cx(
             mediaToggleClass,
             "overflow-visible",
-            !$voiceMicMuted && $isLocalSpeaking && "text-primary",
             $voiceMicMuted && "text-error ring-1 ring-error/50 ring-offset-0 ring-offset-base-100",
           )}
           onclick={toggleMute}>
@@ -207,9 +205,17 @@
         </Button>
         <Button
           data-tip={$currentVoiceSession.cameraOn ? "Turn off camera" : "Turn on camera"}
-          class={cx(mediaToggleClass, $currentVoiceSession.cameraOn && "text-primary")}
+          class={cx(
+            mediaToggleClass,
+            "overflow-visible",
+            $currentVoiceSession.cameraOn && "text-primary",
+            !$currentVoiceSession.cameraOn &&
+              "text-error ring-1 ring-error/50 ring-offset-0 ring-offset-base-100",
+          )}
           onclick={toggleCamera}>
-          <Icon icon={$currentVoiceSession.cameraOn ? VideocameraRecord : Videocamera} size={4} />
+          <Icon
+            icon={$currentVoiceSession.cameraOn ? VideocameraRecord : VideocameraOff}
+            size={4} />
         </Button>
         {#if !Capacitor.isNativePlatform()}
           <Button

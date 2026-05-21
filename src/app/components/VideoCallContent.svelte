@@ -8,6 +8,7 @@
   import ProfileCircle from "@app/components/ProfileCircle.svelte"
   import VideoCallTile from "@app/components/VideoCallTile.svelte"
   import VoiceWidget from "@app/components/VoiceWidget.svelte"
+  import VoiceParticipantMediaBadges from "@app/components/VoiceParticipantMediaBadges.svelte"
   import {get} from "svelte/store"
   import {
     VideoCallLayout,
@@ -18,7 +19,12 @@
     ViewportSize,
     videoPrimaryTileKey,
   } from "@app/call/video"
-  import {currentVoiceSession, currentVoiceRoom, pubkeyFromLiveKitIdentity} from "@app/call/stores"
+  import {
+    currentVoiceSession,
+    currentVoiceRoom,
+    mediaStateByIdentity,
+    pubkeyFromLiveKitIdentity,
+  } from "@app/call/stores"
 
   type Props = {
     layout: VideoCallLayout
@@ -121,6 +127,25 @@
           source: Track.Source.ScreenShare,
         })
       }
+      if (!videoTiles.some(t => t.identity === rp.identity)) {
+        videoTiles.push({
+          identity: rp.identity,
+          isLocal: false,
+          trackSid: `avatar-${rp.identity}`,
+          track: undefined,
+          source: Track.Source.Camera,
+        })
+      }
+    }
+
+    if (!videoTiles.some(t => t.identity === user.identity)) {
+      videoTiles.push({
+        identity: user.identity,
+        isLocal: true,
+        trackSid: "local-avatar",
+        track: undefined,
+        source: Track.Source.Camera,
+      })
     }
 
     return videoTiles
@@ -187,6 +212,7 @@
 </script>
 
 {#snippet videoTile(tile: VideoTileData, layout: TileLayout)}
+  {@const media = $mediaStateByIdentity(tile.identity)}
   <div
     class={cx(
       "relative isolate overflow-hidden rounded-box shadow-sm",
@@ -204,6 +230,15 @@
     {:else}
       <div class="absolute inset-0 flex items-center justify-center">
         <ProfileCircle pubkey={pubkeyFromLiveKitIdentity(tile.identity)} {url} size={14} />
+      </div>
+    {/if}
+    {#if tile.track}
+      <div class="pointer-events-none absolute left-1 top-1 z-10">
+        <VoiceParticipantMediaBadges
+          muted={media.muted}
+          cameraOn={media.cameraOn}
+          showCamera={tile.source === Track.Source.Camera}
+          size={3} />
       </div>
     {/if}
     <span
@@ -256,8 +291,10 @@
   {:else}
     <div
       class="flex min-h-[12rem] flex-1 flex-col items-center justify-center gap-2 rounded-box bg-base-200/50 p-4 text-center text-sm opacity-80">
-      <p>No camera or screen share yet.</p>
-      <p class="text-xs">Use the camera or screen share control to share video.</p>
+      <p>No one is sharing video yet.</p>
+      <p class="text-xs">
+        Participants appear here when they turn on their camera or share their screen.
+      </p>
     </div>
   {/if}
 {/snippet}
