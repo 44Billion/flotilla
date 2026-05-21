@@ -251,8 +251,8 @@
         data-tip={pinned ? "Exit spotlight" : "Spotlight"}
         aria-pressed={pinned}
         class={cx(
-          "absolute right-1 top-1 z-20 btn btn-xs btn-square btn-ghost",
-          pinned ? "btn-active bg-primary/25 text-primary" : "bg-base-100/70",
+          "absolute right-1 top-1 z-20 btn btn-xs btn-square",
+          pinned ? "btn-primary" : "btn-ghost bg-base-100",
         )}
         onclick={spotlightHandlerFor(tileKey(tile))}>
         <Icon icon={Pin} size={3} />
