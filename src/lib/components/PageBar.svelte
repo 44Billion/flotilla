@@ -9,8 +9,8 @@
   const {children, ...props}: Props = $props()
 </script>
 
-<div data-component="PageBar" class="relative z-nav p-2 -mb-4 {props.class}">
-  <div class="rounded-xl bg-base-100 p-4 shadow-md h-20 md:h-12 flex flex-col justify-center">
-    {@render children?.()}
-  </div>
+<div
+  data-component="PageBar"
+  class="relative bg-base-100 p-4 shadow-md h-20 md:h-12 flex flex-col justify-center z-nav {props.class}">
+  {@render children?.()}
 </div>
