@@ -430,8 +430,10 @@
 </script>
 
 <SpaceBar>
-  {#snippet title()}
+  {#snippet leading()}
     <RoomImage {url} {h} />
+  {/snippet}
+  {#snippet title()}
     <RoomName {url} {h} />
   {/snippet}
   {#snippet action()}

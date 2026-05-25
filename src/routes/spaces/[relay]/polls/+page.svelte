@@ -62,8 +62,10 @@
 </script>
 
 <SpaceBar>
-  {#snippet title()}
+  {#snippet leading()}
     <Icon icon={PollIcon} />
+  {/snippet}
+  {#snippet title()}
     <strong>Polls</strong>
   {/snippet}
   {#snippet action()}

@@ -63,8 +63,10 @@
 </script>
 
 <SpaceBar>
-  {#snippet title()}
+  {#snippet leading()}
     <Icon icon={NotesMinimalistic} />
+  {/snippet}
+  {#snippet title()}
     <strong>Threads</strong>
   {/snippet}
   {#snippet action()}

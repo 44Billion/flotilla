@@ -307,8 +307,10 @@
 </script>
 
 <SpaceBar>
-  {#snippet title()}
+  {#snippet leading()}
     <Icon icon={ChatRound} />
+  {/snippet}
+  {#snippet title()}
     <strong>Chat</strong>
   {/snippet}
   {#snippet action()}

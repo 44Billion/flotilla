@@ -211,8 +211,10 @@
 </script>
 
 <SpaceBar>
-  {#snippet title()}
+  {#snippet leading()}
     <Icon icon={History} />
+  {/snippet}
+  {#snippet title()}
     <strong>Recent Activity</strong>
   {/snippet}
   {#snippet action()}

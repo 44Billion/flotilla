@@ -111,8 +111,10 @@
 </script>
 
 <SpaceBar>
-  {#snippet title()}
+  {#snippet leading()}
     <Icon icon={CalendarMinimalistic} />
+  {/snippet}
+  {#snippet title()}
     <strong>Calendar</strong>
   {/snippet}
   {#snippet action()}

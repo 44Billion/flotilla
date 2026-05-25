@@ -7,17 +7,19 @@
   import Icon from "@lib/components/Icon.svelte"
   import Button from "@lib/components/Button.svelte"
   import PageBar from "@lib/components/PageBar.svelte"
+  import RelayIcon from "@app/components/RelayIcon.svelte"
   import {decodeRelay} from "@app/core/state"
   import {makeSpacePath} from "@app/util/routes"
 
   interface Props {
     back?: () => unknown
+    leading?: Snippet
     title?: Snippet
     action?: Snippet
     [key: string]: any
   }
 
-  const {back = () => goto(makeSpacePath(url)), title, action, ...props}: Props = $props()
+  const {back = () => goto(makeSpacePath(url)), leading, title, action, ...props}: Props = $props()
 
   const url = decodeRelay($page.params.relay!)
 </script>
@@ -30,6 +32,10 @@
     <div class="ellipsize whitespace-nowrap flex grow items-center justify-between gap-4">
       <div class="flex flex-col">
         <div class="flex gap-2 items-center">
+          <RelayIcon {url} size={5} class="rounded-full md:hidden" />
+          <div class="hidden md:contents">
+            {@render leading?.()}
+          </div>
           {@render title?.()}
         </div>
         <div class="text-xs text-primary md:hidden">

@@ -62,8 +62,10 @@
 </script>
 
 <SpaceBar>
-  {#snippet title()}
+  {#snippet leading()}
     <Icon icon={StarFallMinimalistic} />
+  {/snippet}
+  {#snippet title()}
     <strong>Goals</strong>
   {/snippet}
   {#snippet action()}

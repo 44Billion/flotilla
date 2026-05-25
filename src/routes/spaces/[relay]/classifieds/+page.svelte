@@ -63,8 +63,10 @@
 </script>
 
 <SpaceBar>
-  {#snippet title()}
+  {#snippet leading()}
     <Icon icon={CaseMinimalistic} />
+  {/snippet}
+  {#snippet title()}
     <strong>Classifieds</strong>
   {/snippet}
   {#snippet action()}
