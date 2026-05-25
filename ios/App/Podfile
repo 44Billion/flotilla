@@ -21,7 +21,7 @@ def capacitor_pods
   pod 'CapacitorPushNotifications', :path => '../../node_modules/.pnpm/@capacitor+push-notifications@8.0.0_@capacitor+core@8.0.1/node_modules/@capacitor/push-notifications'
   pod 'CapacitorShare', :path => '../../node_modules/.pnpm/@capacitor+share@8.0.1_@capacitor+core@8.0.1/node_modules/@capacitor/share'
   pod 'CapawesomeCapacitorBadge', :path => '../../node_modules/.pnpm/@capawesome+capacitor-badge@8.0.0_@capacitor+core@8.0.1/node_modules/@capawesome/capacitor-badge'
-  pod 'NostrSignerCapacitorPlugin', :path => '../../node_modules/.pnpm/nostr-signer-capacitor-plugin@https+++codeload.github.com+coracle-social+nostr-signer-c_2704ecccfd05fcfb1ad8852744422b7c/node_modules/nostr-signer-capacitor-plugin'
+  pod 'NostrSignerCapacitorPlugin', :path => '../../node_modules/.pnpm/nostr-signer-capacitor-plugin@https+++codeload.github.com+coracle-social+nostr-signer-c_a3c0fb15d5bfa83f24d0070ca2583fc9/node_modules/nostr-signer-capacitor-plugin'
 end
 
 target 'Flotilla Chat' do

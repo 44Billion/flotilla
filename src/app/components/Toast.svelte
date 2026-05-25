@@ -71,6 +71,7 @@
 
 {#if $toast}
   {@const theme = $toast.theme || "info"}
+  <!-- svelte-ignore a11y_no_static_element_interactions -->
   <div
     bind:this={containerEl}
     transition:fly={{y: -20}}

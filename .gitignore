@@ -31,10 +31,6 @@ build-server/
 .svelte-kit/
 .next/
 
-# Rust/Tauri
-*target/
-src-tauri/binaries/
-
 # iOS
 ios/App/App/public
 ios/DerivedData
