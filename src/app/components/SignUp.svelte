@@ -11,7 +11,6 @@
   import Modal from "@lib/components/Modal.svelte"
   import ModalBody from "@lib/components/ModalBody.svelte"
   import LogIn from "@app/components/LogIn.svelte"
-  import InfoNostr from "@app/components/InfoNostr.svelte"
   import SignUpKey from "@app/components/SignUpKey.svelte"
   import SignUpEmail from "@app/components/SignUpEmail.svelte"
   import SignUpProfile from "@app/components/SignUpProfile.svelte"
@@ -91,11 +90,10 @@
 
 <Modal>
   <ModalBody>
-    <h1 class="heading">Sign up with Nostr</h1>
+    <h1 class="heading">Join {PLATFORM_NAME}</h1>
     <p class="m-auto max-w-sm text-center">
-      {PLATFORM_NAME} is built using the
-      <Button class="link" onclick={() => pushModal(InfoNostr)}>nostr protocol</Button>, which gives
-      users control over their digital identity using <strong>cryptographic key pairs</strong>.
+      Censorship resistant digital spaces for communities. Sign up to join rooms, meet people, and
+      own your identity.
     </p>
     {#if hasPomade}
       <Button onclick={flows.email.start} class="btn btn-primary">
