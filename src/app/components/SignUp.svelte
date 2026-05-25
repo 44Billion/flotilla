@@ -92,8 +92,7 @@
   <ModalBody>
     <h1 class="heading">Join {PLATFORM_NAME}</h1>
     <p class="m-auto max-w-sm text-center">
-      Censorship resistant digital spaces for communities. Sign up to join rooms, meet people, and
-      own your identity.
+      Censorship resistant digital spaces for communities. Meet new people, own your identity.
     </p>
     {#if hasPomade}
       <Button onclick={flows.email.start} class="btn btn-primary">
