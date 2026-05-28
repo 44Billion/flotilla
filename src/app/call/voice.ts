@@ -20,7 +20,7 @@ import type {TrustedEvent} from "@welshman/util"
 import {makeHttpAuth, makeHttpAuthHeader, getTags} from "@welshman/util"
 import {signer} from "@welshman/app"
 import {getLivekitEndpoint} from "$lib/livekit"
-import {AbortError, whenAborted, whenTimeout} from "$lib/util"
+import {AbortError, TimeoutError, whenAborted, whenTimeout} from "$lib/util"
 import {
   currentVoiceRoom,
   currentVoiceSession,
@@ -157,6 +157,8 @@ const setUpMicrophone = async (
   startMuted: boolean,
   preferredMicId: string | undefined,
   participant: LocalParticipant,
+  signal?: AbortSignal,
+  settleSignal?: AbortSignal,
 ): Promise<boolean> => {
   if (startMuted) {
     return true
@@ -168,15 +170,34 @@ const setUpMicrophone = async (
     capture = {deviceId: preferredMicId}
   }
   try {
-    await participant.setMicrophoneEnabled(true, capture)
+    await Promise.race([
+      participant.setMicrophoneEnabled(true, capture),
+      whenTimeout(15_000, {message: "Microphone access timed out.", signal: settleSignal}),
+      whenAborted(signal),
+    ])
     muted = false
   } catch (e) {
-    pushToast({theme: "error", message: "Could not access microphone"})
+    // Timeout or microphone rejection: join muted, the call is still usable. A
+    // genuine abort is surfaced to the caller so it can tear down the room.
+    if (e instanceof AbortError) throw e
+    if (!(e instanceof TimeoutError)) {
+      pushToast({theme: "error", message: "Could not access microphone"})
+    }
   }
   return muted
 }
 
-const onRoomDisconnected = (reason?: DisconnectReason) => {
+// The room whose events are allowed to mutate shared state. Abandoned rooms
+// (after switching calls or an engine reconnect give-up) must not clobber it.
+let activeRoom: LiveKitRoom | undefined
+
+const makeOnRoomDisconnected = (room: LiveKitRoom) => (reason?: DisconnectReason) => {
+  // Ignore disconnects from rooms that are no longer the active session.
+  if (room !== activeRoom) return
+
+  activeRoom = undefined
+  room.removeAllListeners()
+
   videoPrimaryTileKey.set(undefined)
   voiceMicMuted.set(true)
   currentVoiceSession.set(undefined)
@@ -254,9 +275,6 @@ export const joinVoiceRoom = async (
 ): Promise<void> => {
   cancelJoinVoiceRoom()
 
-  const session = get(currentVoiceSession)
-  if (session) await leaveVoiceRoom()
-
   currentVoiceRoom.set(get(deriveRoom(url, h)))
   voiceState.set(VoiceState.Joining)
 
@@ -265,14 +283,43 @@ export const joinVoiceRoom = async (
   const signal = controller.signal
   const isActive = () => joinAbortController === controller
 
+  // Self-cleaning controller: aborted in finally so whenTimeout/whenAborted
+  // helpers clear their timers/listeners once the races below have settled.
+  const settle = new AbortController()
+
   try {
-    const {server_url, participant_token} = await fetchLivekitToken(url, h, signal)
+    // Tear down any existing session before joining. Bound it so a slow leave
+    // (camera/screenshare renegotiation can take ~15s) cannot block this join.
+    if (get(currentVoiceSession)) {
+      await Promise.race([
+        leaveVoiceRoom(),
+        whenTimeout(15_000, {message: "Leaving previous call timed out.", signal: settle.signal}),
+        whenAborted(signal),
+      ]).catch(e => {
+        if (e instanceof AbortError) throw e
+      })
+
+      // leaveVoiceRoom flips voiceState to Disconnected; re-assert Joining.
+      voiceState.set(VoiceState.Joining)
+    }
+
+    if (signal.aborted) throw new AbortError()
+
+    const {server_url, participant_token} = await Promise.race([
+      fetchLivekitToken(url, h, signal),
+      whenTimeout(15_000, {
+        message: "Connection timed out. Please check your network and try again.",
+        signal: settle.signal,
+      }),
+      whenAborted(signal),
+    ])
 
     if (signal.aborted) throw new AbortError()
 
     const liveKitRoom = new LiveKitRoom({adaptiveStream: true, dynacast: true})
+    activeRoom = liveKitRoom
 
-    liveKitRoom.on(RoomEvent.Disconnected, onRoomDisconnected)
+    liveKitRoom.on(RoomEvent.Disconnected, makeOnRoomDisconnected(liveKitRoom))
     liveKitRoom.on(RoomEvent.ParticipantConnected, onParticipantConnected)
     liveKitRoom.on(RoomEvent.ParticipantDisconnected, onParticipantDisconnected)
     liveKitRoom.on(RoomEvent.TrackSubscribed, onTrackSubscribed)
@@ -290,10 +337,13 @@ export const joinVoiceRoom = async (
         liveKitRoom.connect(server_url, participant_token, {maxRetries: 0}),
         whenTimeout(15_000, {
           message: "Connection timed out. Please check your network and try again.",
+          signal: settle.signal,
         }),
         whenAborted(signal),
       ])
     } catch (e) {
+      if (activeRoom === liveKitRoom) activeRoom = undefined
+      liveKitRoom.removeAllListeners()
       liveKitRoom.disconnect()
       throw e
     }
@@ -304,7 +354,24 @@ export const joinVoiceRoom = async (
       syncParticipantMedia(p)
     }
 
-    const muted = await setUpMicrophone(startMuted, preferredMicId, liveKitRoom.localParticipant)
+    // Bounded against timeout/abort inside setUpMicrophone: a stuck permission
+    // prompt resolves to muted rather than hanging the join forever.
+    const muted = await setUpMicrophone(
+      startMuted,
+      preferredMicId,
+      liveKitRoom.localParticipant,
+      signal,
+      settle.signal,
+    )
+
+    // A cancel during the mic step must tear down the connected room rather
+    // than leaking it.
+    if (signal.aborted) {
+      if (activeRoom === liveKitRoom) activeRoom = undefined
+      liveKitRoom.removeAllListeners()
+      liveKitRoom.disconnect()
+      throw new AbortError()
+    }
 
     voiceMicMuted.set(muted)
     currentVoiceSession.set({
@@ -321,6 +388,7 @@ export const joinVoiceRoom = async (
     if (e instanceof AbortError) return
     throw e
   } finally {
+    settle.abort()
     if (isActive()) joinAbortController = undefined
   }
 }
@@ -348,14 +416,23 @@ export const leaveVoiceRoom = async () => {
     }
   }
 
-  voiceState.set(VoiceState.Disconnected)
-  videoPrimaryTileKey.set(undefined)
-  voiceMicMuted.set(true)
-  currentVoiceSession.set(undefined)
-  resetVideoCallLayout()
+  // Always tear down this room's connection and listeners.
+  if (activeRoom === session.room) activeRoom = undefined
+  session.room.removeAllListeners()
   session.room.disconnect()
-  speakingParticipants.set([])
-  participantMediaState.set(new Map())
+
+  // Only reset shared UI state if this session is still current. A slow leave
+  // that was superseded by a new join (bounded by a timeout in joinVoiceRoom)
+  // must not clobber the freshly-joined session when it finally completes.
+  if (get(currentVoiceSession) === session) {
+    voiceState.set(VoiceState.Disconnected)
+    videoPrimaryTileKey.set(undefined)
+    voiceMicMuted.set(true)
+    currentVoiceSession.set(undefined)
+    resetVideoCallLayout()
+    speakingParticipants.set([])
+    participantMediaState.set(new Map())
+  }
 }
 
 export const rejoinVoiceRoom = async (): Promise<void> => {

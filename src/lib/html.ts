@@ -44,7 +44,10 @@ export const createScroller = ({
     : element.closest(".scroll-container")
 
   const check = async () => {
-    if (container) {
+    const isHidden = (el: Element) =>
+      (el as HTMLElement).offsetParent === null || el.clientHeight === 0
+
+    if (container && !isHidden(container)) {
       // While we have empty space, fill it
       const {scrollY, innerHeight} = window
       const {scrollHeight, scrollTop, clientHeight} = container

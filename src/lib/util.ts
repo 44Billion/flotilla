@@ -44,11 +44,15 @@ export const whenAborted = (signal?: AbortSignal) => {
   })
 }
 
-/** Returns a promise that rejects with TimeoutError after ms. Use with Promise.race. */
-export const whenTimeout = (ms: number, opts: {message?: string} = {}) => {
-  return new Promise<never>((_, reject) =>
-    setTimeout(() => reject(new TimeoutError(opts.message)), ms),
-  )
+/**
+ * Returns a promise that rejects with TimeoutError after ms. Use with Promise.race.
+ * Pass an optional signal to clear the timer when that signal aborts (self-cleaning).
+ */
+export const whenTimeout = (ms: number, opts: {message?: string; signal?: AbortSignal} = {}) => {
+  return new Promise<never>((_, reject) => {
+    const timeout = setTimeout(() => reject(new TimeoutError(opts.message)), ms)
+    opts.signal?.addEventListener("abort", () => clearTimeout(timeout), {once: true})
+  })
 }
 
 export const buildUrl = (base: string | URL, ...pathname: string[]) => {
