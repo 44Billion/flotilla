@@ -22,6 +22,7 @@
     "@sveltejs/vite-plugin-svelte": "^5.1.1",
     "@tailwindcss/postcss": "^4.2.2",
     "@types/eslint": "^9.6.1",
+    "@types/node": "^25.9.1",
     "autoprefixer": "^10.4.23",
     "classnames": "^2.5.1",
     "eslint": "^9.39.2",
@@ -68,16 +69,16 @@
     "@types/throttle-debounce": "^5.0.2",
     "@vite-pwa/assets-generator": "^1.0.2",
     "@vite-pwa/sveltekit": "^1.1.0",
-    "@welshman/app": "^0.8.15",
-    "@welshman/content": "^0.8.15",
-    "@welshman/editor": "^0.8.15",
-    "@welshman/feeds": "^0.8.15",
-    "@welshman/lib": "^0.8.15",
-    "@welshman/net": "^0.8.15",
-    "@welshman/router": "^0.8.15",
-    "@welshman/signer": "^0.8.15",
-    "@welshman/store": "^0.8.15",
-    "@welshman/util": "^0.8.15",
+    "@welshman/app": "^0.8.16",
+    "@welshman/content": "^0.8.16",
+    "@welshman/editor": "^0.8.16",
+    "@welshman/feeds": "^0.8.16",
+    "@welshman/lib": "^0.8.16",
+    "@welshman/net": "^0.8.16",
+    "@welshman/router": "^0.8.16",
+    "@welshman/signer": "^0.8.16",
+    "@welshman/store": "^0.8.16",
+    "@welshman/util": "^0.8.16",
     "cheerio": "^1.2.0",
     "compressorjs-next": "^1.1.2",
     "daisyui": "^5.5.19",
@@ -98,17 +99,5 @@
     "throttle-debounce": "^5.0.2",
     "tippy.js": "^6.3.7"
   },
-  "pnpm": {
-    "ignoredBuiltDependencies": [
-      "esbuild"
-    ],
-    "onlyBuiltDependencies": [
-      "sharp",
-      "nostr-signer-capacitor-plugin"
-    ],
-    "overrides": {
-      "sharp": "0.35.0-rc.0"
-    }
-  },
-  "packageManager": "pnpm@10.33.0+sha512.10568bb4a6afb58c9eb3630da90cc9516417abebd3fabbe6739f0ae795728da1491e9db5a544c76ad8eb7570f5c4bb3d6c637b2cb41bfdcdb47fa823c8649319"
+  "packageManager": "pnpm@11.4.0"
 }
