@@ -4,15 +4,16 @@ allowBuilds:
   esbuild: false
   sharp: true
 minimumReleaseAgeExclude:
-  - '@welshman/app@0.8.16'
-  - '@welshman/content@0.8.16'
-  - '@welshman/editor@0.8.16'
-  - '@welshman/feeds@0.8.16'
-  - '@welshman/lib@0.8.16'
-  - '@welshman/net@0.8.16'
-  - '@welshman/router@0.8.16'
-  - '@welshman/signer@0.8.16'
-  - '@welshman/store@0.8.16'
-  - '@welshman/util@0.8.16'
+  - '@pomade/core'
+  - '@welshman/app'
+  - '@welshman/content'
+  - '@welshman/editor'
+  - '@welshman/feeds'
+  - '@welshman/lib'
+  - '@welshman/net'
+  - '@welshman/router'
+  - '@welshman/signer'
+  - '@welshman/store'
+  - '@welshman/util'
 overrides:
   sharp: 0.35.0-rc.0
