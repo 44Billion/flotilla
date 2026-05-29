@@ -5,7 +5,7 @@ import {derived, readable, writable} from "svelte/store"
 import * as nip19 from "nostr-tools/nip19"
 import {
   on,
-  gt,
+  gte,
   max,
   spec,
   call,
@@ -620,7 +620,7 @@ export const roomsByUrl = derived(roomMetaEventsByIdByUrl, roomMetaEventsByIdByU
     for (const event of metaEvents) {
       const meta = tryCatch(() => readRoomMeta(event))
 
-      if (!meta || gt(deletedByH.get(meta.h), meta.event.created_at)) {
+      if (!meta || gte(deletedByH.get(meta.h), meta.event.created_at)) {
         continue
       }
 
@@ -651,7 +651,10 @@ export const loadRoom = call(() => {
 
     await load({
       relays: [url],
-      filters: [{kinds: [ROOM_META], "#d": [h]}],
+      filters: [
+        {kinds: [ROOM_META], "#d": [h]},
+        {kinds: [ROOM_DELETE], "#h": [h]},
+      ],
     })
   }
 

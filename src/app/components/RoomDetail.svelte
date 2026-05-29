@@ -122,6 +122,7 @@
           repository.removeEvent(thunk.event.id)
           pushToast({theme: "error", message})
         } else {
+          await removeRoomMembership(url, h)
           goto(makeSpacePath(url))
         }
       },
