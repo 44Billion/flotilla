@@ -418,7 +418,7 @@ export const device = withGetter(writable(randomId()))
 export const notificationSettings = withGetter(
   writable({
     push: false,
-    sound: false,
+    sound: true,
     badge: false,
     spaces: true,
     mentions: true,

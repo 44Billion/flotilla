@@ -37,6 +37,7 @@
   import {theme} from "@app/util/theme"
   import {toast, pushToast} from "@app/util/toast"
   import * as notifications from "@app/util/notifications"
+  import {Push} from "@app/util/push"
   import {onPushNotificationAction} from "@app/util/push/adapters/common"
   import * as storage from "@app/util/storage"
   import {syncKeyboard} from "@app/util/keyboard"
@@ -175,7 +176,7 @@
     unsubscribers.push(notifications.syncChecked())
 
     // Initialize background notifications
-    unsubscribers.push(notifications.Push.sync())
+    unsubscribers.push(Push.sync())
 
     // Listen for signer errors, report to user via toast
     unsubscribers.push(

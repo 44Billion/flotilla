@@ -23,8 +23,8 @@
   import SpaceJoinSettings from "@app/components/SpaceJoinSettings.svelte"
   import {pushToast} from "@app/util/toast"
   import {makeSpacePath} from "@app/util/routes"
-  import {Push} from "@app/util/notifications"
   import {relaysMostlyRestricted, notificationSettings, parseInviteLink} from "@app/core/state"
+  import {Push} from "@app/util/push"
   import {
     attemptRelayAccess,
     addSpaceMembership,

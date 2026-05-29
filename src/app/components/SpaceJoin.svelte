@@ -24,7 +24,7 @@
   import {pushModal} from "@app/util/modal"
   import {pushToast} from "@app/util/toast"
   import {makeSpacePath} from "@app/util/routes"
-  import {Push} from "@app/util/notifications"
+  import {Push} from "@app/util/push"
 
   type Props = {
     url: string
