@@ -22,7 +22,7 @@
   $effect(() => {
     if (!containerEl) return
     containerEl.addEventListener("touchmove", onTouchMove, {passive: false})
-    return () => containerEl!.removeEventListener("touchmove", onTouchMove)
+    return () => containerEl?.removeEventListener("touchmove", onTouchMove)
   })
 
   const onActionClick = () => {
