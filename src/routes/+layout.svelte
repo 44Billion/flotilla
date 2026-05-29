@@ -175,6 +175,9 @@
     // Subscribe to page history to update checked state
     unsubscribers.push(notifications.syncChecked())
 
+    // Sync checked state across devices
+    unsubscribers.push(notifications.syncCheckedRemote())
+
     // Initialize background notifications
     unsubscribers.push(Push.sync())
 

@@ -1,11 +1,17 @@
 import {derived, get, writable} from "svelte/store"
 import {Badge} from "@capawesome/capacitor-badge"
 import {synced, throttled, withGetter} from "@welshman/store"
-import {pubkey, tracker, repository, relaysByUrl} from "@welshman/app"
-import {assoc, prop, first, identity, groupBy, now} from "@welshman/lib"
-import type {TrustedEvent} from "@welshman/util"
+import {pubkey, signer, tracker, repository, relaysByUrl} from "@welshman/app"
+import {assoc, prop, first, identity, groupBy, now, throttle, parseJson, gt} from "@welshman/lib"
+import type {SignedEvent, TrustedEvent} from "@welshman/util"
 import {deriveEventsByIdByUrl} from "@welshman/store"
-import {sortEventsDesc, getTagValue, MESSAGE} from "@welshman/util"
+import {
+  sortEventsDesc,
+  getTagValue,
+  MESSAGE,
+  makeHttpAuth,
+  makeHttpAuthHeader,
+} from "@welshman/util"
 import {makeSpacePath, makeRoomPath, makeSpaceChatPath, makeChatPath} from "@app/util/routes"
 import {
   CONTENT_KINDS,
@@ -15,6 +21,8 @@ import {
   getSpaceUrlsFromGroupList,
   makeCommentFilter,
   hasNip29,
+  dufflepud,
+  DUFFLEPUD_URL,
 } from "@app/core/state"
 import {kv} from "@app/core/storage"
 import {page} from "$app/stores"
@@ -73,6 +81,100 @@ export const syncChecked = () => {
 
     prev = $page.url.pathname
   })
+}
+
+const CHECKED_KV_KEY = "checked"
+const NIP98_MAX_AGE = 23 * 60 * 60
+
+let nip98Auth: SignedEvent | undefined
+
+const nip98Header = async () => {
+  const $signer = signer.get()
+
+  if (!$signer) {
+    return undefined
+  }
+
+  if (!nip98Auth || now() - nip98Auth.created_at > NIP98_MAX_AGE) {
+    nip98Auth = await $signer.sign(await makeHttpAuth(DUFFLEPUD_URL, "GET"))
+  }
+
+  return makeHttpAuthHeader(nip98Auth)
+}
+
+const pullCheckedRemote = async () => {
+  const authorization = await nip98Header()
+
+  if (!authorization) {
+    return
+  }
+
+  const res = await fetch(dufflepud(`kv/${CHECKED_KV_KEY}`), {headers: {authorization}})
+
+  if (!res.ok) {
+    return
+  }
+
+  const remote = parseJson<Record<string, number>>(await res.text())
+
+  if (!remote) {
+    return
+  }
+
+  checked.update($checked => {
+    for (const [path, ts] of Object.entries(remote)) {
+      if (gt(ts, $checked[path])) {
+        $checked[path] = ts
+      }
+    }
+
+    return $checked
+  })
+}
+
+const pushCheckedRemote = throttle(3000, async () => {
+  const authorization = await nip98Header()
+
+  if (!authorization) {
+    return
+  }
+
+  try {
+    await fetch(dufflepud(`kv/${CHECKED_KV_KEY}`), {
+      method: "POST",
+      headers: {authorization},
+      body: JSON.stringify(checked.get()),
+    })
+  } catch {
+    // pass
+  }
+})
+
+export const syncCheckedRemote = () => {
+  let ready = false
+
+  const unsubscribePubkey = pubkey.subscribe($pubkey => {
+    ready = false
+    nip98Auth = undefined
+
+    if ($pubkey) {
+      pullCheckedRemote().then(() => {
+        ready = true
+        pushCheckedRemote()
+      })
+    }
+  })
+
+  const unsubscribeChecked = checked.subscribe(() => {
+    if (ready && pubkey.get()) {
+      pushCheckedRemote()
+    }
+  })
+
+  return () => {
+    unsubscribePubkey()
+    unsubscribeChecked()
+  }
 }
 
 // Derived notifications state
