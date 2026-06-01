@@ -23,6 +23,7 @@
   import * as app from "@welshman/app"
   import {isMobile} from "@lib/html"
   import * as implicit from "@lib/implicit"
+  import {maybeInstallRelayMocks} from "@lib/test/relayMocks"
   import AppContainer from "@app/components/AppContainer.svelte"
   import ModalContainer from "@app/components/ModalContainer.svelte"
   import {setupHistory} from "@app/util/history"
@@ -45,6 +46,12 @@
   import NewNotificationSound from "@src/app/components/NewNotificationSound.svelte"
 
   const {children} = $props()
+
+  // Test-only: when Playwright has injected window.__RELAY_MOCKS__, serve relays from in-memory
+  // fixtures instead of the network. No-op for real users; stripped from production builds.
+  if (import.meta.env.DEV) {
+    maybeInstallRelayMocks()
+  }
 
   const policies = [authPolicy, blockPolicy, trustPolicy, mostlyRestrictedPolicy]
 

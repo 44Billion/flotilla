@@ -1,0 +1,29 @@
+[
+  {
+    "kind": 0,
+    "content": "{\"name\":\"Alice\"}",
+    "tags": [],
+    "created_at": 1700000000,
+    "pubkey": "79be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798",
+    "id": "9b3d138641b38364945b20d800268006c2cb7d974bb4b1d63a9f90f5ab974b90",
+    "sig": "de6b86274e7bcf6c02aa881ada1feee9e01ba320691711d4975916b3cd231ab43cf469a47c5db99503ed72707d5db85fede1ad3763c4fbd7c998d04f00eda6bc"
+  },
+  {
+    "kind": 1,
+    "content": "hello from the fixture relay",
+    "tags": [],
+    "created_at": 1700000000,
+    "pubkey": "79be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798",
+    "id": "b9874875bfa8d830c5c9ef3673104360cf21b94848a311febfaf52f0a652b1a9",
+    "sig": "85df94a2e9884ac3d280145492d5191cde2948d49a824c443a1f5d2143633eff1e1789fa7e8843b6efc3dd2dc0d7e33322edb628125d8e35de8ddca1d06ca970"
+  },
+  {
+    "kind": 1,
+    "content": "reply from bob",
+    "tags": [],
+    "created_at": 1700000001,
+    "pubkey": "c6047f9441ed7d6d3045406e95c07cd85c778e4b8cef3ca7abac09b95c709ee5",
+    "id": "171dcbdd63d474ba46da609e8b0104cbcf4801fbb581b6c343d9426280f9e1be",
+    "sig": "eecf26e616a6b70dc67c7eae16fc4fe159314647ba1d4581332257de7f070410aa9a9e41f571b9403ff145d16c9b32766846fce08516201263e25cf08c1ed8f1"
+  }
+]
