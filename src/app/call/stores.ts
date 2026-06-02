@@ -17,6 +17,11 @@ export type Pubkey = string
 
 export type VoiceParticipant = {pubkey?: Pubkey; identity: string}
 
+export type ParticipantMediaState = {
+  muted: boolean
+  cameraOn: boolean
+}
+
 export enum VoiceState {
   Joining = "joining",
   Connected = "connected",
@@ -41,9 +46,7 @@ export const participantKey = (p: VoiceParticipant) => p.pubkey ?? p.identity
 
 export const speakingParticipants = writable<VoiceParticipant[]>([])
 
-export const participantMediaState = writable(
-  new Map<string, {muted: boolean; cameraOn: boolean}>(),
-)
+export const participantMediaState = writable(new Map<string, ParticipantMediaState>())
 
 export const mediaStateByIdentity = derived(
   [participantMediaState, currentVoiceSession, voiceMicMuted],

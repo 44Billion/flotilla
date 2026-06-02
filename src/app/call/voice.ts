@@ -30,6 +30,7 @@ import {
   participantMediaState,
   speakingParticipants,
   VoiceState,
+  type ParticipantMediaState,
   type VoiceParticipant,
   voiceState,
 } from "@app/call/stores"
@@ -77,12 +78,17 @@ export const switchVoiceActiveDevice = async (
   }
 }
 
+const participantMediaFrom = (participant: Participant): ParticipantMediaState => ({
+  muted: !participant.isMicrophoneEnabled,
+  cameraOn: participant.isCameraEnabled,
+})
+
 const deleteParticipant = (identity: string) => {
   participantMediaState.update(m => new Map(reject(nthEq(0, identity), [...m])))
 }
 
 const syncParticipantMedia = (participant: Participant) => {
-  const state = {muted: !participant.isMicrophoneEnabled, cameraOn: participant.isCameraEnabled}
+  const state = participantMediaFrom(participant)
   participantMediaState.update(m => {
     const prev = m.get(participant.identity)
     if (prev?.muted === state.muted && prev?.cameraOn === state.cameraOn) return m
@@ -90,6 +96,29 @@ const syncParticipantMedia = (participant: Participant) => {
     next.set(participant.identity, state)
     return next
   })
+}
+
+// LiveKit does not emit ParticipantConnected/Disconnected during reconnect.
+const resyncAfterReconnect = (room: LiveKitRoom) => {
+  if (room !== activeRoom) return
+
+  const next = new Map<string, ParticipantMediaState>()
+  for (const p of [room.localParticipant, ...room.remoteParticipants.values()]) {
+    next.set(p.identity, participantMediaFrom(p))
+  }
+  participantMediaState.set(next)
+
+  const session = get(currentVoiceSession)
+  if (!session) return
+
+  const {localParticipant} = room
+  voiceMicMuted.set(!localParticipant.isMicrophoneEnabled)
+  currentVoiceSession.set({
+    ...session,
+    cameraOn: localParticipant.isCameraEnabled,
+    screenShareOn: localParticipant.isScreenShareEnabled,
+  })
+  triggerVideoFeedCount()
 }
 
 const onParticipantMediaChanged = (_publication: TrackPublication, participant: Participant) => {
@@ -191,6 +220,55 @@ const setUpMicrophone = async (
 // (after switching calls or an engine reconnect give-up) must not clobber it.
 let activeRoom: LiveKitRoom | undefined
 
+const RECONNECT_DELAYS = [1000, 2000, 4000, 8000, 16000]
+let reconnectTimeout: ReturnType<typeof setTimeout> | undefined
+let reconnectAttempt = 0
+
+const clearReconnectSchedule = () => {
+  if (reconnectTimeout !== undefined) {
+    clearTimeout(reconnectTimeout)
+    reconnectTimeout = undefined
+  }
+  reconnectAttempt = 0
+}
+
+const attemptReconnect = async () => {
+  const target = get(currentVoiceRoom)
+  if (!target) return
+
+  try {
+    await joinVoiceRoom(target.url, target.h)
+  } catch {
+    if (reconnectAttempt >= RECONNECT_DELAYS.length) {
+      pushToast({theme: "error", message: "Voice connection lost."})
+      clearReconnectSchedule()
+      return
+    }
+    scheduleReconnect()
+  }
+}
+
+const scheduleReconnect = () => {
+  if (reconnectTimeout !== undefined) return
+  if (!get(currentVoiceRoom)) return
+  if (reconnectAttempt >= RECONNECT_DELAYS.length) {
+    pushToast({theme: "error", message: "Voice connection lost."})
+    return
+  }
+
+  const delay = RECONNECT_DELAYS[reconnectAttempt]!
+  reconnectAttempt++
+  reconnectTimeout = setTimeout(() => {
+    reconnectTimeout = undefined
+    void attemptReconnect()
+  }, delay)
+}
+
+const makeOnRoomReconnected = (room: LiveKitRoom) => () => {
+  if (room !== activeRoom) return
+  resyncAfterReconnect(room)
+}
+
 const makeOnRoomDisconnected = (room: LiveKitRoom) => (reason?: DisconnectReason) => {
   // Ignore disconnects from rooms that are no longer the active session.
   if (room !== activeRoom) return
@@ -204,11 +282,14 @@ const makeOnRoomDisconnected = (room: LiveKitRoom) => (reason?: DisconnectReason
   resetVideoCallLayout()
   if (reason !== undefined && reason !== DisconnectReason.CLIENT_INITIATED) {
     voiceState.set(VoiceState.Disconnected)
-    const message =
-      reason === DisconnectReason.JOIN_FAILURE
-        ? "Could not connect to voice room. Please try again."
-        : "Voice connection lost."
-    pushToast({theme: "error", message})
+    if (reason === DisconnectReason.JOIN_FAILURE) {
+      pushToast({theme: "error", message: "Could not connect to voice room. Please try again."})
+    } else if (get(currentVoiceRoom)) {
+      clearReconnectSchedule()
+      scheduleReconnect()
+    } else {
+      pushToast({theme: "error", message: "Voice connection lost."})
+    }
   }
   speakingParticipants.set([])
   participantMediaState.set(new Map())
@@ -263,8 +344,13 @@ const onLocalTrackUnpublished = (
 
 let joinAbortController: AbortController | undefined
 
-export const cancelJoinVoiceRoom = () => {
+const abortJoinVoiceRoom = () => {
   joinAbortController?.abort()
+}
+
+export const cancelJoinVoiceRoom = () => {
+  clearReconnectSchedule()
+  abortJoinVoiceRoom()
 }
 
 export const joinVoiceRoom = async (
@@ -273,7 +359,7 @@ export const joinVoiceRoom = async (
   startMuted = true,
   preferredMicId?: string,
 ): Promise<void> => {
-  cancelJoinVoiceRoom()
+  abortJoinVoiceRoom()
 
   currentVoiceRoom.set(get(deriveRoom(url, h)))
   voiceState.set(VoiceState.Joining)
@@ -320,6 +406,7 @@ export const joinVoiceRoom = async (
     activeRoom = liveKitRoom
 
     liveKitRoom.on(RoomEvent.Disconnected, makeOnRoomDisconnected(liveKitRoom))
+    liveKitRoom.on(RoomEvent.Reconnected, makeOnRoomReconnected(liveKitRoom))
     liveKitRoom.on(RoomEvent.ParticipantConnected, onParticipantConnected)
     liveKitRoom.on(RoomEvent.ParticipantDisconnected, onParticipantDisconnected)
     liveKitRoom.on(RoomEvent.TrackSubscribed, onTrackSubscribed)
@@ -382,10 +469,14 @@ export const joinVoiceRoom = async (
       screenShareOn: false,
     })
     voiceState.set(VoiceState.Connected)
+    clearReconnectSchedule()
     playJoinSound()
   } catch (e) {
     if (isActive()) voiceState.set(VoiceState.Disconnected)
-    if (e instanceof AbortError) return
+    if (e instanceof AbortError) {
+      clearReconnectSchedule()
+      return
+    }
     throw e
   } finally {
     settle.abort()
@@ -394,6 +485,7 @@ export const joinVoiceRoom = async (
 }
 
 export const leaveVoiceRoom = async () => {
+  clearReconnectSchedule()
   const session = get(currentVoiceSession)
   if (!session) return
 
@@ -433,12 +525,6 @@ export const leaveVoiceRoom = async () => {
     speakingParticipants.set([])
     participantMediaState.set(new Map())
   }
-}
-
-export const rejoinVoiceRoom = async (): Promise<void> => {
-  const target = get(currentVoiceRoom)
-  if (!target) return
-  return joinVoiceRoom(target.url, target.h)
 }
 
 export const toggleMute = async () => {
