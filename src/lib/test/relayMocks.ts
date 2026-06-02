@@ -32,9 +32,8 @@ class FixtureAdapter extends AbstractAdapter {
 
     const forward = (message: RelayMessage) => this.emit(AdapterEvent.Receive, message, this.url)
 
-    this._unsubscribers.push(
-      on(this.local, AdapterEvent.Receive, forward),
-      () => this.local.cleanup(),
+    this._unsubscribers.push(on(this.local, AdapterEvent.Receive, forward), () =>
+      this.local.cleanup(),
     )
   }
 
