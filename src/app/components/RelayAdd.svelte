@@ -88,7 +88,7 @@
       <input bind:value={term} class="grow" type="text" placeholder="Search for relays..." />
     </label>
     <div class="column -m-6 mt-0 h-[50vh] gap-2 overflow-auto p-6 pt-2" bind:this={element}>
-      {#if customUrl && isShareableRelayUrl(customUrl) && !$relays.includes(normalizeRelayUrl(customUrl))}
+      {#if customUrl && isShareableRelayUrl(customUrl) && !$relays.includes(customUrl)}
         <RelayItem url={term}>
           <Button
             class="btn btn-outline btn-sm flex items-center"

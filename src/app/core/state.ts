@@ -755,7 +755,7 @@ export const getSpaceUrlsFromGroupList = (groupList: List | undefined) => {
     }
   }
 
-  return uniq(urls.map(normalizeRelayUrl))
+  return uniqBy(normalizeRelayUrl, urls)
 }
 
 export const getSpaceRoomsFromGroupList = (url: string, groupList: List | undefined) => {

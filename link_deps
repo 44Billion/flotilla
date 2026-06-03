@@ -12,6 +12,7 @@ if (execSync('git status --porcelain', { encoding: 'utf8' }).trim() && !force) {
 
 const pkg = JSON.parse(fs.readFileSync('./package.json', 'utf8'))
 
+pkg.pnpm = pkg.pnpm || {}
 pkg.pnpm.overrides = pkg.pnpm.overrides || {}
 pkg.pnpm.overrides["@welshman/app"] = "link:../welshman/packages/app"
 pkg.pnpm.overrides["@welshman/content"] = "link:../welshman/packages/content"
