@@ -127,7 +127,7 @@
       <div class:mt-2={showPubkey && event.kind !== MESSAGE}>
         <RoomItemContent {url} event={$innerEvent ?? event} />
         {#if thunk}
-          <ThunkFailure showToastOnRetry {thunk} class="mt-2 text-sm" />
+          <ThunkFailure showToastOnRetry {thunk} class="mt-1 flex justify-end" />
         {/if}
       </div>
     </div>

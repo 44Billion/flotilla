@@ -6,17 +6,18 @@
 
   interface Props {
     thunk: AbstractThunk
+    showToastOnRetry?: boolean
     class?: string
   }
 
-  const {thunk, ...restProps}: Props = $props()
+  const {thunk, showToastOnRetry, ...restProps}: Props = $props()
 
   const showFailure = $derived(thunkIsComplete($thunk) && getFailedThunkUrls($thunk).length > 0)
   const showPending = $derived(!thunkIsComplete($thunk))
 </script>
 
 {#if showFailure}
-  <ThunkFailure class={restProps.class} {thunk} />
+  <ThunkFailure class={restProps.class} {thunk} {showToastOnRetry} />
 {:else if showPending}
   <ThunkPending class={restProps.class} {thunk} />
 {/if}
