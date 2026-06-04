@@ -350,16 +350,11 @@
           event.created_at - previousCreatedAt > int(3, MINUTE) ||
           previousKind === ROOM_ADD_MEMBER
 
-        if (showPubkey && elements.length > 0) {
-          elements[elements.length - 1].addSpaceBelow = true
-        }
-
         elements.push({
           id: event.id,
           type: "note",
           value: event,
           showPubkey,
-          addSpaceBelow: false,
         })
 
         previousDate = date
@@ -367,9 +362,6 @@
         previousPubkey = event.pubkey
         previousCreatedAt = event.created_at
         seen.add(event.id)
-      }
-      if (elements.length > 0) {
-        elements[elements.length - 1].addSpaceBelow = true
       }
     }
 
@@ -470,7 +462,7 @@
       bind:element
       onscroll={onScroll}
       class={cx(
-        "flex-col-reverse pb-0! pt-4",
+        "flex-col-reverse !mb-0",
         showMobileVideoPanel ? "hidden md:flex md:flex-col-reverse" : "flex",
         pageContentHiddenDesktopVideoOnly && "md:hidden",
       )}>
@@ -501,7 +493,7 @@
             <Spinner loading={loadingForward}>Looking for messages...</Spinner>
           </p>
         {/if}
-        {#each elements as { type, id, value, showPubkey, addSpaceBelow }, i (id)}
+        {#each elements as { type, id, value, showPubkey }, i (id)}
           {#if type === "new-messages"}
             <div
               {id}
@@ -523,7 +515,6 @@
                 {event}
                 {replyTo}
                 {showPubkey}
-                {addSpaceBelow}
                 canEdit={canEditEvent}
                 onEdit={onEditEvent} />
             {/if}

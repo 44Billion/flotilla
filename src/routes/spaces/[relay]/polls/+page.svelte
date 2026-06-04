@@ -76,7 +76,7 @@
   {/snippet}
 </SpaceBar>
 
-<PageContent bind:element class="flex flex-col gap-2 p-2 pt-4">
+<PageContent bind:element class="flex flex-col gap-2 p-2">
   {#each items as event (event.id)}
     <div in:fly>
       <PollItem {url} event={$state.snapshot(event)} />

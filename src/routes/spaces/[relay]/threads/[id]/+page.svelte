@@ -61,7 +61,7 @@
   {/snippet}
 </SpaceBar>
 
-<PageContent class="flex flex-col p-2 pt-4">
+<PageContent class="flex flex-col gap-2 p-2">
   {#if $event}
     <div class="flex flex-col gap-3">
       <NoteCard event={$event} {url} class="card2 bg-alt z-feature w-full">
@@ -90,7 +90,7 @@
     {#if showReply}
       <EventReply {url} event={$event} onClose={closeReply} onSubmit={closeReply} />
     {:else}
-      <div class="flex justify-end p-2">
+      <div class="flex justify-end">
         <Button class="btn btn-primary" onclick={openReply}>
           <Icon icon={Reply} />
           Reply to thread
@@ -98,10 +98,12 @@
       </div>
     {/if}
   {:else}
-    {#await sleep(5000)}
-      <Spinner loading>Loading thread...</Spinner>
-    {:then}
-      <p>Failed to load thread.</p>
-    {/await}
+    <div class="flex justify-center py-20">
+      {#await sleep(5000)}
+        <Spinner loading>Loading thread...</Spinner>
+      {:then}
+        <p>Failed to load thread.</p>
+      {/await}
+    </div>
   {/if}
 </PageContent>

@@ -45,20 +45,11 @@
     event: TrustedEvent
     replyTo?: (event: TrustedEvent) => void
     showPubkey?: boolean
-    addSpaceBelow?: boolean
     canEdit: (event: TrustedEvent) => boolean
     onEdit: (event: TrustedEvent) => void
   }
 
-  const {
-    url,
-    event,
-    replyTo = undefined,
-    showPubkey = false,
-    addSpaceBelow = false,
-    canEdit,
-    onEdit,
-  }: Props = $props()
+  const {url, event, replyTo = undefined, showPubkey = false, canEdit, onEdit}: Props = $props()
 
   const path = getRoomItemPath(url, event)
   const shouldProtect = canEnforceNip70(url)
@@ -95,7 +86,7 @@
   {onTap}
   class={cx(
     "group relative flex w-full cursor-default flex-col px-2 py-0.5 text-left hover:bg-base-100/50",
-    {"mt-1.5": showPubkey, "mb-1.5": addSpaceBelow},
+    {"mt-1.5": showPubkey},
   )}>
   <div class="flex w-full gap-3 overflow-auto">
     {#if showPubkey}

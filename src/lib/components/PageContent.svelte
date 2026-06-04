@@ -13,7 +13,7 @@
   const className = $derived(
     cx(
       props.class,
-      "scroll-container z-feature flex min-h-0 w-full min-w-0 flex-col overflow-y-auto overflow-x-hidden pb-14 md:pb-0",
+      "scroll-container z-feature flex flex-col min-h-0 w-full min-w-0 overflow-y-auto overflow-x-hidden mb-14 md:mb-0",
     ),
   )
 </script>

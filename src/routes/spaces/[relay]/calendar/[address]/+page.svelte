@@ -64,7 +64,7 @@
   {/snippet}
 </SpaceBar>
 
-<PageContent class="flex flex-col gap-3 p-2 pt-4">
+<PageContent class="flex flex-col gap-3 p-2">
   {#if $event}
     <div class="card2 bg-alt col-3 z-feature">
       <div class="flex items-start gap-4">
@@ -109,10 +109,12 @@
       </div>
     {/if}
   {:else}
-    {#await sleep(5000)}
-      <Spinner loading>Loading comments...</Spinner>
-    {:then}
-      <p>Failed to load comments.</p>
-    {/await}
+    <div class="flex justify-center py-20">
+      {#await sleep(5000)}
+        <Spinner loading>Loading event...</Spinner>
+      {:then}
+        <p>Failed to load event.</p>
+      {/await}
+    </div>
   {/if}
 </PageContent>

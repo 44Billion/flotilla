@@ -227,16 +227,11 @@
           event.created_at - previousCreatedAt > int(3, MINUTE) ||
           previousKind === RELAY_ADD_MEMBER
 
-        if (showPubkey && elements.length > 0) {
-          elements[elements.length - 1].addSpaceBelow = true
-        }
-
         elements.push({
           id: event.id,
           type: "note",
           value: event,
           showPubkey,
-          addSpaceBelow: false,
         })
 
         previousDate = date
@@ -244,9 +239,6 @@
         previousPubkey = event.pubkey
         previousCreatedAt = event.created_at
         seen.add(event.id)
-      }
-      if (elements.length > 0) {
-        elements[elements.length - 1].addSpaceBelow = true
       }
     }
 
@@ -318,13 +310,13 @@
   {/snippet}
 </SpaceBar>
 
-<PageContent bind:element onscroll={onScroll} class="flex flex-col-reverse pt-4 pb-0!">
+<PageContent bind:element onscroll={onScroll} class="flex-col-reverse !mb-0">
   {#if loadingForward}
     <p class="py-20 flex justify-center">
       <Spinner loading={loadingForward}>Looking for messages...</Spinner>
     </p>
   {/if}
-  {#each elements as { type, id, value, showPubkey, addSpaceBelow }, i (id)}
+  {#each elements as { type, id, value, showPubkey }, i (id)}
     {#if type === "new-messages"}
       <div
         {id}
@@ -347,8 +339,7 @@
           {replyTo}
           {showPubkey}
           canEdit={canEditEvent}
-          onEdit={onEditEvent}
-          {addSpaceBelow} />
+          onEdit={onEditEvent} />
       {/if}
     {/if}
   {/each}
