@@ -262,12 +262,6 @@ app.use(
 // SPA fallback for routes that don't match static files
 app.get("*", async context => {
   const requestUrl = requestUrlFromContext(context)
-
-  // If the path has an extension, it's likely a missing static asset, not an SPA route
-  if (path.extname(requestUrl.pathname)) {
-    return context.text("Not found", 404)
-  }
-
   const metadata = await getMetadataForRoute(requestUrl)
   const html = metadata ? injectMeta(metadata) : TEMPLATE_HTML
 
