@@ -257,8 +257,14 @@ export const attemptRelayAccess = async (url: string, claim = "") => {
   const error = await waitForThunkError(publishJoinRequest({url, claim}))
 
   if (shouldIgnoreError(error)) return
-  if (!claim && error.includes("invite code size")) return
-  if (error.includes("invite code")) return "join request rejected"
+
+  if (claim) {
+    if (error.includes("invite code")) {
+      return "join request rejected"
+    }
+  } else if (error.includes("invite code")) {
+    return
+  }
 
   return stripPrefix(error)
 }
