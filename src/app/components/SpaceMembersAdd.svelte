@@ -13,7 +13,7 @@
   import ModalFooter from "@lib/components/ModalFooter.svelte"
   import ProfileMultiSelect from "@app/components/ProfileMultiSelect.svelte"
   import {addSpaceMembers} from "@app/core/commands"
-  import {pushToast} from "@app/util/toast"
+  import {pushToast} from "@app/toast"
 
   interface Props {
     url: string

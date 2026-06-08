@@ -17,8 +17,8 @@
   import SecondaryNavItem from "@lib/components/SecondaryNavItem.svelte"
   import SecondaryNavSection from "@lib/components/SecondaryNavSection.svelte"
   import LogOut from "@app/components/LogOut.svelte"
-  import {pushModal} from "@app/util/modal"
-  import {theme} from "@app/util/theme"
+  import {pushModal} from "@app/modal"
+  import {theme} from "@app/theme"
 
   type Props = {
     children?: Snippet

@@ -16,9 +16,9 @@
   import ModalTitle from "@lib/components/ModalTitle.svelte"
   import ModalSubtitle from "@lib/components/ModalSubtitle.svelte"
   import ModalFooter from "@lib/components/ModalFooter.svelte"
-  import {loginWithPomade, deleteCurrentPomadeSession} from "@app/util/pomade"
-  import {clearModals} from "@app/util/modal"
-  import {pushToast} from "@app/util/toast"
+  import {loginWithPomade, deleteCurrentPomadeSession} from "@app/pomade"
+  import {clearModals} from "@app/modal"
+  import {pushToast} from "@app/toast"
 
   type Props = {
     userSecret: string

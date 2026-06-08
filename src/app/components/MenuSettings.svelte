@@ -13,8 +13,8 @@
   import ModalBody from "@lib/components/ModalBody.svelte"
   import Profile from "@app/components/Profile.svelte"
   import LogOut from "@app/components/LogOut.svelte"
-  import {pushModal} from "@app/util/modal"
-  import {theme} from "@app/util/theme"
+  import {pushModal} from "@app/modal"
+  import {theme} from "@app/theme"
 
   const logout = () => pushModal(LogOut)
   const toggleTheme = () => theme.set($theme === "dark" ? "light" : "dark")

@@ -45,9 +45,9 @@
     removeRoomMembership,
     toggleRoomNotifications,
   } from "@app/core/commands"
-  import {makeSpacePath} from "@app/util/routes"
-  import {pushModal} from "@app/util/modal"
-  import {pushToast} from "@app/util/toast"
+  import {makeSpacePath} from "@app/routes"
+  import {pushModal} from "@app/modal"
+  import {pushToast} from "@app/toast"
 
   type Props = {
     url: string

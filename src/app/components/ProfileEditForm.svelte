@@ -12,7 +12,7 @@
   import ModalFooter from "@lib/components/ModalFooter.svelte"
   import InputProfilePicture from "@app/components/InputProfilePicture.svelte"
   import InfoHandle from "@app/components/InfoHandle.svelte"
-  import {pushModal} from "@app/util/modal"
+  import {pushModal} from "@app/modal"
 
   type Values = {
     profile: Profile

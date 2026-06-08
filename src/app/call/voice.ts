@@ -37,7 +37,7 @@ import {
 } from "@app/call/stores"
 import {resetVideoCallLayout, triggerVideoFeedCount, videoPrimaryTileKey} from "@app/call/video"
 import {deriveLatestEventForUrl, deriveRoom, makeRoomId} from "@app/core/state"
-import {pushToast} from "@app/util/toast"
+import {pushToast} from "@app/toast"
 
 export const LIVEKIT_PARTICIPANTS = 39004
 

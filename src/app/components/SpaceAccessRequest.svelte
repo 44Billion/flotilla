@@ -14,7 +14,7 @@
   import ModalTitle from "@lib/components/ModalTitle.svelte"
   import ModalSubtitle from "@lib/components/ModalSubtitle.svelte"
   import ModalFooter from "@lib/components/ModalFooter.svelte"
-  import {pushToast} from "@app/util/toast"
+  import {pushToast} from "@app/toast"
   import {attemptRelayAccess} from "@app/core/commands"
   import {parseInviteLink} from "@app/core/state"
 

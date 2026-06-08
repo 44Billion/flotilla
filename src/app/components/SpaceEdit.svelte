@@ -19,8 +19,8 @@
   import ModalFooter from "@lib/components/ModalFooter.svelte"
   import ImageIcon from "@lib/components/ImageIcon.svelte"
   import IconPickerButton from "@lib/components/IconPickerButton.svelte"
-  import {pushToast} from "@app/util/toast"
-  import {clearModals} from "@app/util/modal"
+  import {pushToast} from "@app/toast"
+  import {clearModals} from "@app/modal"
   import {uploadFile} from "@app/core/commands"
 
   type Props = {

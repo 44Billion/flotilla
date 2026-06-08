@@ -9,7 +9,7 @@
   import PageBar from "@lib/components/PageBar.svelte"
   import RelayIcon from "@app/components/RelayIcon.svelte"
   import {decodeRelay} from "@app/core/state"
-  import {makeSpacePath} from "@app/util/routes"
+  import {makeSpacePath} from "@app/routes"
 
   interface Props {
     back?: () => unknown

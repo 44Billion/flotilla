@@ -18,7 +18,7 @@
   import ModalSubtitle from "@lib/components/ModalSubtitle.svelte"
   import ModalFooter from "@lib/components/ModalFooter.svelte"
   import QRCode from "@app/components/QRCode.svelte"
-  import {clip} from "@app/util/toast"
+  import {clip} from "@app/toast"
   import {PLATFORM_URL} from "@app/core/state"
   import {deriveRelayAuthError} from "@app/core/commands"
 

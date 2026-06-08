@@ -19,10 +19,10 @@
   import ModalFooter from "@lib/components/ModalFooter.svelte"
   import BunkerConnect from "@app/components/BunkerConnect.svelte"
   import BunkerUrl from "@app/components/BunkerUrl.svelte"
-  import {Nip46Controller} from "@app/util/nip46"
-  import {clearModals} from "@app/util/modal"
-  import {setChecked} from "@app/util/notifications"
-  import {pushToast} from "@app/util/toast"
+  import {Nip46Controller} from "@app/nip46"
+  import {clearModals} from "@app/modal"
+  import {setChecked} from "@app/notifications"
+  import {pushToast} from "@app/toast"
   import {SIGNER_RELAYS, NIP46_PERMS} from "@app/core/state"
 
   const back = () => {

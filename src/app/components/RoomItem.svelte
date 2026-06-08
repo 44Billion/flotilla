@@ -37,8 +37,8 @@
   import RoomItemContent from "@app/components/RoomItemContent.svelte"
   import {colors, ENABLE_ZAPS, deriveEventsForUrl, deriveEvent} from "@app/core/state"
   import {publishDelete, publishReaction, canEnforceNip70} from "@app/core/commands"
-  import {getRoomItemPath} from "@app/util/routes"
-  import {pushModal} from "@app/util/modal"
+  import {getRoomItemPath} from "@app/routes"
+  import {pushModal} from "@app/modal"
 
   interface Props {
     url: string

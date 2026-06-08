@@ -7,7 +7,7 @@
   import Button from "@lib/components/Button.svelte"
   import RelaySettingsHealthCheck from "@app/components/RelaySettingsHealthCheck.svelte"
   import {PLATFORM_NAME} from "@app/core/state"
-  import {pendingHealthChecks, applyHealthCheck} from "@app/util/health"
+  import {pendingHealthChecks, applyHealthCheck} from "@app/healthChecks"
 
   const applyAll = () => {
     for (const healthCheck of $pendingHealthChecks) {

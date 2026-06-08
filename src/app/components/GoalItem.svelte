@@ -7,7 +7,7 @@
   import GoalActions from "@app/components/GoalActions.svelte"
   import GoalSummary from "@app/components/GoalSummary.svelte"
   import RoomLink from "@app/components/RoomLink.svelte"
-  import {makeGoalPath} from "@app/util/routes"
+  import {makeGoalPath} from "@app/routes"
 
   type Props = {
     url: string

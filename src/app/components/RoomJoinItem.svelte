@@ -6,8 +6,8 @@
   import ProfileName from "@app/components/ProfileName.svelte"
   import ProfileDetail from "@app/components/ProfileDetail.svelte"
   import RoomName from "@app/components/RoomName.svelte"
-  import {pushModal} from "@app/util/modal"
-  import {pushToast} from "@app/util/toast"
+  import {pushModal} from "@app/modal"
+  import {pushToast} from "@app/toast"
   import {deriveRoom} from "@app/core/state"
   import {addRoomMembers} from "@app/core/commands"
 

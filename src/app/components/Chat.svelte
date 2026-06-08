@@ -54,10 +54,10 @@
   import ChatComposeParent from "@app/components/ChatComposeParent.svelte"
   import ThunkToast from "@app/components/ThunkToast.svelte"
   import {userSettingsValues, deriveChat, makeChatId} from "@app/core/state"
-  import {pushModal} from "@app/util/modal"
-  import {DraftKey} from "@app/util/drafts"
+  import {pushModal} from "@app/modal"
+  import {DraftKey} from "@app/drafts"
   import {makeDelete, prependParent} from "@app/core/commands"
-  import {pushToast} from "@app/util/toast"
+  import {pushToast} from "@app/toast"
 
   type Props = {
     pubkeys: string[]

@@ -36,9 +36,9 @@
     parseInviteLink,
   } from "@app/core/state"
   import {setSpaceMembershipOrder} from "@app/core/commands"
-  import {pushModal} from "@app/util/modal"
-  import {goToSpace, makeSpacePath} from "@app/util/routes"
-  import {notifications} from "@app/util/notifications"
+  import {pushModal} from "@app/modal"
+  import {goToSpace, makeSpacePath} from "@app/routes"
+  import {notifications} from "@app/notifications"
 
   const addSpace = () => pushModal(SpaceAdd)
 

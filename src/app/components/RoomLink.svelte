@@ -2,7 +2,7 @@
   import cx from "classnames"
   import Link from "@lib/components/Link.svelte"
   import RoomName from "@app/components/RoomName.svelte"
-  import {makeSpacePath} from "@app/util/routes"
+  import {makeSpacePath} from "@app/routes"
 
   type Props = {
     h: string

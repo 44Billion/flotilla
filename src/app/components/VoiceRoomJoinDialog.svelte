@@ -16,8 +16,8 @@
   import ProfileCircles from "@app/components/ProfileCircles.svelte"
   import {displayRoom} from "@app/core/state"
   import {deriveVoiceParticipants, joinVoiceRoom, loadVoiceParticipants} from "@app/call/voice"
-  import {popModal} from "@app/util/modal"
-  import {pushToast} from "@app/util/toast"
+  import {popModal} from "@app/modal"
+  import {pushToast} from "@app/toast"
 
   type Props = {
     url: string

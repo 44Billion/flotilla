@@ -9,8 +9,8 @@
   import ProfileDetail from "@app/components/ProfileDetail.svelte"
   import NoteContent from "@app/components/NoteContent.svelte"
   import ReportMenu from "@app/components/ReportMenu.svelte"
-  import {pushModal} from "@app/util/modal"
-  import {goToEvent} from "@app/util/routes"
+  import {pushModal} from "@app/modal"
+  import {goToEvent} from "@app/routes"
 
   type Props = {
     url: string

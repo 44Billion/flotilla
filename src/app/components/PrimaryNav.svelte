@@ -12,9 +12,9 @@
   import PrimaryNavItem from "@lib/components/PrimaryNavItem.svelte"
   import PrimaryNavSpaces from "@app/components/PrimaryNavSpaces.svelte"
   import {userSpaceUrls, PLATFORM_RELAYS} from "@app/core/state"
-  import {pushModal} from "@app/util/modal"
-  import {notifications} from "@app/util/notifications"
-  import {goToChat, makeSpacePath} from "@app/util/routes"
+  import {pushModal} from "@app/modal"
+  import {notifications} from "@app/notifications"
+  import {goToChat, makeSpacePath} from "@app/routes"
 
   type Props = {
     children?: Snippet

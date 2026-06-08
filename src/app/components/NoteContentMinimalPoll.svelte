@@ -4,7 +4,7 @@
   import {POLL_RESPONSE} from "@welshman/util"
   import ContentMinimal from "@app/components/ContentMinimal.svelte"
   import {deriveEvents} from "@app/core/state"
-  import {getPollResults} from "@app/util/polls"
+  import {getPollResults} from "@app/polls"
 
   const props: ComponentProps<typeof ContentMinimal> = $props()
 

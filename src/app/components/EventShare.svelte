@@ -15,7 +15,7 @@
   import ModalBody from "@lib/components/ModalBody.svelte"
   import RoomName from "@app/components/RoomName.svelte"
   import {roomsByUrl} from "@app/core/state"
-  import {makeRoomPath} from "@app/util/routes"
+  import {makeRoomPath} from "@app/routes"
 
   const {url, noun, event}: {url: string; noun: string; event: TrustedEvent} = $props()
 

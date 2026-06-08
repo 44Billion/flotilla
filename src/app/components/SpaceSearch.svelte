@@ -12,7 +12,7 @@
   import Button from "@lib/components/Button.svelte"
   import Icon from "@lib/components/Icon.svelte"
   import {CONTENT_KINDS} from "@app/core/state"
-  import {goToEvent} from "@app/util/routes"
+  import {goToEvent} from "@app/routes"
 
   type Props = {
     url: string

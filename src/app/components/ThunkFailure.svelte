@@ -8,7 +8,7 @@
   import Tippy from "@lib/components/Tippy.svelte"
   import ThunkToast from "@app/components/ThunkToast.svelte"
   import ThunkStatusDetail from "@app/components/ThunkStatusDetail.svelte"
-  import {pushToast} from "@app/util/toast"
+  import {pushToast} from "@app/toast"
 
   interface Props {
     thunk: AbstractThunk

@@ -6,7 +6,7 @@
   import Zap from "@app/components/Zap.svelte"
   import ZapInvoice from "@app/components/ZapInvoice.svelte"
   import InfoZapperError from "@app/components/InfoZapperError.svelte"
-  import {pushModal} from "@app/util/modal"
+  import {pushModal} from "@app/modal"
 
   type Props = {
     url?: string

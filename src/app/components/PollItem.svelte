@@ -6,7 +6,7 @@
   import CommentActions from "@app/components/CommentActions.svelte"
   import RoomLink from "@app/components/RoomLink.svelte"
   import ProfileLink from "@app/components/ProfileLink.svelte"
-  import {makePollPath} from "@app/util/routes"
+  import {makePollPath} from "@app/routes"
 
   type Props = {
     url: string

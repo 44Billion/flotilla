@@ -19,7 +19,7 @@
   import RelayDescription from "@app/components/RelayDescription.svelte"
   import ProfileLatest from "@app/components/ProfileLatest.svelte"
   import {deriveUserIsSpaceAdmin} from "@app/core/state"
-  import {pushModal} from "@app/util/modal"
+  import {pushModal} from "@app/modal"
 
   type Props = {
     url: string

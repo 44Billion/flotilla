@@ -9,7 +9,7 @@ import {
   SIGNER_RELAYS,
   NIP46_PERMS,
 } from "@app/core/state"
-import {pushToast} from "@app/util/toast"
+import {pushToast} from "@app/toast"
 
 const APP_SCHEME = "social.flotilla"
 

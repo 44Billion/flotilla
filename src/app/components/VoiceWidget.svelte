@@ -27,9 +27,9 @@
     RoomType,
     type Room,
   } from "@app/core/state"
-  import {pushModal} from "@app/util/modal"
-  import {notifications} from "@app/util/notifications"
-  import {makeRoomPath} from "@app/util/routes"
+  import {pushModal} from "@app/modal"
+  import {notifications} from "@app/notifications"
+  import {makeRoomPath} from "@app/routes"
   import {
     VideoCallLayout,
     isDesktopLayout,

@@ -23,8 +23,8 @@
   import ProfileLink from "@app/components/ProfileLink.svelte"
   import QRCode from "@app/components/QRCode.svelte"
   import WalletConnect from "@app/components/WalletConnect.svelte"
-  import {pushModal} from "@app/util/modal"
-  import {clip, pushToast} from "@app/util/toast"
+  import {pushModal} from "@app/modal"
+  import {clip, pushToast} from "@app/toast"
 
   type Props = {
     url: string

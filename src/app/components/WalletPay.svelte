@@ -16,8 +16,8 @@
   import ModalFooter from "@lib/components/ModalFooter.svelte"
   import {errorMessage} from "@lib/util"
   import {payInvoice} from "@app/core/commands"
-  import {pushToast} from "@app/util/toast"
-  import {clearModals} from "@app/util/modal"
+  import {pushToast} from "@app/toast"
+  import {clearModals} from "@app/modal"
 
   const back = () => history.back()
 

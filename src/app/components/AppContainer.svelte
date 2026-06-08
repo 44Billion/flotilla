@@ -5,7 +5,7 @@
   import Landing from "@app/components/Landing.svelte"
   import Toast from "@app/components/Toast.svelte"
   import PrimaryNav from "@app/components/PrimaryNav.svelte"
-  import {modal} from "@app/util/modal"
+  import {modal} from "@app/modal"
 
   interface Props {
     children: Snippet

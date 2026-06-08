@@ -73,6 +73,7 @@ GoogleService-Info.plist
 .idea/
 .vscode/
 .claude/
+.local/
 
 # OS generated
 .DS_Store

@@ -30,9 +30,9 @@
   import ProfileBadges from "@app/components/ProfileBadges.svelte"
   import {pubkeyLink, deriveUserIsSpaceAdmin, deriveSpaceBannedPubkeyItems} from "@app/core/state"
   import {addSpaceMembers} from "@app/core/commands"
-  import {pushModal} from "@app/util/modal"
-  import {pushToast} from "@app/util/toast"
-  import {goToChat} from "@app/util/routes"
+  import {pushModal} from "@app/modal"
+  import {pushToast} from "@app/toast"
+  import {goToChat} from "@app/routes"
 
   export type Props = {
     pubkey: string

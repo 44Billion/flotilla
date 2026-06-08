@@ -9,7 +9,7 @@
   import ModalTitle from "@lib/components/ModalTitle.svelte"
   import {currentVoiceSession, type VoiceSession} from "@app/call/stores"
   import {DeviceKind, supportsAudioOutputSelection, switchVoiceActiveDevice} from "@app/call/voice"
-  import {popModal} from "@app/util/modal"
+  import {popModal} from "@app/modal"
 
   const selectValueForActiveDevice = (session: VoiceSession, kind: DeviceKind): string => {
     const livekitDeviceId = session.room.getActiveDevice(kind)

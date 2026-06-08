@@ -18,7 +18,7 @@
   import Profile from "@app/components/Profile.svelte"
   import {deriveSpaceBannedPubkeyItems, deriveSupportedMethods} from "@app/core/state"
   import {addSpaceMembers} from "@app/core/commands"
-  import {pushToast} from "@app/util/toast"
+  import {pushToast} from "@app/toast"
 
   interface Props {
     url: string

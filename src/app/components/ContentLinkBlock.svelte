@@ -7,7 +7,7 @@
   import ContentLinkDetail from "@app/components/ContentLinkDetail.svelte"
   import ContentLinkUrl from "@app/components/ContentLinkUrl.svelte"
   import ContentLinkBlockImage from "@app/components/ContentLinkBlockImage.svelte"
-  import {pushModal} from "@app/util/modal"
+  import {pushModal} from "@app/modal"
   import {
     dufflepud,
     IMAGE_CONTENT_TYPES,

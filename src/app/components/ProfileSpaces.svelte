@@ -7,7 +7,7 @@
   import ModalFooter from "@lib/components/ModalFooter.svelte"
   import RelayIcon from "@app/components/RelayIcon.svelte"
   import RelayName from "@app/components/RelayName.svelte"
-  import {makeSpacePath} from "@app/util/routes"
+  import {makeSpacePath} from "@app/routes"
   import {deriveGroupList, getSpaceUrlsFromGroupList} from "@app/core/state"
 
   type Props = {

@@ -15,8 +15,8 @@
   import ModalFooter from "@lib/components/ModalFooter.svelte"
   import RelayAdd from "@app/components/RelayAdd.svelte"
   import RelayItem from "@app/components/RelayItem.svelte"
-  import {pushModal} from "@app/util/modal"
-  import {pushToast} from "@app/util/toast"
+  import {pushModal} from "@app/modal"
+  import {pushToast} from "@app/toast"
 
   interface Props {
     title: string

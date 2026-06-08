@@ -16,9 +16,9 @@
   import ModalFooter from "@lib/components/ModalFooter.svelte"
   import StringMultiInput from "@lib/components/StringMultiInput.svelte"
   import PasswordResetConfirm from "@app/components/PasswordResetConfirm.svelte"
-  import {pushToast} from "@app/util/toast"
-  import {pushModal} from "@app/util/modal"
-  import {getPomadeClient} from "@app/util/pomade"
+  import {pushToast} from "@app/toast"
+  import {pushModal} from "@app/modal"
+  import {getPomadeClient} from "@app/pomade"
 
   type Props = {
     peersByPrefix: Map<string, string>

@@ -9,7 +9,7 @@
   import ModalHeader from "@lib/components/ModalHeader.svelte"
   import ModalTitle from "@lib/components/ModalTitle.svelte"
   import ModalFooter from "@lib/components/ModalFooter.svelte"
-  import {logout} from "@app/util/logout"
+  import {logout} from "@app/session"
 
   const back = () => history.back()
 

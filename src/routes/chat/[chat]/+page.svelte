@@ -18,8 +18,8 @@
   import Chat from "@app/components/Chat.svelte"
   import {splitChatId} from "@app/core/state"
   import {notificationSettings} from "@app/core/state"
-  import {pushToast} from "@app/util/toast"
-  import {Push} from "@app/util/push"
+  import {pushToast} from "@app/toast"
+  import {Push} from "@app/push"
 
   const {chat} = $page.params as MakeNonOptional<typeof $page.params>
   const pubkeys = uniq(append($pubkey!, splitChatId(chat)))

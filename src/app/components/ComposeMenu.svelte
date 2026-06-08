@@ -7,7 +7,7 @@
   import Revote from "@assets/icons/revote.svg?dataurl"
   import Button from "@lib/components/Button.svelte"
   import Icon from "@lib/components/Icon.svelte"
-  import {pushModal} from "@app/util/modal"
+  import {pushModal} from "@app/modal"
   import CalendarEventCreate from "@app/components/CalendarEventCreate.svelte"
   import ThreadCreate from "@app/components/ThreadCreate.svelte"
   import ClassifiedCreate from "@app/components/ClassifiedCreate.svelte"

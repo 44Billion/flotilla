@@ -12,7 +12,7 @@
   import ModalSubtitle from "@lib/components/ModalSubtitle.svelte"
   import ModalFooter from "@lib/components/ModalFooter.svelte"
   import RoomForm from "@app/components/RoomForm.svelte"
-  import {makeSpacePath} from "@app/util/routes"
+  import {makeSpacePath} from "@app/routes"
 
   const {url} = $props()
 

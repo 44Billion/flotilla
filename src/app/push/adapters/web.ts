@@ -3,9 +3,9 @@ import {maybe} from "@welshman/lib"
 import type {Unsubscriber} from "svelte/store"
 import {getPubkeyTagValues, matchFilter, type TrustedEvent} from "@welshman/util"
 import {DM_KINDS, notificationSettings} from "@app/core/state"
-import type {IPushAdapter} from "@app/util/push/adapters/common"
-import {onNotification} from "@app/util/push/adapters/common"
-import {goToEvent} from "@app/util/routes"
+import type {IPushAdapter} from "@app/push/adapters/common"
+import {onNotification} from "@app/push/adapters/common"
+import {goToEvent} from "@app/routes"
 
 export class WebNotifications implements IPushAdapter {
   _unsubscriber = maybe<Unsubscriber>()

@@ -11,8 +11,8 @@
   import EventInfo from "@app/components/EventInfo.svelte"
   import Report from "@app/components/Report.svelte"
   import EventDeleteConfirm from "@app/components/EventDeleteConfirm.svelte"
-  import {pushModal} from "@app/util/modal"
-  import {pushToast} from "@app/util/toast"
+  import {pushModal} from "@app/modal"
+  import {pushToast} from "@app/toast"
   import {deriveUserIsSpaceAdmin} from "@app/core/state"
 
   type Props = {

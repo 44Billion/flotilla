@@ -13,8 +13,8 @@
   import SpaceAuthError from "@app/components/SpaceAuthError.svelte"
   import SpaceTrustRelay from "@app/components/SpaceTrustRelay.svelte"
   import SpaceJoin from "@app/components/SpaceJoin.svelte"
-  import {pushModal} from "@app/util/modal"
-  import {makeSpacePath} from "@app/util/routes"
+  import {pushModal} from "@app/modal"
+  import {makeSpacePath} from "@app/routes"
   import {decodeRelay, userGroupList, relaysPendingTrust, userSpaceUrls} from "@app/core/state"
   import {deriveRelayAuthError} from "@app/core/commands"
 

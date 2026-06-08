@@ -2,7 +2,7 @@ import {Track} from "livekit-client"
 import {MediaQuery} from "svelte/reactivity"
 import {derived, get, writable} from "svelte/store"
 import {currentVoiceSession, VoiceState, type VoiceSession, voiceState} from "@app/call/stores"
-import {pushToast} from "@app/util/toast"
+import {pushToast} from "@app/toast"
 
 export enum VideoCallLayout {
   Chat = "chat",

@@ -3,7 +3,7 @@
   import type {TrustedEvent} from "@welshman/util"
   import {noop} from "@welshman/lib"
   import {stopPropagation} from "@lib/html"
-  import {getPollType, isPollClosed} from "@app/util/polls"
+  import {getPollType, isPollClosed} from "@app/polls"
 
   type Props = {
     event: TrustedEvent

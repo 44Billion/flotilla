@@ -6,7 +6,7 @@
   import ProfileInfo from "@app/components/ProfileInfo.svelte"
   import ProfileBadges from "@app/components/ProfileBadges.svelte"
   import ProfileDetail from "@app/components/ProfileDetail.svelte"
-  import {pushModal} from "@app/util/modal"
+  import {pushModal} from "@app/modal"
 
   type Props = {
     pubkey: string

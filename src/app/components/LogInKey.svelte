@@ -19,9 +19,9 @@
   import ModalTitle from "@lib/components/ModalTitle.svelte"
   import ModalSubtitle from "@lib/components/ModalSubtitle.svelte"
   import ModalFooter from "@lib/components/ModalFooter.svelte"
-  import {clearModals} from "@app/util/modal"
-  import {setChecked} from "@app/util/notifications"
-  import {pushToast} from "@app/util/toast"
+  import {clearModals} from "@app/modal"
+  import {setChecked} from "@app/notifications"
+  import {pushToast} from "@app/toast"
 
   let loading = $state(false)
   let keyInput = $state("")

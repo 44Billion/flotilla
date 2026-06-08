@@ -4,7 +4,7 @@
   import DangerTriangle from "@assets/icons/danger-triangle.svg?dataurl"
   import Icon from "@lib/components/Icon.svelte"
   import RelayList from "@app/components/RelayList.svelte"
-  import {pushModal} from "@app/util/modal"
+  import {pushModal} from "@app/modal"
 
   interface Props {
     icon: string

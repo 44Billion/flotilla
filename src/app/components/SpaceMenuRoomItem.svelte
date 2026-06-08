@@ -6,8 +6,8 @@
   import RoomNameWithImage from "@app/components/RoomNameWithImage.svelte"
   import VoiceRoomItem from "@app/components/VoiceRoomItem.svelte"
   import {deriveRoom, deriveShouldNotify, getRoomType, RoomType} from "@app/core/state"
-  import {notifications} from "@app/util/notifications"
-  import {makeRoomPath} from "@app/util/routes"
+  import {notifications} from "@app/notifications"
+  import {makeRoomPath} from "@app/routes"
 
   interface Props {
     url: any

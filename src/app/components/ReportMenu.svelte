@@ -14,8 +14,8 @@
   import Confirm from "@lib/components/Confirm.svelte"
   import {deriveUserIsSpaceAdmin} from "@app/core/state"
   import {publishDelete, canEnforceNip70} from "@app/core/commands"
-  import {pushToast} from "@app/util/toast"
-  import {pushModal} from "@app/util/modal"
+  import {pushToast} from "@app/toast"
+  import {pushModal} from "@app/modal"
 
   type Props = {
     url: string

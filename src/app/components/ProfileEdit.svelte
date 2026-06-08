@@ -8,8 +8,8 @@
   import Button from "@lib/components/Button.svelte"
   import Spinner from "@lib/components/Spinner.svelte"
   import ProfileEditForm from "@app/components/ProfileEditForm.svelte"
-  import {clearModals} from "@app/util/modal"
-  import {pushToast} from "@app/util/toast"
+  import {clearModals} from "@app/modal"
+  import {pushToast} from "@app/toast"
   import {updateProfile} from "@app/core/commands"
 
   const profile = $profilesByPubkey.get($pubkey!) || makeProfile()

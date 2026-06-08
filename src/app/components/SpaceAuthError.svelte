@@ -15,7 +15,7 @@
   import ModalSubtitle from "@lib/components/ModalSubtitle.svelte"
   import ModalFooter from "@lib/components/ModalFooter.svelte"
   import SpaceAccessRequest from "@app/components/SpaceAccessRequest.svelte"
-  import {pushModal, clearModals} from "@app/util/modal"
+  import {pushModal, clearModals} from "@app/modal"
   import {removeSpaceMembership, publishLeaveRequest, removeTrustedRelay} from "@app/core/commands"
 
   const {url, error} = $props()

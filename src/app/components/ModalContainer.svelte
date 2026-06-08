@@ -2,7 +2,7 @@
   import {onMount, mount, unmount} from "svelte"
   import Drawer from "@lib/components/Drawer.svelte"
   import Dialog from "@lib/components/Dialog.svelte"
-  import {modal, modalStack, popModal} from "@app/util/modal"
+  import {modal, modalStack, popModal} from "@app/modal"
 
   const closeModal = () => {
     if ($modal && !$modal.options.noEscape) {

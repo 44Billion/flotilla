@@ -9,9 +9,9 @@
   import Spinner from "@lib/components/Spinner.svelte"
   import Icon from "@lib/components/Icon.svelte"
   import Button from "@lib/components/Button.svelte"
-  import {pushToast} from "@app/util/toast"
-  import {clearBadges} from "@app/util/notifications"
-  import {Push} from "@app/util/push"
+  import {pushToast} from "@app/toast"
+  import {clearBadges} from "@app/notifications"
+  import {Push} from "@app/push"
   import {notificationSettings} from "@app/core/state"
 
   const reset = () => {

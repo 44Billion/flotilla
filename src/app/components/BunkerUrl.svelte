@@ -7,8 +7,8 @@
   import QrCode from "@assets/icons/qr-code.svg?dataurl"
   import Icon from "@lib/components/Icon.svelte"
   import InfoBunker from "@app/components/InfoBunker.svelte"
-  import type {Nip46Controller} from "@app/util/nip46"
-  import {pushModal} from "@app/util/modal"
+  import type {Nip46Controller} from "@app/nip46"
+  import {pushModal} from "@app/modal"
 
   type Props = {
     controller: Nip46Controller

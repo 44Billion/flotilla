@@ -27,8 +27,8 @@
     deriveUserIsSpaceAdmin,
     deriveSupportedMethods,
   } from "@app/core/state"
-  import {pushModal} from "@app/util/modal"
-  import {pushToast} from "@app/util/toast"
+  import {pushModal} from "@app/modal"
+  import {pushToast} from "@app/toast"
 
   interface Props {
     url: string

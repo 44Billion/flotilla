@@ -10,8 +10,8 @@
   import Button from "@lib/components/Button.svelte"
   import ProfileSpaces from "@app/components/ProfileSpaces.svelte"
   import {deriveGroupList, getSpaceUrlsFromGroupList} from "@app/core/state"
-  import {goToEvent} from "@app/util/routes"
-  import {pushModal} from "@app/util/modal"
+  import {goToEvent} from "@app/routes"
+  import {pushModal} from "@app/modal"
 
   type Props = {
     pubkey: string

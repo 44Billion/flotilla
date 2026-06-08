@@ -11,8 +11,8 @@
   import ModalTitle from "@lib/components/ModalTitle.svelte"
   import ModalFooter from "@lib/components/ModalFooter.svelte"
   import {updateProfile} from "@app/core/commands"
-  import {clearModals} from "@app/util/modal"
-  import {pushToast} from "@app/util/toast"
+  import {clearModals} from "@app/modal"
+  import {pushToast} from "@app/toast"
 
   const lud16 = getWalletAddress($session!.wallet!)
 

@@ -23,9 +23,9 @@
     DEFAULT_RELAYS,
     DEFAULT_MESSAGING_RELAYS,
   } from "@app/core/state"
-  import {setChecked} from "@app/util/notifications"
-  import {loginWithPomade} from "@app/util/pomade"
-  import {pushModal, clearModals} from "@app/util/modal"
+  import {setChecked} from "@app/notifications"
+  import {loginWithPomade} from "@app/pomade"
+  import {pushModal, clearModals} from "@app/modal"
 
   setKey("signup.email", "")
   setKey("signup.secret", makeSecret())

@@ -24,7 +24,7 @@
   import Reaction from "@app/components/Reaction.svelte"
   import ReportDetails from "@app/components/ReportDetails.svelte"
   import {REACTION_KINDS, deriveUserIsSpaceAdmin} from "@app/core/state"
-  import {pushModal} from "@app/util/modal"
+  import {pushModal} from "@app/modal"
 
   interface Props {
     event: TrustedEvent

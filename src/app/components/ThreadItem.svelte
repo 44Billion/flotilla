@@ -7,7 +7,7 @@
   import ProfileLink from "@app/components/ProfileLink.svelte"
   import ThreadActions from "@app/components/ThreadActions.svelte"
   import RoomLink from "@app/components/RoomLink.svelte"
-  import {makeThreadPath} from "@app/util/routes"
+  import {makeThreadPath} from "@app/routes"
 
   type Props = {
     url: string

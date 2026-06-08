@@ -21,10 +21,10 @@
     setSpaceNotifications,
   } from "@app/core/commands"
   import {relaysMostlyRestricted, notificationSettings} from "@app/core/state"
-  import {pushModal} from "@app/util/modal"
-  import {pushToast} from "@app/util/toast"
-  import {makeSpacePath} from "@app/util/routes"
-  import {Push} from "@app/util/push"
+  import {pushModal} from "@app/modal"
+  import {pushToast} from "@app/toast"
+  import {makeSpacePath} from "@app/routes"
+  import {Push} from "@app/push"
 
   type Props = {
     url: string

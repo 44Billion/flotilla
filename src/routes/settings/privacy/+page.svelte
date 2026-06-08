@@ -4,7 +4,7 @@
   import FieldInline from "@lib/components/FieldInline.svelte"
   import Icon from "@lib/components/Icon.svelte"
   import Button from "@lib/components/Button.svelte"
-  import {pushToast} from "@app/util/toast"
+  import {pushToast} from "@app/toast"
   import {PLATFORM_NAME, RelayAuthMode, userSettingsValues} from "@app/core/state"
   import {publishSettings} from "@app/core/commands"
 

@@ -4,7 +4,7 @@
   import Button from "@lib/components/Button.svelte"
   import ProfileName from "@app/components/ProfileName.svelte"
   import ProfileDetail from "@app/components/ProfileDetail.svelte"
-  import {pushModal} from "@app/util/modal"
+  import {pushModal} from "@app/modal"
 
   type Props = {
     pubkey: string

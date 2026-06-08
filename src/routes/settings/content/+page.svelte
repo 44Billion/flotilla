@@ -19,7 +19,7 @@
   import Icon from "@lib/components/Icon.svelte"
   import Button from "@lib/components/Button.svelte"
   import ProfileMultiSelect from "@app/components/ProfileMultiSelect.svelte"
-  import {pushToast} from "@app/util/toast"
+  import {pushToast} from "@app/toast"
   import {PLATFORM_NAME, userSettingsValues} from "@app/core/state"
   import {publishSettings} from "@app/core/commands"
 

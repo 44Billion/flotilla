@@ -1,6 +1,6 @@
 import {db, kv, ss} from "@app/core/storage"
-import {deactivateCurrentPomadeSession} from "@app/util/pomade"
-import {Push} from "@app/util/push"
+import {deactivateCurrentPomadeSession} from "@app/pomade"
+import {Push} from "@app/push"
 
 export const logout = async () => {
   await deactivateCurrentPomadeSession()

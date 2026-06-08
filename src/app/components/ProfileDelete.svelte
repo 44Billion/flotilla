@@ -23,8 +23,8 @@
   import Modal from "@lib/components/Modal.svelte"
   import ModalBody from "@lib/components/ModalBody.svelte"
   import {INDEXER_RELAYS, PLATFORM_NAME, userSpaceUrls} from "@app/core/state"
-  import {pushToast} from "@app/util/toast"
-  import {logout} from "@app/util/logout"
+  import {pushToast} from "@app/toast"
+  import {logout} from "@app/session"
 
   let progress: number | undefined = $state(undefined)
   let confirmText = $state("")

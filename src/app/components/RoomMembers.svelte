@@ -19,8 +19,8 @@
   import RoomName from "@app/components/RoomName.svelte"
   import RoomMembersAdd from "@app/components/RoomMembersAdd.svelte"
   import {deriveRoom, deriveRoomMembers, deriveUserIsRoomAdmin} from "@app/core/state"
-  import {pushModal} from "@app/util/modal"
-  import {pushToast} from "@app/util/toast"
+  import {pushModal} from "@app/modal"
+  import {pushToast} from "@app/toast"
 
   interface Props {
     url: string

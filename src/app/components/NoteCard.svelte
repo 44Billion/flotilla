@@ -8,7 +8,7 @@
   import Button from "@lib/components/Button.svelte"
   import Profile from "@app/components/Profile.svelte"
   import ProfileName from "@app/components/ProfileName.svelte"
-  import {goToEvent} from "@app/util/routes"
+  import {goToEvent} from "@app/routes"
   import {isEventMuted} from "@app/core/state"
 
   const {

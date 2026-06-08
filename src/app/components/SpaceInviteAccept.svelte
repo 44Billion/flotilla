@@ -21,10 +21,10 @@
   import ModalFooter from "@lib/components/ModalFooter.svelte"
   import RelaySummary from "@app/components/RelaySummary.svelte"
   import SpaceJoinSettings from "@app/components/SpaceJoinSettings.svelte"
-  import {pushToast} from "@app/util/toast"
-  import {makeSpacePath} from "@app/util/routes"
+  import {pushToast} from "@app/toast"
+  import {makeSpacePath} from "@app/routes"
   import {relaysMostlyRestricted, notificationSettings, parseInviteLink} from "@app/core/state"
-  import {Push} from "@app/util/push"
+  import {Push} from "@app/push"
   import {
     attemptRelayAccess,
     addSpaceMembership,

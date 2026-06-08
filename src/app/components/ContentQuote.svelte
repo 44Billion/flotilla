@@ -8,7 +8,7 @@
   import NoteCard from "@app/components/NoteCard.svelte"
   import NoteContentMinimal from "@app/components/NoteContentMinimal.svelte"
   import {deriveEvent, entityLink} from "@app/core/state"
-  import {goToEvent} from "@app/util/routes"
+  import {goToEvent} from "@app/routes"
 
   type Props = {
     value: any

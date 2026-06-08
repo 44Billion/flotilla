@@ -6,8 +6,8 @@ import type {Session} from "@welshman/app"
 import {maybe, now} from "@welshman/lib"
 import type {Filter} from "@welshman/util"
 import {pushState} from "@app/core/state"
-import type {IPushAdapter} from "@app/util/push/adapters/common"
-import {requestPermissions, syncRelaySubscriptions} from "@app/util/push/adapters/common"
+import type {IPushAdapter} from "@app/push/adapters/common"
+import {requestPermissions, syncRelaySubscriptions} from "@app/push/adapters/common"
 
 type AndroidFallbackSubscription = {
   relay: string

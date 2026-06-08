@@ -6,7 +6,7 @@
   import PrimaryNavItem from "@lib/components/PrimaryNavItem.svelte"
   import PrimaryNavItemSpace from "@app/components/PrimaryNavItemSpace.svelte"
   import {userSpaceUrls, PLATFORM_RELAYS, PLATFORM_LOGO} from "@app/core/state"
-  import {notifications} from "@app/util/notifications"
+  import {notifications} from "@app/notifications"
 
   let windowHeight = $state(0)
 

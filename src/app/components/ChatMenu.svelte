@@ -7,7 +7,7 @@
   import Button from "@lib/components/Button.svelte"
   import Modal from "@lib/components/Modal.svelte"
   import ModalBody from "@lib/components/ModalBody.svelte"
-  import {setChecked} from "@app/util/notifications"
+  import {setChecked} from "@app/notifications"
   import {notificationSettings} from "@app/core/state"
 
   const markAsRead = () => {

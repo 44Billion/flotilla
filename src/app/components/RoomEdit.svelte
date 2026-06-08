@@ -12,7 +12,7 @@
   import ModalFooter from "@lib/components/ModalFooter.svelte"
   import RoomForm from "@app/components/RoomForm.svelte"
   import {deriveRoom} from "@app/core/state"
-  import {makeSpacePath} from "@app/util/routes"
+  import {makeSpacePath} from "@app/routes"
 
   type Props = {
     url: string

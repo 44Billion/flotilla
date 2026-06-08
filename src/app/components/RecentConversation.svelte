@@ -10,7 +10,7 @@
   import NoteContentMinimal from "@app/components/NoteContentMinimal.svelte"
   import ProfileCircle from "@app/components/ProfileCircle.svelte"
   import RoomNameWithImage from "@app/components/RoomNameWithImage.svelte"
-  import {makeRoomPath, makeSpaceChatPath} from "@app/util/routes"
+  import {makeRoomPath, makeSpaceChatPath} from "@app/routes"
 
   type Props = {
     url: string

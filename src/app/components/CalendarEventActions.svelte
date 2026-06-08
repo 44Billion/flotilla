@@ -13,8 +13,8 @@
   import EventActions from "@app/components/EventActions.svelte"
   import CalendarEventEdit from "@app/components/CalendarEventEdit.svelte"
   import {publishDelete, publishReaction, canEnforceNip70} from "@app/core/commands"
-  import {makeCalendarPath, makeSpacePath} from "@app/util/routes"
-  import {pushModal} from "@app/util/modal"
+  import {makeCalendarPath, makeSpacePath} from "@app/routes"
+  import {pushModal} from "@app/modal"
 
   type Props = {
     url: string

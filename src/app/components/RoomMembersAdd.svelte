@@ -18,8 +18,8 @@
   import Confirm from "@lib/components/Confirm.svelte"
   import RoomName from "@app/components/RoomName.svelte"
   import ProfileMultiSelect from "@app/components/ProfileMultiSelect.svelte"
-  import {pushToast} from "@app/util/toast"
-  import {pushModal} from "@app/util/modal"
+  import {pushToast} from "@app/toast"
+  import {pushModal} from "@app/modal"
   import {deriveRoom, deriveSpaceMembers} from "@app/core/state"
   import {addRoomMembers} from "@app/core/commands"
 

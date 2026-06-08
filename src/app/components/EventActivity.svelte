@@ -6,7 +6,7 @@
   import {deriveArray, deriveEventsById} from "@welshman/store"
   import type {TrustedEvent} from "@welshman/util"
   import {repository} from "@welshman/app"
-  import {deriveChecked} from "@app/util/notifications"
+  import {deriveChecked} from "@app/notifications"
   import Reply from "@assets/icons/reply-2.svg?dataurl"
   import Icon from "@lib/components/Icon.svelte"
 

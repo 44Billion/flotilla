@@ -12,7 +12,7 @@
   import ComposeMenu from "@app/components/ComposeMenu.svelte"
   import EditorContent from "@app/editor/EditorContent.svelte"
   import {makeEditor} from "@app/editor"
-  import {DraftKey} from "@app/util/drafts"
+  import {DraftKey} from "@app/drafts"
   import {onDestroy, onMount} from "svelte"
 
   type Values = {

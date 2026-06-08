@@ -31,7 +31,7 @@ import {
   userSettingsValues,
   makeCommentFilter,
 } from "@app/core/state"
-import {makeSpacePath, getEventPath} from "@app/util/routes"
+import {makeSpacePath, getEventPath} from "@app/routes"
 
 export interface IPushAdapter {
   request: (prompt?: boolean) => Promise<string>

@@ -2,7 +2,7 @@
   import type {TrustedEvent} from "@welshman/util"
   import Confirm from "@lib/components/Confirm.svelte"
   import {publishDelete, canEnforceNip70} from "@app/core/commands"
-  import {clearModals} from "@app/util/modal"
+  import {clearModals} from "@app/modal"
 
   type Props = {
     url: string

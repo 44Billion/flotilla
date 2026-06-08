@@ -50,7 +50,7 @@
   import PollItem from "@app/components/PollItem.svelte"
   import RecentConversation from "@app/components/RecentConversation.svelte"
   import {decodeRelay, deriveEventsForUrl, CONTENT_KINDS} from "@app/core/state"
-  import {goToEvent} from "@app/util/routes"
+  import {goToEvent} from "@app/routes"
 
   const url = decodeRelay($page.params.relay!)
   const since = ago(3, MONTH)

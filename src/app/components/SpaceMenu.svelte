@@ -58,9 +58,9 @@
     displayRoom,
   } from "@app/core/state"
   import {setSpaceNotifications} from "@app/core/commands"
-  import {pushModal} from "@app/util/modal"
-  import {makeSpacePath, goToChat} from "@app/util/routes"
-  import {notifications} from "@app/util/notifications"
+  import {pushModal} from "@app/modal"
+  import {makeSpacePath, goToChat} from "@app/routes"
+  import {notifications} from "@app/notifications"
 
   const {url} = $props()
 

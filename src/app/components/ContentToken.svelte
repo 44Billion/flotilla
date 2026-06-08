@@ -2,7 +2,7 @@
   import Bolt from "@assets/icons/bolt.svg?dataurl"
   import Icon from "@lib/components/Icon.svelte"
   import Button from "@lib/components/Button.svelte"
-  import {clip} from "@app/util/toast"
+  import {clip} from "@app/toast"
 
   const {value} = $props()
 

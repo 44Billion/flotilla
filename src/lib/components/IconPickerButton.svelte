@@ -6,7 +6,7 @@
   import Tippy from "@lib/components/Tippy.svelte"
   import IconPickerModal from "@app/components/IconPickerModal.svelte"
   import IconPickerPopover from "@app/components/IconPickerPopover.svelte"
-  import {pushModal, popModal} from "@app/util/modal"
+  import {pushModal, popModal} from "@app/modal"
 
   const {...props} = $props()
 

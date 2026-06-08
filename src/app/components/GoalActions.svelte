@@ -8,7 +8,7 @@
   import EventActions from "@app/components/EventActions.svelte"
   import RoomName from "@app/components/RoomName.svelte"
   import {publishDelete, publishReaction, canEnforceNip70} from "@app/core/commands"
-  import {makeGoalPath, makeSpacePath} from "@app/util/routes"
+  import {makeGoalPath, makeSpacePath} from "@app/routes"
 
   interface Props {
     url: string

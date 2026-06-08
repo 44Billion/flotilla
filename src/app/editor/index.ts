@@ -35,7 +35,7 @@ import {
   userSpaceUrls,
   roomsByUrl,
 } from "@app/core/state"
-import {pushToast} from "@app/util/toast"
+import {pushToast} from "@app/toast"
 
 export const makeEditor = async ({
   encryptFiles = false,

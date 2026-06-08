@@ -18,10 +18,10 @@
   import LogInBunker from "@app/components/LogInBunker.svelte"
   import LogInEmail from "@app/components/LogInEmail.svelte"
   import LogInKey from "@app/components/LogInKey.svelte"
-  import {pushModal, clearModals} from "@app/util/modal"
+  import {pushModal, clearModals} from "@app/modal"
   import {PLATFORM_NAME, POMADE_SIGNERS} from "@app/core/state"
-  import {pushToast} from "@app/util/toast"
-  import {setChecked} from "@app/util/notifications"
+  import {pushToast} from "@app/toast"
+  import {setChecked} from "@app/notifications"
 
   let signers: any[] = $state([])
   let loading: string | undefined = $state()

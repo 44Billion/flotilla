@@ -17,7 +17,7 @@
   import InfoSignatures from "@app/components/InfoSignatures.svelte"
   import {relaysPendingTrust} from "@app/core/state"
   import {removeSpaceMembership, addTrustedRelay, removeTrustedRelay} from "@app/core/commands"
-  import {pushModal} from "@app/util/modal"
+  import {pushModal} from "@app/modal"
 
   type Props = {
     url: string

@@ -2,8 +2,8 @@
   import {deriveRelayDisplay} from "@welshman/app"
   import PrimaryNavItem from "@lib/components/PrimaryNavItem.svelte"
   import RelayIcon from "@app/components/RelayIcon.svelte"
-  import {makeSpacePath, goToSpace} from "@app/util/routes"
-  import {notifications} from "@app/util/notifications"
+  import {makeSpacePath, goToSpace} from "@app/routes"
+  import {notifications} from "@app/notifications"
 
   type Props = {
     url: string

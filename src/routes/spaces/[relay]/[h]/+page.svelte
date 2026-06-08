@@ -49,10 +49,10 @@
   import {VideoCallLayout, videoCallLayout, videoTileCount} from "@app/call/video"
   import {makeFeed} from "@app/core/requests"
   import {popKey} from "@lib/implicit"
-  import {checked, deferredRoomPath, setChecked} from "@app/util/notifications"
-  import {makeRoomPath} from "@app/util/routes"
-  import {pushModal} from "@app/util/modal"
-  import {pushToast} from "@app/util/toast"
+  import {checked, deferredRoomPath, setChecked} from "@app/notifications"
+  import {makeRoomPath} from "@app/routes"
+  import {pushModal} from "@app/modal"
+  import {pushToast} from "@app/toast"
 
   const {h, relay} = $page.params as MakeNonOptional<typeof $page.params>
   const mounted = now()

@@ -8,7 +8,7 @@
   import Icon from "@lib/components/Icon.svelte"
   import Button from "@lib/components/Button.svelte"
   import LogOut from "@app/components/LogOut.svelte"
-  import {pushModal} from "@app/util/modal"
+  import {pushModal} from "@app/modal"
   import PomadeSessions from "@app/components/PomadeSessions.svelte"
 
   const finished = $derived($signerLog.filter(x => x.finished_at))

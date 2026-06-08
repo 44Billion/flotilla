@@ -20,8 +20,8 @@
   import EditorContent from "@app/editor/EditorContent.svelte"
   import {PROTECTED} from "@app/core/state"
   import {makeEditor} from "@app/editor"
-  import {DraftKey} from "@app/util/drafts"
-  import {pushToast} from "@app/util/toast"
+  import {DraftKey} from "@app/drafts"
+  import {pushToast} from "@app/toast"
   import {canEnforceNip70, publishRoomQuote} from "@app/core/commands"
 
   type Values = {

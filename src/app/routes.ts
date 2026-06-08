@@ -20,9 +20,25 @@ import {
   getRelaysFromList,
 } from "@welshman/util"
 import {makeChatId, entityLink, encodeRelay, DM_KINDS, ROOM} from "@app/core/state"
-import {pushModal} from "@app/util/modal"
-import {lastPageBySpaceUrl, lastChatUrl} from "@app/util/history"
+import {pushModal} from "@app/modal"
 import ChatEnable from "@app/components/ChatEnable.svelte"
+
+// State
+
+export let lastChatUrl: string | undefined = undefined
+
+export const lastPageBySpaceUrl = new Map<string, string>()
+
+export const setupHistory = () =>
+  page.subscribe($page => {
+    if ($page.params.relay) {
+      lastPageBySpaceUrl.set($page.params.relay, $page.url.pathname)
+    }
+
+    if ($page.params.chat) {
+      lastChatUrl = $page.url.pathname
+    }
+  })
 
 // Chat
 

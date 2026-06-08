@@ -17,8 +17,8 @@
   import ModalFooter from "@lib/components/ModalFooter.svelte"
   import StringMultiInput from "@lib/components/StringMultiInput.svelte"
   import KeyDownload from "@app/components/KeyDownload.svelte"
-  import {pushToast} from "@app/util/toast"
-  import {pushModal, clearModals} from "@app/util/modal"
+  import {pushToast} from "@app/toast"
+  import {pushModal, clearModals} from "@app/modal"
 
   type Props = {
     peersByPrefix: Map<string, string>

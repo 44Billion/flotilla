@@ -8,9 +8,9 @@
   import Button from "@lib/components/Button.svelte"
   import Popover from "@lib/components/Popover.svelte"
   import TrashBin2 from "@assets/icons/trash-bin-2.svg?dataurl"
-  import {pushToast} from "@app/util/toast"
-  import {loadOtherPomadeSessions} from "@app/util/pomade"
-  import type {PomadeSessionWithPeers} from "@app/util/pomade"
+  import {pushToast} from "@app/toast"
+  import {loadOtherPomadeSessions} from "@app/pomade"
+  import type {PomadeSessionWithPeers} from "@app/pomade"
 
   const toggleMenu = (client: string) => {
     menuClient = menuClient === client ? "" : client

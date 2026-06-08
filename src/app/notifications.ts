@@ -12,7 +12,7 @@ import {
   makeHttpAuth,
   makeHttpAuthHeader,
 } from "@welshman/util"
-import {makeSpacePath, makeRoomPath, makeSpaceChatPath, makeChatPath} from "@app/util/routes"
+import {makeSpacePath, makeRoomPath, makeSpaceChatPath, makeChatPath} from "@app/routes"
 import {
   CONTENT_KINDS,
   notificationSettings,

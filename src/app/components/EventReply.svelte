@@ -10,8 +10,8 @@
   import {publishComment, canEnforceNip70} from "@app/core/commands"
   import {PROTECTED} from "@app/core/state"
   import {makeEditor} from "@app/editor"
-  import {DraftKey} from "@app/util/drafts"
-  import {pushToast} from "@app/util/toast"
+  import {DraftKey} from "@app/drafts"
+  import {pushToast} from "@app/toast"
 
   type Values = {
     content?: string | object

@@ -1,11 +1,11 @@
 import {Capacitor} from "@capacitor/core"
 import {notificationSettings, pushState} from "@app/core/state"
-import {WebNotifications} from "@app/util/push/adapters/web"
-import {CapacitorNotifications} from "@app/util/push/adapters/capacitor"
-import {AndroidFallbackNotifications} from "@app/util/push/adapters/android"
-import type {IPushAdapter} from "@app/util/push/adapters/common"
+import {WebNotifications} from "@app/push/adapters/web"
+import {CapacitorNotifications} from "@app/push/adapters/capacitor"
+import {AndroidFallbackNotifications} from "@app/push/adapters/android"
+import type {IPushAdapter} from "@app/push/adapters/common"
 
-export {onNotification} from "@app/util/push/adapters/common"
+export {onNotification} from "@app/push/adapters/common"
 
 export class Push {
   static _adapter: IPushAdapter | undefined

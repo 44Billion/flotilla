@@ -19,8 +19,8 @@
   import EventDeleteConfirm from "@app/components/EventDeleteConfirm.svelte"
   import {ENABLE_ZAPS} from "@app/core/state"
   import {publishReaction, canEnforceNip70} from "@app/core/commands"
-  import {getRoomItemPath} from "@app/util/routes"
-  import {pushModal} from "@app/util/modal"
+  import {getRoomItemPath} from "@app/routes"
+  import {pushModal} from "@app/modal"
 
   type Props = {
     url: string

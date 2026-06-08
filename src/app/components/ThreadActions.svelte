@@ -8,7 +8,7 @@
   import EventActivity from "@app/components/EventActivity.svelte"
   import EventActions from "@app/components/EventActions.svelte"
   import {publishDelete, publishReaction, canEnforceNip70} from "@app/core/commands"
-  import {makeThreadPath, makeSpacePath} from "@app/util/routes"
+  import {makeThreadPath, makeSpacePath} from "@app/routes"
 
   interface Props {
     url: string

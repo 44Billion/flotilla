@@ -9,7 +9,7 @@
   import ProfileLink from "@app/components/ProfileLink.svelte"
   import ClassifiedActions from "@app/components/ClassifiedActions.svelte"
   import RoomLink from "@app/components/RoomLink.svelte"
-  import {makeClassifiedPath} from "@app/util/routes"
+  import {makeClassifiedPath} from "@app/routes"
 
   type Props = {
     url: string

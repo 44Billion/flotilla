@@ -13,13 +13,13 @@ import type {Filter} from "@welshman/util"
 import {DELETE, getRelaysFromList, makeEvent, Address} from "@welshman/util"
 import {buildUrl} from "@lib/util"
 import {PUSH_BRIDGE, PUSH_SERVER, pushState, userSpaceUrls, device} from "@app/core/state"
-import type {IPushAdapter} from "@app/util/push/adapters/common"
+import type {IPushAdapter} from "@app/push/adapters/common"
 import {
   onPushNotificationAction,
   syncRelaySubscriptions,
   requestPermissions,
   requestToken,
-} from "@app/util/push/adapters/common"
+} from "@app/push/adapters/common"
 
 export class CapacitorNotifications implements IPushAdapter {
   _controller = maybe<AbortController>()

@@ -22,8 +22,8 @@
   import ModalSubtitle from "@lib/components/ModalSubtitle.svelte"
   import ModalFooter from "@lib/components/ModalFooter.svelte"
   import {getWebLn} from "@app/core/commands"
-  import {pushToast} from "@app/util/toast"
-  import {pushModal} from "@app/util/modal"
+  import {pushToast} from "@app/toast"
+  import {pushModal} from "@app/modal"
   import WalletAsReceivingAddress from "@app/components/WalletAsReceivingAddress.svelte"
   import Divider from "@lib/components/Divider.svelte"
 

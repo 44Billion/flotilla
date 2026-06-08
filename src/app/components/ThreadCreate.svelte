@@ -16,10 +16,10 @@
   import Modal from "@lib/components/Modal.svelte"
   import ModalBody from "@lib/components/ModalBody.svelte"
   import EditorContent from "@app/editor/EditorContent.svelte"
-  import {pushToast} from "@app/util/toast"
+  import {pushToast} from "@app/toast"
   import {PROTECTED} from "@app/core/state"
   import {makeEditor} from "@app/editor"
-  import {DraftKey} from "@app/util/drafts"
+  import {DraftKey} from "@app/drafts"
   import {canEnforceNip70, publishRoomQuote} from "@app/core/commands"
 
   type Values = {

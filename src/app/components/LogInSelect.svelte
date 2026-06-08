@@ -13,11 +13,11 @@
   import ModalSubtitle from "@lib/components/ModalSubtitle.svelte"
   import ModalFooter from "@lib/components/ModalFooter.svelte"
   import Profile from "@app/components/Profile.svelte"
-  import {deleteDeactivatedPomadeSessions, loginWithPomade} from "@app/util/pomade"
-  import {getPomadeLoginFailureMessage, POMADE_NETWORK_ERROR_MESSAGE} from "@app/util/pomadeErrors"
-  import {setChecked} from "@app/util/notifications"
-  import {clearModals} from "@app/util/modal"
-  import {pushToast} from "@app/util/toast"
+  import {deleteDeactivatedPomadeSessions, loginWithPomade} from "@app/pomade"
+  import {getPomadeLoginFailureMessage, POMADE_NETWORK_ERROR_MESSAGE} from "@app/pomade"
+  import {setChecked} from "@app/notifications"
+  import {clearModals} from "@app/modal"
+  import {pushToast} from "@app/toast"
 
   interface Props {
     email: string

@@ -26,9 +26,9 @@
   import SignerStatus from "@app/components/SignerStatus.svelte"
   import PasswordReset from "@app/components/PasswordReset.svelte"
   import InfoKeys from "@app/components/InfoKeys.svelte"
-  import {pushModal} from "@app/util/modal"
-  import {POMADE_NETWORK_ERROR_MESSAGE} from "@app/util/pomadeErrors"
-  import {clip, pushToast} from "@app/util/toast"
+  import {pushModal} from "@app/modal"
+  import {POMADE_NETWORK_ERROR_MESSAGE} from "@app/pomade"
+  import {clip, pushToast} from "@app/toast"
 
   const npub = nip19.npubEncode($pubkey!)
   const profile = deriveProfile($pubkey!)

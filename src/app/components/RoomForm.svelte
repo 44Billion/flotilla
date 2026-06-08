@@ -14,7 +14,7 @@
   import IconPickerButton from "@lib/components/IconPickerButton.svelte"
   import Modal from "@lib/components/Modal.svelte"
   import ModalBody from "@lib/components/ModalBody.svelte"
-  import {pushToast} from "@app/util/toast"
+  import {pushToast} from "@app/toast"
   import {uploadFile} from "@app/core/commands"
   import {deriveHasLivekit, getRoomType, RoomType} from "@app/core/state"
 

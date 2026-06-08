@@ -10,7 +10,7 @@
   import ChatStart from "@app/components/ChatStart.svelte"
   import ChatMenu from "@app/components/ChatMenu.svelte"
   import {chatSearch} from "@app/core/state"
-  import {pushModal} from "@app/util/modal"
+  import {pushModal} from "@app/modal"
 
   let term = $state("")
 

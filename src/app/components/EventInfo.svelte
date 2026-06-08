@@ -17,7 +17,7 @@
   import ModalFooter from "@lib/components/ModalFooter.svelte"
   import ModalTitle from "@lib/components/ModalTitle.svelte"
   import ModalSubtitle from "@lib/components/ModalSubtitle.svelte"
-  import {clip} from "@app/util/toast"
+  import {clip} from "@app/toast"
 
   type Props = {
     url?: string

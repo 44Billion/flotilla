@@ -14,8 +14,8 @@
   import EmojiPicker from "@lib/components/EmojiPicker.svelte"
   import EventInfo from "@app/components/EventInfo.svelte"
   import {makeReaction} from "@app/core/commands"
-  import {pushModal} from "@app/util/modal"
-  import {clip} from "@app/util/toast"
+  import {pushModal} from "@app/modal"
+  import {clip} from "@app/toast"
 
   type Props = {
     pubkeys: string[]

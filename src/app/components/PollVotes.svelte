@@ -5,7 +5,7 @@
   import {pubkey, publishThunk, abortThunk} from "@welshman/app"
   import {formatTimestampRelative} from "@welshman/lib"
   import {deriveEvents} from "@app/core/state"
-  import {pushToast} from "@app/util/toast"
+  import {pushToast} from "@app/toast"
   import {makePollResponse} from "@app/core/commands"
   import PollOption from "@app/components/PollOption.svelte"
   import {
@@ -15,7 +15,7 @@
     getPollResults,
     getPollType,
     isPollClosed,
-  } from "@app/util/polls"
+  } from "@app/polls"
 
   type Props = {
     url: string

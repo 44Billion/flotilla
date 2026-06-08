@@ -13,7 +13,7 @@
   import ModalTitle from "@lib/components/ModalTitle.svelte"
   import ModalFooter from "@lib/components/ModalFooter.svelte"
   import {DEFAULT_RELAYS, DEFAULT_MESSAGING_RELAYS} from "@app/core/state"
-  import {pushToast} from "@app/util/toast"
+  import {pushToast} from "@app/toast"
 
   type Props = {
     next: () => void

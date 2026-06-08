@@ -18,9 +18,9 @@
   import EventShare from "@app/components/EventShare.svelte"
   import EventDeleteConfirm from "@app/components/EventDeleteConfirm.svelte"
   import {hasNip29, deriveUserIsSpaceAdmin} from "@app/core/state"
-  import {pushModal} from "@app/util/modal"
-  import {pushToast} from "@app/util/toast"
-  import {makeSpaceChatPath} from "@app/util/routes"
+  import {pushModal} from "@app/modal"
+  import {pushToast} from "@app/toast"
+  import {makeSpaceChatPath} from "@app/routes"
 
   type Props = {
     url: string

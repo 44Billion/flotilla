@@ -2,8 +2,8 @@
   import Stars from "@assets/icons/stars.svg?dataurl"
   import Icon from "@lib/components/Icon.svelte"
   import Button from "@lib/components/Button.svelte"
-  import type {HealthCheck} from "@app/util/health"
-  import {applyHealthCheck} from "@app/util/health"
+  import type {HealthCheck} from "@app/healthChecks"
+  import {applyHealthCheck} from "@app/healthChecks"
 
   type Props = {
     healthCheck: HealthCheck

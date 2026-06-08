@@ -19,11 +19,11 @@
   import ModalFooter from "@lib/components/ModalFooter.svelte"
   import Modal from "@lib/components/Modal.svelte"
   import ModalBody from "@lib/components/ModalBody.svelte"
-  import {pushToast} from "@app/util/toast"
+  import {pushToast} from "@app/toast"
   import {PROTECTED} from "@app/core/state"
   import {canEnforceNip70, publishRoomQuote} from "@app/core/commands"
-  import {DraftKey} from "@app/util/drafts"
-  import type {PollType} from "@app/util/polls"
+  import {DraftKey} from "@app/drafts"
+  import type {PollType} from "@app/polls"
 
   type Option = {
     id: string

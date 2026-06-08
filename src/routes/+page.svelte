@@ -1,7 +1,7 @@
 <script lang="ts">
   import {onMount} from "svelte"
   import {goto} from "$app/navigation"
-  import {goToSpace} from "@app/util/routes"
+  import {goToSpace} from "@app/routes"
   import {PLATFORM_RELAYS} from "@app/core/state"
 
   onMount(async () => {

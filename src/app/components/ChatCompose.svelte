@@ -10,7 +10,7 @@
   import Button from "@lib/components/Button.svelte"
   import EditorContent from "@app/editor/EditorContent.svelte"
   import {makeEditor} from "@app/editor"
-  import {type DraftKey} from "@app/util/drafts"
+  import {type DraftKey} from "@app/drafts"
 
   type Values = {
     content?: string | object

@@ -19,7 +19,7 @@
   import {decodeRelay} from "@app/core/state"
   import {makeCommentFilter} from "@app/core/state"
   import {makeFeed} from "@app/core/requests"
-  import {pushModal} from "@app/util/modal"
+  import {pushModal} from "@app/modal"
 
   const url = decodeRelay($page.params.relay!)
 

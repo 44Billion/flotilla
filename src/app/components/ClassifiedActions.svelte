@@ -16,8 +16,8 @@
   import EventActions from "@app/components/EventActions.svelte"
   import ClassifiedEdit from "@app/components/ClassifiedEdit.svelte"
   import {publishDelete, publishReaction, canEnforceNip70} from "@app/core/commands"
-  import {makeClassifiedPath, makeSpacePath} from "@app/util/routes"
-  import {pushModal} from "@app/util/modal"
+  import {makeClassifiedPath, makeSpacePath} from "@app/routes"
+  import {pushModal} from "@app/modal"
 
   interface Props {
     url: string

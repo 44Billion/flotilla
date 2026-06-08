@@ -5,7 +5,7 @@
   import Icon from "@lib/components/Icon.svelte"
   import Link from "@lib/components/Link.svelte"
   import {PLATFORM_URL, displayRoom, isRoomId, splitRoomId} from "@app/core/state"
-  import {makeRoomPath, makeSpacePath} from "@app/util/routes"
+  import {makeRoomPath, makeSpacePath} from "@app/routes"
 
   const {
     url,

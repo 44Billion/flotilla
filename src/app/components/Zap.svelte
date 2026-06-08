@@ -20,7 +20,7 @@
   import {errorMessage} from "@lib/util"
   import ProfileLink from "@app/components/ProfileLink.svelte"
   import {payInvoice} from "@app/core/commands"
-  import {pushToast} from "@app/util/toast"
+  import {pushToast} from "@app/toast"
 
   type Props = {
     url: string

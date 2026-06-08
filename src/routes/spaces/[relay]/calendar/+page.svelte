@@ -17,7 +17,7 @@
   import SpaceBar from "@app/components/SpaceBar.svelte"
   import CalendarEventItem from "@app/components/CalendarEventItem.svelte"
   import CalendarEventCreate from "@app/components/CalendarEventCreate.svelte"
-  import {pushModal} from "@app/util/modal"
+  import {pushModal} from "@app/modal"
   import {decodeRelay, makeCommentFilter} from "@app/core/state"
   import {makeCalendarFeed} from "@app/core/requests"
 
