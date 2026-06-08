@@ -23,14 +23,13 @@
   import SpaceJoinSettings from "@app/components/SpaceJoinSettings.svelte"
   import {pushToast} from "@app/toast"
   import {makeSpacePath} from "@app/routes"
-  import {relaysMostlyRestricted, notificationSettings, parseInviteLink} from "@app/core/state"
+  import {relaysMostlyRestricted} from "@app/policies"
+  import {notificationSettings, setSpaceNotifications} from "@app/settings"
+  import {parseInviteLink} from "@app/invites"
   import {Push} from "@app/push"
-  import {
-    attemptRelayAccess,
-    addSpaceMembership,
-    broadcastUserData,
-    setSpaceNotifications,
-  } from "@app/core/commands"
+  import {attemptRelayAccess} from "@app/relays"
+  import {addSpace} from "@app/groups"
+  import {broadcastUserData} from "@app/profiles"
 
   type Props = {
     invite: string
@@ -68,7 +67,7 @@
         await setSpaceNotifications(url, false)
       }
 
-      await addSpaceMembership(url)
+      await addSpace(url)
       await goto(makeSpacePath(url), {replaceState: true})
 
       broadcastUserData([url])

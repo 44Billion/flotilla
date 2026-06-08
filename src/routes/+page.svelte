@@ -2,7 +2,7 @@
   import {onMount} from "svelte"
   import {goto} from "$app/navigation"
   import {goToSpace} from "@app/routes"
-  import {PLATFORM_RELAYS} from "@app/core/state"
+  import {PLATFORM_RELAYS} from "@app/env"
 
   onMount(async () => {
     if (PLATFORM_RELAYS.length > 0) {

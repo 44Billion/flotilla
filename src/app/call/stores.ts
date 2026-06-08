@@ -1,6 +1,6 @@
 import {Room as LiveKitRoom} from "livekit-client"
 import {derived, writable} from "svelte/store"
-import {type Room} from "@app/core/state"
+import type {Room} from "@app/groups"
 
 export type VoiceSession = {
   url: string

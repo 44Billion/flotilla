@@ -1,7 +1,10 @@
 import {append, identity, uniq} from "@welshman/lib"
 import {repository} from "@welshman/app"
 import {displayPubkey, getTagValue} from "@welshman/util"
-import {PLATFORM_NAME, decodeRelay, getRoom, makeRoomId, splitChatId} from "@app/core/state"
+import {PLATFORM_NAME} from "@app/env"
+import {decodeRelay} from "@app/relays"
+import {getRoom, makeRoomId} from "@app/groups"
+import {splitChatId} from "@app/chats"
 
 const FALLBACK_APP_NAME = "Flotilla"
 

@@ -20,8 +20,8 @@
   import Modal from "@lib/components/Modal.svelte"
   import ModalBody from "@lib/components/ModalBody.svelte"
   import {pushToast} from "@app/toast"
-  import {PROTECTED} from "@app/core/state"
-  import {canEnforceNip70, publishRoomQuote} from "@app/core/commands"
+  import {PROTECTED, publishRoomQuote} from "@app/groups"
+  import {canEnforceNip70} from "@app/relays"
   import {DraftKey} from "@app/drafts"
   import type {PollType} from "@app/polls"
 

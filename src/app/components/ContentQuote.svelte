@@ -7,7 +7,8 @@
   import Spinner from "@lib/components/Spinner.svelte"
   import NoteCard from "@app/components/NoteCard.svelte"
   import NoteContentMinimal from "@app/components/NoteContentMinimal.svelte"
-  import {deriveEvent, entityLink} from "@app/core/state"
+  import {deriveEvent} from "@app/repository"
+  import {entityLink} from "@app/env"
   import {goToEvent} from "@app/routes"
 
   type Props = {

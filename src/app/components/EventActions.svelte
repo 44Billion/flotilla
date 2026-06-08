@@ -12,8 +12,9 @@
   import ZapButton from "@app/components/ZapButton.svelte"
   import EmojiButton from "@lib/components/EmojiButton.svelte"
   import EventMenu from "@app/components/EventMenu.svelte"
-  import {ENABLE_ZAPS} from "@app/core/state"
-  import {publishReaction, canEnforceNip70} from "@app/core/commands"
+  import {ENABLE_ZAPS} from "@app/env"
+  import {publishReaction} from "@app/reactions"
+  import {canEnforceNip70} from "@app/relays"
 
   type Props = {
     url: string

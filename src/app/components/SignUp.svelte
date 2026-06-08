@@ -15,14 +15,14 @@
   import SignUpEmail from "@app/components/SignUpEmail.svelte"
   import SignUpProfile from "@app/components/SignUpProfile.svelte"
   import SignUpComplete from "@app/components/SignUpComplete.svelte"
-  import {initProfile} from "@app/core/commands"
+  import {initProfile} from "@app/profiles"
   import {
     POMADE_SIGNERS,
     PLATFORM_NAME,
     INDEXER_RELAYS,
     DEFAULT_RELAYS,
     DEFAULT_MESSAGING_RELAYS,
-  } from "@app/core/state"
+  } from "@app/env"
   import {setChecked} from "@app/notifications"
   import {loginWithPomade} from "@app/pomade"
   import {pushModal, clearModals} from "@app/modal"

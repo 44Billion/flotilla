@@ -11,7 +11,7 @@
   import ModalSubtitle from "@lib/components/ModalSubtitle.svelte"
   import ModalFooter from "@lib/components/ModalFooter.svelte"
   import RoomForm from "@app/components/RoomForm.svelte"
-  import {deriveRoom} from "@app/core/state"
+  import {deriveRoom} from "@app/groups"
   import {makeSpacePath} from "@app/routes"
 
   type Props = {

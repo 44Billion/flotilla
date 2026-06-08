@@ -5,7 +5,7 @@
   import AddCircle from "@assets/icons/add-circle.svg?dataurl"
   import GallerySend from "@assets/icons/gallery-send.svg?dataurl"
   import Icon from "@lib/components/Icon.svelte"
-  import {uploadFile} from "@app/core/commands"
+  import {uploadFile} from "@app/uploads"
 
   interface Props {
     file?: File | undefined

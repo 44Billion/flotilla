@@ -8,7 +8,7 @@
   import RelayIcon from "@app/components/RelayIcon.svelte"
   import RelayName from "@app/components/RelayName.svelte"
   import {makeSpacePath} from "@app/routes"
-  import {deriveGroupList, getSpaceUrlsFromGroupList} from "@app/core/state"
+  import {deriveGroupList, getSpaceUrlsFromGroupList} from "@app/groups"
 
   type Props = {
     pubkey: string

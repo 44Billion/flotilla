@@ -16,9 +16,9 @@
   import SpaceBar from "@app/components/SpaceBar.svelte"
   import ClassifiedItem from "@app/components/ClassifiedItem.svelte"
   import ClassifiedCreate from "@app/components/ClassifiedCreate.svelte"
-  import {decodeRelay} from "@app/core/state"
-  import {makeCommentFilter} from "@app/core/state"
-  import {makeFeed} from "@app/core/requests"
+  import {decodeRelay} from "@app/relays"
+  import {makeCommentFilter} from "@app/content"
+  import {makeFeed} from "@app/feeds"
   import {pushModal} from "@app/modal"
 
   const url = decodeRelay($page.params.relay!)

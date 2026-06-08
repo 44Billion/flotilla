@@ -19,7 +19,7 @@
   import EmojiButton from "@lib/components/EmojiButton.svelte"
   import {errorMessage} from "@lib/util"
   import ProfileLink from "@app/components/ProfileLink.svelte"
-  import {payInvoice} from "@app/core/commands"
+  import {payInvoice} from "@app/lightning"
   import {pushToast} from "@app/toast"
 
   type Props = {

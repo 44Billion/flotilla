@@ -16,8 +16,8 @@
   import ModalSubtitle from "@lib/components/ModalSubtitle.svelte"
   import ModalFooter from "@lib/components/ModalFooter.svelte"
   import Profile from "@app/components/Profile.svelte"
-  import {deriveSpaceBannedPubkeyItems, deriveSupportedMethods} from "@app/core/state"
-  import {addSpaceMembers} from "@app/core/commands"
+  import {deriveSpaceBannedPubkeyItems, addSpaceMembers} from "@app/members"
+  import {deriveSupportedMethods} from "@app/relays"
   import {pushToast} from "@app/toast"
 
   interface Props {

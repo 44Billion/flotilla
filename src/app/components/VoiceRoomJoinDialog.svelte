@@ -14,7 +14,7 @@
   import ModalTitle from "@lib/components/ModalTitle.svelte"
   import {AbortError, TimeoutError} from "$lib/util"
   import ProfileCircles from "@app/components/ProfileCircles.svelte"
-  import {displayRoom} from "@app/core/state"
+  import {displayRoom} from "@app/groups"
   import {deriveVoiceParticipants, joinVoiceRoom, loadVoiceParticipants} from "@app/call/voice"
   import {popModal} from "@app/modal"
   import {pushToast} from "@app/toast"

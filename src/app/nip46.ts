@@ -1,14 +1,20 @@
+import {
+  CLASSIFIED,
+  CLIENT_AUTH,
+  COMMENT,
+  MESSAGE,
+  REACTION,
+  RELAY_JOIN,
+  ROOMS,
+  THREAD,
+  WRAP,
+  ZAP_REQUEST,
+} from "@welshman/util"
 import {get, writable} from "svelte/store"
 import type {Nip46ResponseWithResult} from "@welshman/signer"
 import {Nip46Broker} from "@welshman/signer"
 import {makeSecret} from "@welshman/util"
-import {
-  PLATFORM_URL,
-  PLATFORM_NAME,
-  PLATFORM_LOGO,
-  SIGNER_RELAYS,
-  NIP46_PERMS,
-} from "@app/core/state"
+import {PLATFORM_URL, PLATFORM_NAME, PLATFORM_LOGO, SIGNER_RELAYS} from "@app/env"
 import {pushToast} from "@app/toast"
 
 const APP_SCHEME = "social.flotilla"
@@ -26,6 +32,23 @@ const makeSignerLaunchUrl = (nostrconnectUrl: string) => {
 
   return `nostrsigner://x-callback-url/auth/nip46?${params.toString()}`
 }
+
+export const NIP46_PERMS =
+  "nip44_encrypt,nip44_decrypt," +
+  [
+    CLIENT_AUTH,
+    RELAY_JOIN,
+    MESSAGE,
+    THREAD,
+    CLASSIFIED,
+    COMMENT,
+    ROOMS,
+    WRAP,
+    REACTION,
+    ZAP_REQUEST,
+  ]
+    .map(k => `sign_event:${k}`)
+    .join(",")
 
 export class Nip46Controller {
   url = writable("")

@@ -5,8 +5,8 @@
   import Icon from "@lib/components/Icon.svelte"
   import Button from "@lib/components/Button.svelte"
   import {pushToast} from "@app/toast"
-  import {PLATFORM_NAME, RelayAuthMode, userSettingsValues} from "@app/core/state"
-  import {publishSettings} from "@app/core/commands"
+  import {PLATFORM_NAME} from "@app/env"
+  import {RelayAuthMode, userSettingsValues, publishSettings} from "@app/settings"
 
   const reset = () => {
     settings = {...$userSettingsValues}

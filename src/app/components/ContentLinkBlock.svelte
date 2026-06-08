@@ -8,14 +8,9 @@
   import ContentLinkUrl from "@app/components/ContentLinkUrl.svelte"
   import ContentLinkBlockImage from "@app/components/ContentLinkBlockImage.svelte"
   import {pushModal} from "@app/modal"
-  import {
-    dufflepud,
-    IMAGE_CONTENT_TYPES,
-    PLATFORM_URL,
-    VIDEO_CONTENT_TYPES,
-    THUMBNAIL_URL,
-    isRoomId,
-  } from "@app/core/state"
+  import {dufflepud, PLATFORM_URL, THUMBNAIL_URL} from "@app/env"
+  import {IMAGE_CONTENT_TYPES, VIDEO_CONTENT_TYPES} from "@app/content"
+  import {isRoomId} from "@app/groups"
 
   const {value, event} = $props()
 

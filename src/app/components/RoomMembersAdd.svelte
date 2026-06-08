@@ -20,8 +20,8 @@
   import ProfileMultiSelect from "@app/components/ProfileMultiSelect.svelte"
   import {pushToast} from "@app/toast"
   import {pushModal} from "@app/modal"
-  import {deriveRoom, deriveSpaceMembers} from "@app/core/state"
-  import {addRoomMembers} from "@app/core/commands"
+  import {deriveRoom} from "@app/groups"
+  import {deriveSpaceMembers, addRoomMembers} from "@app/members"
 
   interface Props {
     url: string

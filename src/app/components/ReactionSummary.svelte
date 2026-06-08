@@ -23,7 +23,8 @@
   import Icon from "@lib/components/Icon.svelte"
   import Reaction from "@app/components/Reaction.svelte"
   import ReportDetails from "@app/components/ReportDetails.svelte"
-  import {REACTION_KINDS, deriveUserIsSpaceAdmin} from "@app/core/state"
+  import {REACTION_KINDS} from "@app/content"
+  import {deriveUserIsSpaceAdmin} from "@app/members"
   import {pushModal} from "@app/modal"
 
   interface Props {

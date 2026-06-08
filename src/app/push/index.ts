@@ -1,5 +1,6 @@
 import {Capacitor} from "@capacitor/core"
-import {notificationSettings, pushState} from "@app/core/state"
+import {notificationSettings} from "@app/settings"
+import {pushState} from "@app/push/adapters/common"
 import {WebNotifications} from "@app/push/adapters/web"
 import {CapacitorNotifications} from "@app/push/adapters/capacitor"
 import {AndroidFallbackNotifications} from "@app/push/adapters/android"

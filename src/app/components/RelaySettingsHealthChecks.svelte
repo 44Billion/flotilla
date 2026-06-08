@@ -6,7 +6,7 @@
   import Icon from "@lib/components/Icon.svelte"
   import Button from "@lib/components/Button.svelte"
   import RelaySettingsHealthCheck from "@app/components/RelaySettingsHealthCheck.svelte"
-  import {PLATFORM_NAME} from "@app/core/state"
+  import {PLATFORM_NAME} from "@app/env"
   import {pendingHealthChecks, applyHealthCheck} from "@app/healthChecks"
 
   const applyAll = () => {

@@ -1,7 +1,7 @@
 <script lang="ts">
   import {displayRelayUrl} from "@welshman/util"
   import RoomNameWithImage from "@app/components/RoomNameWithImage.svelte"
-  import {splitRoomId} from "@app/core/state"
+  import {splitRoomId} from "@app/groups"
 
   type Props = {
     value: string

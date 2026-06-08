@@ -12,8 +12,9 @@
   import Popover from "@lib/components/Popover.svelte"
   import Button from "@lib/components/Button.svelte"
   import Confirm from "@lib/components/Confirm.svelte"
-  import {deriveUserIsSpaceAdmin} from "@app/core/state"
-  import {publishDelete, canEnforceNip70} from "@app/core/commands"
+  import {deriveUserIsSpaceAdmin} from "@app/members"
+  import {publishDelete} from "@app/deletes"
+  import {canEnforceNip70} from "@app/relays"
   import {pushToast} from "@app/toast"
   import {pushModal} from "@app/modal"
 

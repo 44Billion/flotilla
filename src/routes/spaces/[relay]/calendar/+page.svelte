@@ -18,8 +18,9 @@
   import CalendarEventItem from "@app/components/CalendarEventItem.svelte"
   import CalendarEventCreate from "@app/components/CalendarEventCreate.svelte"
   import {pushModal} from "@app/modal"
-  import {decodeRelay, makeCommentFilter} from "@app/core/state"
-  import {makeCalendarFeed} from "@app/core/requests"
+  import {decodeRelay} from "@app/relays"
+  import {makeCommentFilter} from "@app/content"
+  import {makeCalendarFeed} from "@app/feeds"
 
   const url = decodeRelay($page.params.relay!)
 

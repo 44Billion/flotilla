@@ -5,7 +5,8 @@
   import SecondaryNavItem from "@lib/components/SecondaryNavItem.svelte"
   import RoomNameWithImage from "@app/components/RoomNameWithImage.svelte"
   import VoiceRoomItem from "@app/components/VoiceRoomItem.svelte"
-  import {deriveRoom, deriveShouldNotify, getRoomType, RoomType} from "@app/core/state"
+  import {deriveRoom, getRoomType, RoomType} from "@app/groups"
+  import {deriveShouldNotify} from "@app/settings"
   import {notifications} from "@app/notifications"
   import {makeRoomPath} from "@app/routes"
 

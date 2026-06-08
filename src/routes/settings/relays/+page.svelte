@@ -24,8 +24,8 @@
   import Icon from "@lib/components/Icon.svelte"
   import RelaySettingsItem from "@app/components/RelaySettingsItem.svelte"
   import RelaySettingsHealthChecks from "@app/components/RelaySettingsHealthChecks.svelte"
-  import {hasNip50} from "@app/core/state"
-  import {discoverRelays} from "@app/core/requests"
+  import {hasNip50} from "@app/relays"
+  import {discoverRelays} from "@app/relays"
 
   const readRelayUrls = derivePubkeyRelays($pubkey!, RelayMode.Read)
   const writeRelayUrls = derivePubkeyRelays($pubkey!, RelayMode.Write)

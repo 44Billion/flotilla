@@ -11,7 +11,9 @@
   import ModalHeader from "@lib/components/ModalHeader.svelte"
   import ModalTitle from "@lib/components/ModalTitle.svelte"
   import ModalFooter from "@lib/components/ModalFooter.svelte"
-  import {removeSpaceMembership, publishLeaveRequest, removeTrustedRelay} from "@app/core/commands"
+  import {removeSpace} from "@app/groups"
+  import {publishLeaveRequest} from "@app/relays"
+  import {removeTrustedRelay} from "@app/settings"
 
   const {url} = $props()
 
@@ -21,7 +23,7 @@
     loading = true
 
     try {
-      await removeSpaceMembership(url)
+      await removeSpace(url)
       await publishLeaveRequest({url})
       await removeTrustedRelay(url)
     } finally {

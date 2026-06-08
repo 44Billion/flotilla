@@ -14,7 +14,7 @@
   import ModalFooter from "@lib/components/ModalFooter.svelte"
   import {errorMessage} from "@lib/util"
   import QRCode from "@app/components/QRCode.svelte"
-  import {createInvoice} from "@app/core/commands"
+  import {createInvoice} from "@app/lightning"
   import {pushToast} from "@app/toast"
 
   const back = () => history.back()

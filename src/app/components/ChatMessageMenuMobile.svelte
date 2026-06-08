@@ -13,7 +13,7 @@
   import Button from "@lib/components/Button.svelte"
   import EmojiPicker from "@lib/components/EmojiPicker.svelte"
   import EventInfo from "@app/components/EventInfo.svelte"
-  import {makeReaction} from "@app/core/commands"
+  import {makeReaction} from "@app/reactions"
   import {pushModal} from "@app/modal"
   import {clip} from "@app/toast"
 

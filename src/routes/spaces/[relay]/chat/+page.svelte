@@ -26,11 +26,13 @@
   import RoomCompose from "@app/components/RoomCompose.svelte"
   import RoomComposeEdit from "@src/app/components/RoomComposeEdit.svelte"
   import RoomComposeParent from "@app/components/RoomComposeParent.svelte"
-  import {userSettingsValues, decodeRelay, PROTECTED} from "@app/core/state"
-  import {prependParent, canEnforceNip70, publishDelete} from "@app/core/commands"
+  import {userSettingsValues} from "@app/settings"
+  import {decodeRelay, canEnforceNip70} from "@app/relays"
+  import {PROTECTED, prependParent} from "@app/groups"
+  import {publishDelete} from "@app/deletes"
   import {checked} from "@app/notifications"
   import {pushToast} from "@app/toast"
-  import {makeFeed} from "@app/core/requests"
+  import {makeFeed} from "@app/feeds"
   import {popKey} from "@lib/implicit"
 
   const mounted = now()

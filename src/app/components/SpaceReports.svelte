@@ -11,7 +11,7 @@
   import ModalFooter from "@lib/components/ModalFooter.svelte"
   import ReportItem from "@app/components/ReportItem.svelte"
   import RelayName from "@app/components/RelayName.svelte"
-  import {deriveEventsForUrl} from "@app/core/state"
+  import {deriveEventsForUrl} from "@app/repository"
 
   interface Props {
     url: string

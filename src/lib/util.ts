@@ -1,3 +1,4 @@
+import {identity} from "@welshman/lib"
 import * as nip19 from "nostr-tools/nip19"
 import {range, DAY, hexToBytes, bytesToHex} from "@welshman/lib"
 
@@ -66,3 +67,7 @@ export const buildUrl = (base: string | URL, ...pathname: string[]) => {
 export const addPeriod = (s: string) => (s + ".").replace(/\.+$/, ".")
 
 export const normalizeTopic = (topic: string) => topic.trim().replace(/^#+/, "").toLowerCase()
+
+export const fromCsv = (s: string) => (s || "").split(",").filter(identity)
+
+export const stripPrefix = (m: string) => m.replace(/^\w+: /, "")

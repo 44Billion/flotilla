@@ -4,9 +4,9 @@
   import {POLL_RESPONSE} from "@welshman/util"
   import {pubkey, publishThunk, abortThunk} from "@welshman/app"
   import {formatTimestampRelative} from "@welshman/lib"
-  import {deriveEvents} from "@app/core/state"
+  import {deriveEvents} from "@app/repository"
   import {pushToast} from "@app/toast"
-  import {makePollResponse} from "@app/core/commands"
+  import {makePollResponse} from "@app/polls"
   import PollOption from "@app/components/PollOption.svelte"
   import {
     getPollEndsAt,

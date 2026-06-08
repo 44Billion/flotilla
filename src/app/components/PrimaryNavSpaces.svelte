@@ -5,7 +5,8 @@
   import Divider from "@lib/components/Divider.svelte"
   import PrimaryNavItem from "@lib/components/PrimaryNavItem.svelte"
   import PrimaryNavItemSpace from "@app/components/PrimaryNavItemSpace.svelte"
-  import {userSpaceUrls, PLATFORM_RELAYS, PLATFORM_LOGO} from "@app/core/state"
+  import {userSpaceUrls} from "@app/groups"
+  import {PLATFORM_RELAYS, PLATFORM_LOGO} from "@app/env"
   import {notifications} from "@app/notifications"
 
   let windowHeight = $state(0)

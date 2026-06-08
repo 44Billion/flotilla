@@ -4,7 +4,8 @@
   import LinkRound from "@assets/icons/link-round.svg?dataurl"
   import Icon from "@lib/components/Icon.svelte"
   import Link from "@lib/components/Link.svelte"
-  import {PLATFORM_URL, displayRoom, isRoomId, splitRoomId} from "@app/core/state"
+  import {PLATFORM_URL} from "@app/env"
+  import {displayRoom, isRoomId, splitRoomId} from "@app/groups"
   import {makeRoomPath, makeSpacePath} from "@app/routes"
 
   const {

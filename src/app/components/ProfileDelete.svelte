@@ -22,7 +22,8 @@
   import ModalFooter from "@lib/components/ModalFooter.svelte"
   import Modal from "@lib/components/Modal.svelte"
   import ModalBody from "@lib/components/ModalBody.svelte"
-  import {INDEXER_RELAYS, PLATFORM_NAME, userSpaceUrls} from "@app/core/state"
+  import {INDEXER_RELAYS, PLATFORM_NAME} from "@app/env"
+  import {userSpaceUrls} from "@app/groups"
   import {pushToast} from "@app/toast"
   import {logout} from "@app/session"
 

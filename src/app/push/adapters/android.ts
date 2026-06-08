@@ -5,7 +5,7 @@ import {session} from "@welshman/app"
 import type {Session} from "@welshman/app"
 import {maybe, now} from "@welshman/lib"
 import type {Filter} from "@welshman/util"
-import {pushState} from "@app/core/state"
+import {pushState} from "@app/push/adapters/common"
 import type {IPushAdapter} from "@app/push/adapters/common"
 import {requestPermissions, syncRelaySubscriptions} from "@app/push/adapters/common"
 

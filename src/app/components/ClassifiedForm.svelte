@@ -18,10 +18,11 @@
   import TopicMultiSelect from "@app/components/TopicMultiSelect.svelte"
   import EditorContent from "@app/editor/EditorContent.svelte"
   import {pushToast} from "@app/toast"
-  import {PROTECTED} from "@app/core/state"
+  import {PROTECTED, publishRoomQuote} from "@app/groups"
   import {makeEditor} from "@app/editor"
   import {DraftKey} from "@app/drafts"
-  import {canEnforceNip70, publishRoomQuote, uploadFile} from "@app/core/commands"
+  import {canEnforceNip70} from "@app/relays"
+  import {uploadFile} from "@app/uploads"
 
   type Values = {
     d: string

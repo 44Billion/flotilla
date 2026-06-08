@@ -4,7 +4,7 @@
   import Microphone from "@assets/icons/microphone.svg?dataurl"
   import Icon from "@lib/components/Icon.svelte"
   import Button from "@lib/components/Button.svelte"
-  import {deriveRoom} from "@app/core/state"
+  import {deriveRoom} from "@app/groups"
 
   interface Props {
     h: any

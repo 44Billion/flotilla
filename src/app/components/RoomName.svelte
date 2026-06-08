@@ -1,5 +1,5 @@
 <script lang="ts">
-  import {deriveRoom} from "@app/core/state"
+  import {deriveRoom} from "@app/groups"
 
   type Props = {
     url: string

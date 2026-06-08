@@ -7,7 +7,7 @@
   import ContentLinkDetail from "@app/components/ContentLinkDetail.svelte"
   import ContentLinkUrl from "@app/components/ContentLinkUrl.svelte"
   import {pushModal} from "@app/modal"
-  import {IMAGE_CONTENT_TYPES} from "@app/core/state"
+  import {IMAGE_CONTENT_TYPES} from "@app/content"
 
   const {value, event} = $props()
 

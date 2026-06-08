@@ -19,7 +19,11 @@ import {
   getPubkeyTagValues,
   getRelaysFromList,
 } from "@welshman/util"
-import {makeChatId, entityLink, encodeRelay, DM_KINDS, ROOM} from "@app/core/state"
+import {makeChatId} from "@app/chats"
+import {entityLink} from "@app/env"
+import {encodeRelay} from "@app/relays"
+import {DM_KINDS} from "@app/content"
+import {ROOM} from "@app/groups"
 import {pushModal} from "@app/modal"
 import ChatEnable from "@app/components/ChatEnable.svelte"
 

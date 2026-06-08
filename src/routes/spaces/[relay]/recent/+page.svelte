@@ -49,7 +49,9 @@
   import CalendarEventItem from "@app/components/CalendarEventItem.svelte"
   import PollItem from "@app/components/PollItem.svelte"
   import RecentConversation from "@app/components/RecentConversation.svelte"
-  import {decodeRelay, deriveEventsForUrl, CONTENT_KINDS} from "@app/core/state"
+  import {decodeRelay} from "@app/relays"
+  import {deriveEventsForUrl} from "@app/repository"
+  import {CONTENT_KINDS} from "@app/content"
   import {goToEvent} from "@app/routes"
 
   const url = decodeRelay($page.params.relay!)

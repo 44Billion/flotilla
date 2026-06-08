@@ -12,7 +12,7 @@
   import ModalSubtitle from "@lib/components/ModalSubtitle.svelte"
   import ModalFooter from "@lib/components/ModalFooter.svelte"
   import ProfileMultiSelect from "@app/components/ProfileMultiSelect.svelte"
-  import {addSpaceMembers} from "@app/core/commands"
+  import {addSpaceMembers} from "@app/members"
   import {pushToast} from "@app/toast"
 
   interface Props {

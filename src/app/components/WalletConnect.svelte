@@ -21,7 +21,7 @@
   import ModalTitle from "@lib/components/ModalTitle.svelte"
   import ModalSubtitle from "@lib/components/ModalSubtitle.svelte"
   import ModalFooter from "@lib/components/ModalFooter.svelte"
-  import {getWebLn} from "@app/core/commands"
+  import {getWebLn} from "@app/lightning"
   import {pushToast} from "@app/toast"
   import {pushModal} from "@app/modal"
   import WalletAsReceivingAddress from "@app/components/WalletAsReceivingAddress.svelte"

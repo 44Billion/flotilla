@@ -5,7 +5,7 @@
   import RelayIcon from "@app/components/RelayIcon.svelte"
   import RelayDescription from "@app/components/RelayDescription.svelte"
   import ProfileCircles from "@app/components/ProfileCircles.svelte"
-  import {deriveGroupListPubkeys, deriveUserRooms} from "@app/core/state"
+  import {deriveGroupListPubkeys, deriveUserRooms} from "@app/groups"
 
   type Props = {
     url: string

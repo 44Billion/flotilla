@@ -1,6 +1,6 @@
 import type {NodeViewRendererProps} from "@tiptap/core"
 import {displayRelayUrl} from "@welshman/util"
-import {deriveRoom} from "@app/core/state"
+import {deriveRoom} from "@app/groups"
 
 export const RoomReferenceNodeView = ({node}: NodeViewRendererProps) => {
   const dom = document.createElement("span")

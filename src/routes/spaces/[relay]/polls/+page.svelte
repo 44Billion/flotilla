@@ -16,8 +16,9 @@
   import SpaceBar from "@app/components/SpaceBar.svelte"
   import PollItem from "@app/components/PollItem.svelte"
   import PollCreate from "@app/components/PollCreate.svelte"
-  import {decodeRelay, makeCommentFilter} from "@app/core/state"
-  import {makeFeed} from "@app/core/requests"
+  import {decodeRelay} from "@app/relays"
+  import {makeCommentFilter} from "@app/content"
+  import {makeFeed} from "@app/feeds"
   import {pushModal} from "@app/modal"
 
   const url = decodeRelay($page.params.relay!)

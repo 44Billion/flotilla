@@ -1,6 +1,7 @@
 import {now, removeUndefined, uniq} from "@welshman/lib"
 import type {TrustedEvent} from "@welshman/util"
-import {getTagValue, getTags, getTagValues} from "@welshman/util"
+import {POLL_RESPONSE, getTagValue, getTags, getTagValues, makeEvent} from "@welshman/util"
+import {publishThunk} from "@welshman/app"
 
 export type PollType = "singlechoice" | "multiplechoice"
 
@@ -74,3 +75,17 @@ export const getPollResults = (event: TrustedEvent, responses: TrustedEvent[]) =
     voters: latestByPubkey.size,
   }
 }
+
+export type PollResponseParams = {
+  event: TrustedEvent
+  selectedIds: string[]
+}
+
+export const makePollResponse = ({event, selectedIds}: PollResponseParams) =>
+  makeEvent(POLL_RESPONSE, {
+    content: "",
+    tags: [["e", event.id], ...selectedIds.map(selectedId => ["response", selectedId])],
+  })
+
+export const publishPollResponse = ({relays, ...params}: PollResponseParams & {relays: string[]}) =>
+  publishThunk({event: makePollResponse(params), relays})

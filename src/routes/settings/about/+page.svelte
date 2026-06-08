@@ -4,7 +4,7 @@
   import Button from "@lib/components/Button.svelte"
   import Icon from "@lib/components/Icon.svelte"
   import ProfileDetail from "@app/components/ProfileDetail.svelte"
-  import {PLATFORM_NAME} from "@app/core/state"
+  import {PLATFORM_NAME} from "@app/env"
   import {pushModal} from "@app/modal"
   import Code from "@assets/icons/code-2.svg?dataurl"
   import Global from "@assets/icons/global.svg?dataurl"

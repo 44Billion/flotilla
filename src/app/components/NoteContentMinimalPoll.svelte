@@ -3,7 +3,7 @@
   import {derived} from "svelte/store"
   import {POLL_RESPONSE} from "@welshman/util"
   import ContentMinimal from "@app/components/ContentMinimal.svelte"
-  import {deriveEvents} from "@app/core/state"
+  import {deriveEvents} from "@app/repository"
   import {getPollResults} from "@app/polls"
 
   const props: ComponentProps<typeof ContentMinimal> = $props()

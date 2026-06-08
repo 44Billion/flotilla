@@ -13,18 +13,13 @@ import {
   makeHttpAuthHeader,
 } from "@welshman/util"
 import {makeSpacePath, makeRoomPath, makeSpaceChatPath, makeChatPath} from "@app/routes"
-import {
-  CONTENT_KINDS,
-  notificationSettings,
-  chatsById,
-  userGroupList,
-  getSpaceUrlsFromGroupList,
-  makeCommentFilter,
-  hasNip29,
-  dufflepud,
-  DUFFLEPUD_URL,
-} from "@app/core/state"
-import {kv} from "@app/core/storage"
+import {CONTENT_KINDS, makeCommentFilter} from "@app/content"
+import {notificationSettings} from "@app/settings"
+import {chatsById} from "@app/chats"
+import {userGroupList, getSpaceUrlsFromGroupList} from "@app/groups"
+import {hasNip29} from "@app/relays"
+import {dufflepud, DUFFLEPUD_URL} from "@app/env"
+import {kv} from "@app/storage"
 import {page} from "$app/stores"
 
 // Checked state

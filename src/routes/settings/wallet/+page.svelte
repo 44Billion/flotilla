@@ -13,7 +13,7 @@
   import WalletDisconnect from "@app/components/WalletDisconnect.svelte"
   import WalletUpdateReceivingAddress from "@app/components/WalletUpdateReceivingAddress.svelte"
   import {pushModal} from "@app/modal"
-  import {getNwcClient, getWebLn} from "@app/core/commands"
+  import {getNwcClient, getWebLn} from "@app/lightning"
   import Wallet2 from "@assets/icons/wallet.svg?dataurl"
   import CheckCircle from "@assets/icons/check-circle.svg?dataurl"
   import AddCircle from "@assets/icons/add-circle.svg?dataurl"

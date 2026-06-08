@@ -1,3 +1,5 @@
+import {withGetter} from "@welshman/store"
+import {writable} from "svelte/store"
 import {goto} from "$app/navigation"
 import type {Subscriber, Unsubscriber} from "svelte/store"
 import {
@@ -21,17 +23,23 @@ import {
   type Filter,
   type TrustedEvent,
 } from "@welshman/util"
-import {
-  DM_KINDS,
-  CONTENT_KINDS,
-  notificationSettings,
-  pushState,
-  shouldNotify,
-  userSpaceUrls,
-  userSettingsValues,
-  makeCommentFilter,
-} from "@app/core/state"
+import {DM_KINDS, CONTENT_KINDS, makeCommentFilter} from "@app/content"
+import {notificationSettings, shouldNotify, userSettingsValues} from "@app/settings"
+import {userSpaceUrls} from "@app/groups"
 import {makeSpacePath, getEventPath} from "@app/routes"
+
+export type PushSubscription = {
+  key: string
+  callback: string
+}
+
+export type PushState = {
+  token?: string
+  useFallback?: boolean
+  subscription?: PushSubscription
+}
+
+export const pushState = withGetter(writable<PushState>({}))
 
 export interface IPushAdapter {
   request: (prompt?: boolean) => Promise<string>

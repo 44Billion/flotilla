@@ -18,7 +18,7 @@
   import SpaceRelayStatus from "@app/components/SpaceRelayStatus.svelte"
   import RelayDescription from "@app/components/RelayDescription.svelte"
   import ProfileLatest from "@app/components/ProfileLatest.svelte"
-  import {deriveUserIsSpaceAdmin} from "@app/core/state"
+  import {deriveUserIsSpaceAdmin} from "@app/members"
   import {pushModal} from "@app/modal"
 
   type Props = {

@@ -1,39 +1,108 @@
-import {writable} from "svelte/store"
+import {deriveItems, deriveItemsByKey, getter, makeDeriveItem, makeLoadItem} from "@welshman/store"
+import {
+  ensurePlaintext,
+  makeOutboxLoader,
+  makeUserData,
+  makeUserLoader,
+  repository,
+  tracker,
+} from "@welshman/app"
+import {derived, writable} from "svelte/store"
 import {
   batch,
+  between,
   call,
-  uniq,
-  int,
-  YEAR,
-  WEEK,
+  groupBy,
   insertAt,
-  sortBy,
+  int,
   now,
   on,
-  between,
-  isDefined,
-  filterVals,
-  fromPairs,
+  sortBy,
+  WEEK,
+  YEAR,
 } from "@welshman/lib"
 import {
+  Address,
   EVENT_TIME,
-  RELAY_INVITE,
-  matchFilters,
-  getTagValue,
+  FEED,
+  FEEDS,
+  asDecryptedEvent,
   getAddress,
-  isShareableRelayUrl,
-  getRelaysFromList,
+  getIdFilters,
+  getTagValue,
+  matchFilters,
+  readList,
   sortEventsDesc,
 } from "@welshman/util"
-import type {TrustedEvent, Filter, List} from "@welshman/util"
-import {load, request, mergeRepositoryUpdates} from "@welshman/net"
+import type {Filter, PublishedList, TrustedEvent} from "@welshman/util"
+import {load, mergeRepositoryUpdates, request} from "@welshman/net"
 import type {RepositoryUpdate} from "@welshman/net"
-import {repository, loadRelay, tracker} from "@welshman/app"
+import {Router} from "@welshman/router"
 import {createScroller} from "@lib/html"
 import {daysBetween} from "@lib/util"
-import {getEventsForUrl} from "@app/core/state"
+import {readFeed} from "@lib/feeds"
+import {getEventsForUrl} from "@app/repository"
+export const feedsByAddress = deriveItemsByKey({
+  repository,
+  getKey: feed => getAddress(feed.event),
+  filters: [{kinds: [FEED]}],
+  eventToItem: readFeed,
+})
 
-// Utils
+export const getFeedsByAddress = getter(feedsByAddress)
+
+export const feeds = deriveItems(feedsByAddress)
+
+export const getFeeds = getter(feeds)
+
+export const getFeed = (address: string) => getFeedsByAddress().get(address)
+
+export const fetchFeed = (address: string) => {
+  const {pubkey} = Address.from(address)
+
+  return load({
+    relays: Router.get().FromPubkey(pubkey).getUrls(),
+    filters: getIdFilters([address]),
+  })
+}
+
+export const loadFeed = makeLoadItem(fetchFeed, getFeed)
+
+export const deriveFeed = makeDeriveItem(feedsByAddress, loadFeed)
+
+export const feedsByPubkey = derived(feeds, $feeds => groupBy(f => f.event.pubkey, $feeds))
+
+export const getFeedsByPubkey = getter(feedsByPubkey)
+
+export const getFeedsForPubkey = (pubkey: string) => getFeedsByPubkey().get(pubkey)
+
+export const loadFeedsForPubkey = makeLoadItem(makeOutboxLoader(FEED), getFeedsForPubkey)
+
+export const userFeeds = makeUserData(feedsByPubkey, loadFeedsForPubkey)
+
+export const loadUserFeeds = makeUserLoader(loadFeedsForPubkey)
+
+export const feedFavoritesByPubkey = deriveItemsByKey<PublishedList>({
+  repository,
+  getKey: list => list.event.pubkey,
+  filters: [{kinds: [FEEDS]}],
+  eventToItem: async event =>
+    readList(
+      asDecryptedEvent(event, {
+        content: await ensurePlaintext(event),
+      }),
+    ),
+})
+
+export const getFeedFavoritesByPubkey = getter(feedFavoritesByPubkey)
+
+export const getFeedFavorites = (pubkey: string) => getFeedFavoritesByPubkey().get(pubkey)
+
+export const loadFeedFavorites = makeLoadItem(makeOutboxLoader(FEEDS), getFeedFavorites)
+
+export const userFeedFavorites = makeUserData(feedFavoritesByPubkey, loadFeedFavorites)
+
+export const loadUserFeedFavorites = makeUserLoader(loadFeedFavorites)
 
 export const makeFeed = ({
   url,
@@ -344,27 +413,3 @@ export const makeCalendarFeed = ({
     },
   }
 }
-
-// Domain specific
-
-export const discoverRelays = (lists: List[]) =>
-  Promise.all(
-    uniq(lists.flatMap($l => getRelaysFromList($l)))
-      .filter(isShareableRelayUrl)
-      .map(url => loadRelay(url)),
-  )
-
-export const requestRelayClaim = async (url: string) => {
-  const filters = [{kinds: [RELAY_INVITE], limit: 1}]
-  const events = await load({filters, relays: [url]})
-
-  if (events.length > 0) {
-    return getTagValue("claim", events[0].tags)
-  }
-}
-
-export const requestRelayClaims = async (urls: string[]) =>
-  filterVals(
-    isDefined,
-    fromPairs(await Promise.all(urls.map(async url => [url, await requestRelayClaim(url)]))),
-  )

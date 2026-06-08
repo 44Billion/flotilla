@@ -25,8 +25,8 @@
     deriveSpaceMembers,
     deriveSpaceBannedPubkeyItems,
     deriveUserIsSpaceAdmin,
-    deriveSupportedMethods,
-  } from "@app/core/state"
+  } from "@app/members"
+  import {deriveSupportedMethods} from "@app/relays"
   import {pushModal} from "@app/modal"
   import {pushToast} from "@app/toast"
 

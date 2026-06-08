@@ -23,7 +23,8 @@
   import {clearModals} from "@app/modal"
   import {setChecked} from "@app/notifications"
   import {pushToast} from "@app/toast"
-  import {SIGNER_RELAYS, NIP46_PERMS} from "@app/core/state"
+  import {SIGNER_RELAYS} from "@app/env"
+  import {NIP46_PERMS} from "@app/nip46"
 
   const back = () => {
     if (mode === "connect") {

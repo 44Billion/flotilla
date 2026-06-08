@@ -12,7 +12,7 @@
   import {pushToast} from "@app/toast"
   import {clearBadges} from "@app/notifications"
   import {Push} from "@app/push"
-  import {notificationSettings} from "@app/core/state"
+  import {notificationSettings} from "@app/settings"
 
   const reset = () => {
     settings = {...notificationSettings.get()}

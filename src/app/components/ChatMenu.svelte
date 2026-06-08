@@ -8,7 +8,7 @@
   import Modal from "@lib/components/Modal.svelte"
   import ModalBody from "@lib/components/ModalBody.svelte"
   import {setChecked} from "@app/notifications"
-  import {notificationSettings} from "@app/core/state"
+  import {notificationSettings} from "@app/settings"
 
   const markAsRead = () => {
     setChecked("/chat/*")

@@ -16,8 +16,9 @@
   import ProfileDetail from "@app/components/ProfileDetail.svelte"
   import ChatMessageMenu from "@app/components/ChatMessageMenu.svelte"
   import ChatMessageMenuMobile from "@app/components/ChatMessageMenuMobile.svelte"
-  import {colors} from "@app/core/state"
-  import {makeDelete, makeReaction} from "@app/core/commands"
+  import {colors} from "@app/theme"
+  import {makeDelete} from "@app/deletes"
+  import {makeReaction} from "@app/reactions"
   import {pushModal} from "@app/modal"
 
   interface Props {

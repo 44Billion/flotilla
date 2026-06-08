@@ -3,7 +3,8 @@
   import EmojiButton from "@lib/components/EmojiButton.svelte"
   import SmileCircle from "@assets/icons/smile-circle.svg?dataurl"
   import Icon from "@lib/components/Icon.svelte"
-  import {publishReaction, canEnforceNip70} from "@app/core/commands"
+  import {publishReaction} from "@app/reactions"
+  import {canEnforceNip70} from "@app/relays"
 
   const {url, event} = $props()
 

@@ -14,13 +14,12 @@
   import RelaySummary from "@app/components/RelaySummary.svelte"
   import SpaceAccessRequest from "@app/components/SpaceAccessRequest.svelte"
   import SpaceJoinSettings from "@app/components/SpaceJoinSettings.svelte"
-  import {
-    attemptRelayAccess,
-    addSpaceMembership,
-    broadcastUserData,
-    setSpaceNotifications,
-  } from "@app/core/commands"
-  import {relaysMostlyRestricted, notificationSettings} from "@app/core/state"
+  import {attemptRelayAccess} from "@app/relays"
+  import {addSpace} from "@app/groups"
+  import {broadcastUserData} from "@app/profiles"
+  import {setSpaceNotifications} from "@app/settings"
+  import {relaysMostlyRestricted} from "@app/policies"
+  import {notificationSettings} from "@app/settings"
   import {pushModal} from "@app/modal"
   import {pushToast} from "@app/toast"
   import {makeSpacePath} from "@app/routes"
@@ -56,7 +55,7 @@
         await setSpaceNotifications(url, false)
       }
 
-      await addSpaceMembership(url)
+      await addSpace(url)
       await goto(makeSpacePath(url), {replaceState: true})
 
       broadcastUserData([url])

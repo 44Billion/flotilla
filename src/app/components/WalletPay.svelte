@@ -15,7 +15,7 @@
   import ModalSubtitle from "@lib/components/ModalSubtitle.svelte"
   import ModalFooter from "@lib/components/ModalFooter.svelte"
   import {errorMessage} from "@lib/util"
-  import {payInvoice} from "@app/core/commands"
+  import {payInvoice} from "@app/lightning"
   import {pushToast} from "@app/toast"
   import {clearModals} from "@app/modal"
 

@@ -10,7 +10,7 @@
   import ModalHeader from "@lib/components/ModalHeader.svelte"
   import ModalTitle from "@lib/components/ModalTitle.svelte"
   import ModalFooter from "@lib/components/ModalFooter.svelte"
-  import {updateProfile} from "@app/core/commands"
+  import {updateProfile} from "@app/profiles"
   import {clearModals} from "@app/modal"
   import {pushToast} from "@app/toast"
 

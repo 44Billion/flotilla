@@ -17,7 +17,7 @@
   import ModalFooter from "@lib/components/ModalFooter.svelte"
   import ProgressBar from "@app/components/ProgressBar.svelte"
   import {pushToast} from "@app/toast"
-  import {PLATFORM_NAME} from "@app/core/state"
+  import {PLATFORM_NAME} from "@app/env"
 
   type Props = {
     secret: string

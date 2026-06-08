@@ -1,4 +1,4 @@
-import {get} from "svelte/store"
+import {get, writable} from "svelte/store"
 import {on, call, dissoc, assoc, uniq} from "@welshman/lib"
 import {RelayMode} from "@welshman/util"
 import type {Socket, RelayMessage, ClientMessage} from "@welshman/net"
@@ -16,15 +16,15 @@ import {
   isClientNegClose,
 } from "@welshman/net"
 import {sign, pubkey, thunks, getPubkeyRelays} from "@welshman/app"
-import {
-  BLOCKED_RELAYS,
-  userSettingsValues,
-  getSetting,
-  relaysPendingTrust,
-  relaysMostlyRestricted,
-  RelayAuthMode,
-  userSpaceUrls,
-} from "@app/core/state"
+import {BLOCKED_RELAYS} from "@app/env"
+import {userSettingsValues, getSetting, RelayAuthMode} from "@app/settings"
+import {userSpaceUrls} from "@app/groups"
+
+// Relays sending events with empty signatures that the user has to choose to trust
+export const relaysPendingTrust = writable<string[]>([])
+
+// Relays that mostly send restricted responses to requests and events
+export const relaysMostlyRestricted = writable<Record<string, string>>({})
 
 export const authPolicy = makeSocketPolicyAuth({
   sign,

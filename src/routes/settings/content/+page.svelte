@@ -20,8 +20,8 @@
   import Button from "@lib/components/Button.svelte"
   import ProfileMultiSelect from "@app/components/ProfileMultiSelect.svelte"
   import {pushToast} from "@app/toast"
-  import {PLATFORM_NAME, userSettingsValues} from "@app/core/state"
-  import {publishSettings} from "@app/core/commands"
+  import {PLATFORM_NAME} from "@app/env"
+  import {userSettingsValues, publishSettings} from "@app/settings"
 
   const reset = () => {
     settings = {...$userSettingsValues}

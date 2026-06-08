@@ -31,20 +31,14 @@
   import RoomEdit from "@app/components/RoomEdit.svelte"
   import RoomName from "@app/components/RoomName.svelte"
   import RoomImage from "@app/components/RoomImage.svelte"
+  import {deriveRoom, deriveUserRooms, addRoom, removeRoom} from "@app/groups"
   import {
-    deriveRoom,
     deriveRoomMembers,
     deriveUserIsRoomAdmin,
     deriveUserRoomMembershipStatus,
-    deriveUserRooms,
-    deriveShouldNotify,
     MembershipStatus,
-  } from "@app/core/state"
-  import {
-    addRoomMembership,
-    removeRoomMembership,
-    toggleRoomNotifications,
-  } from "@app/core/commands"
+  } from "@app/members"
+  import {deriveShouldNotify, toggleRoomNotifications} from "@app/settings"
   import {makeSpacePath} from "@app/routes"
   import {pushModal} from "@app/modal"
   import {pushToast} from "@app/toast"
@@ -99,9 +93,9 @@
 
   const toggleFavorite = () => {
     if (isFavorite) {
-      removeRoomMembership(url, h)
+      removeRoom(url, h)
     } else {
-      addRoomMembership(url, h)
+      addRoom(url, h)
     }
   }
 
@@ -122,7 +116,7 @@
           repository.removeEvent(thunk.event.id)
           pushToast({theme: "error", message})
         } else {
-          await removeRoomMembership(url, h)
+          await removeRoom(url, h)
           goto(makeSpacePath(url))
         }
       },

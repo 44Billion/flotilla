@@ -13,7 +13,7 @@
   import EventDeleteConfirm from "@app/components/EventDeleteConfirm.svelte"
   import {pushModal} from "@app/modal"
   import {pushToast} from "@app/toast"
-  import {deriveUserIsSpaceAdmin} from "@app/core/state"
+  import {deriveUserIsSpaceAdmin} from "@app/members"
 
   type Props = {
     url: string

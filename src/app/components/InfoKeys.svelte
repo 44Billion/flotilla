@@ -11,7 +11,7 @@
   import ModalTitle from "@lib/components/ModalTitle.svelte"
   import ModalFooter from "@lib/components/ModalFooter.svelte"
   import KeyRecoveryRequest from "@app/components/KeyRecoveryRequest.svelte"
-  import {PLATFORM_NAME} from "@app/core/state"
+  import {PLATFORM_NAME} from "@app/env"
   import {pushModal} from "@app/modal"
 
   const back = () => history.back()

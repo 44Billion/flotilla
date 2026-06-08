@@ -11,7 +11,8 @@ import {
   userSearchRelayList,
   userMessagingRelayList,
 } from "@welshman/app"
-import {hasNip50, DEFAULT_RELAYS, DEFAULT_MESSAGING_RELAYS} from "@app/core/state"
+import {hasNip50} from "@app/relays"
+import {DEFAULT_RELAYS, DEFAULT_MESSAGING_RELAYS} from "@app/env"
 
 export type HealthCheckContext = {
   readRelays: string[]

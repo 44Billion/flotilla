@@ -27,14 +27,9 @@ import ProfileSuggestion from "@app/editor/ProfileSuggestion.svelte"
 import {RoomReferenceExtension} from "@app/editor/RoomReferenceExtension"
 import RoomSuggestion from "@app/editor/RoomSuggestion.svelte"
 import {NativeClipboardPasteExtension} from "@app/editor/clipboard"
-import {uploadFile} from "@app/core/commands"
-import {
-  deriveSpaceMembers,
-  makeRoomId,
-  splitRoomId,
-  userSpaceUrls,
-  roomsByUrl,
-} from "@app/core/state"
+import {uploadFile} from "@app/uploads"
+import {deriveSpaceMembers} from "@app/members"
+import {makeRoomId, splitRoomId, userSpaceUrls, roomsByUrl} from "@app/groups"
 import {pushToast} from "@app/toast"
 
 export const makeEditor = async ({

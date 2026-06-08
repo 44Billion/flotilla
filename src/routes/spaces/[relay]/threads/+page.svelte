@@ -16,9 +16,9 @@
   import SpaceBar from "@app/components/SpaceBar.svelte"
   import ThreadItem from "@app/components/ThreadItem.svelte"
   import ThreadCreate from "@app/components/ThreadCreate.svelte"
-  import {decodeRelay} from "@app/core/state"
-  import {makeCommentFilter} from "@app/core/state"
-  import {makeFeed} from "@app/core/requests"
+  import {decodeRelay} from "@app/relays"
+  import {makeCommentFilter} from "@app/content"
+  import {makeFeed} from "@app/feeds"
   import {pushModal} from "@app/modal"
 
   const url = decodeRelay($page.params.relay!)

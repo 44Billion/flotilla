@@ -12,7 +12,10 @@ import {assoc, hash, maybe} from "@welshman/lib"
 import type {Filter} from "@welshman/util"
 import {DELETE, getRelaysFromList, makeEvent, Address} from "@welshman/util"
 import {buildUrl} from "@lib/util"
-import {PUSH_BRIDGE, PUSH_SERVER, pushState, userSpaceUrls, device} from "@app/core/state"
+import {PUSH_BRIDGE, PUSH_SERVER} from "@app/env"
+import {pushState} from "@app/push/adapters/common"
+import {userSpaceUrls} from "@app/groups"
+import {device} from "@app/device"
 import type {IPushAdapter} from "@app/push/adapters/common"
 import {
   onPushNotificationAction,

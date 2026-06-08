@@ -5,7 +5,7 @@
   import SmileCircle from "@assets/icons/smile-circle.svg?dataurl"
   import Icon from "@lib/components/Icon.svelte"
   import EmojiButton from "@lib/components/EmojiButton.svelte"
-  import {makeReaction} from "@app/core/commands"
+  import {makeReaction} from "@app/reactions"
 
   interface Props {
     event: TrustedEvent

@@ -1,6 +1,6 @@
 <script context="module" lang="ts">
   import {synced} from "@welshman/store"
-  import {kv} from "@app/core/storage"
+  import {kv} from "@app/storage"
 
   const dmNotificationsPrompted = synced({
     key: "dmNotificationsPrompted",
@@ -16,8 +16,8 @@
   import {append, uniq} from "@welshman/lib"
   import {pubkey} from "@welshman/app"
   import Chat from "@app/components/Chat.svelte"
-  import {splitChatId} from "@app/core/state"
-  import {notificationSettings} from "@app/core/state"
+  import {splitChatId} from "@app/chats"
+  import {notificationSettings} from "@app/settings"
   import {pushToast} from "@app/toast"
   import {Push} from "@app/push"
 

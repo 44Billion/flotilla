@@ -21,7 +21,7 @@
   import IconPickerButton from "@lib/components/IconPickerButton.svelte"
   import {pushToast} from "@app/toast"
   import {clearModals} from "@app/modal"
-  import {uploadFile} from "@app/core/commands"
+  import {uploadFile} from "@app/uploads"
 
   type Props = {
     url: string

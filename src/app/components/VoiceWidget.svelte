@@ -19,14 +19,9 @@
   import Button from "@lib/components/Button.svelte"
   import VoiceCallAudioSettingsDialog from "@app/components/VoiceCallAudioSettingsDialog.svelte"
   import VoiceRoomJoinDialog from "@app/components/VoiceRoomJoinDialog.svelte"
-  import {
-    decodeRelay,
-    deriveRoom,
-    displayRoom,
-    getRoomType,
-    RoomType,
-    type Room,
-  } from "@app/core/state"
+  import {decodeRelay} from "@app/relays"
+  import {deriveRoom, displayRoom, getRoomType, RoomType} from "@app/groups"
+  import type {Room} from "@app/groups"
   import {pushModal} from "@app/modal"
   import {notifications} from "@app/notifications"
   import {makeRoomPath} from "@app/routes"

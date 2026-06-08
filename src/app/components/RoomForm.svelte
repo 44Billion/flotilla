@@ -15,8 +15,9 @@
   import Modal from "@lib/components/Modal.svelte"
   import ModalBody from "@lib/components/ModalBody.svelte"
   import {pushToast} from "@app/toast"
-  import {uploadFile} from "@app/core/commands"
-  import {deriveHasLivekit, getRoomType, RoomType} from "@app/core/state"
+  import {uploadFile} from "@app/uploads"
+  import {deriveHasLivekit} from "@app/relays"
+  import {getRoomType, RoomType} from "@app/groups"
 
   type Props = {
     url: string

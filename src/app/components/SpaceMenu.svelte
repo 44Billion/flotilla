@@ -40,24 +40,20 @@
   import SpaceMenuRoomItem from "@app/components/SpaceMenuRoomItem.svelte"
   import VoiceWidget from "@app/components/VoiceWidget.svelte"
   import SocketStatusIndicator from "@app/components/SocketStatusIndicator.svelte"
+  import {ENABLE_ZAPS} from "@app/env"
+  import {CONTENT_KINDS} from "@app/content"
+  import {deriveSpaceMembers, deriveUserCanCreateRoom, deriveUserIsSpaceAdmin} from "@app/members"
   import {
-    ENABLE_ZAPS,
-    CONTENT_KINDS,
-    deriveSpaceMembers,
     deriveUserRooms,
     deriveOtherRooms,
     deriveOtherVoiceRooms,
     userSpaceUrls,
-    hasNip29,
-    deriveUserCanCreateRoom,
-    deriveUserIsSpaceAdmin,
-    deriveEventsForUrl,
-    deriveSpaceActionItems,
-    notificationSettings,
-    deriveShouldNotify,
     displayRoom,
-  } from "@app/core/state"
-  import {setSpaceNotifications} from "@app/core/commands"
+  } from "@app/groups"
+  import {hasNip29} from "@app/relays"
+  import {deriveEventsForUrl} from "@app/repository"
+  import {deriveSpaceActionItems} from "@app/actionItems"
+  import {notificationSettings, deriveShouldNotify, setSpaceNotifications} from "@app/settings"
   import {pushModal} from "@app/modal"
   import {makeSpacePath, goToChat} from "@app/routes"
   import {notifications} from "@app/notifications"

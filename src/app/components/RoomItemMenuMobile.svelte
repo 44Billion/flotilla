@@ -17,8 +17,9 @@
   import ZapButton from "@app/components/ZapButton.svelte"
   import EventInfo from "@app/components/EventInfo.svelte"
   import EventDeleteConfirm from "@app/components/EventDeleteConfirm.svelte"
-  import {ENABLE_ZAPS} from "@app/core/state"
-  import {publishReaction, canEnforceNip70} from "@app/core/commands"
+  import {ENABLE_ZAPS} from "@app/env"
+  import {publishReaction} from "@app/reactions"
+  import {canEnforceNip70} from "@app/relays"
   import {getRoomItemPath} from "@app/routes"
   import {pushModal} from "@app/modal"
 

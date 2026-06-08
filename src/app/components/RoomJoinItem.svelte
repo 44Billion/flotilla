@@ -8,8 +8,8 @@
   import RoomName from "@app/components/RoomName.svelte"
   import {pushModal} from "@app/modal"
   import {pushToast} from "@app/toast"
-  import {deriveRoom} from "@app/core/state"
-  import {addRoomMembers} from "@app/core/commands"
+  import {deriveRoom} from "@app/groups"
+  import {addRoomMembers} from "@app/members"
 
   type Props = {
     url: string

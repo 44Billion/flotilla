@@ -5,7 +5,7 @@
   import ModalBody from "@lib/components/ModalBody.svelte"
   import ModalHeader from "@lib/components/ModalHeader.svelte"
   import ModalTitle from "@lib/components/ModalTitle.svelte"
-  import {PLATFORM_NAME} from "@app/core/state"
+  import {PLATFORM_NAME} from "@app/env"
 </script>
 
 <Modal

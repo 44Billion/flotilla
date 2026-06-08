@@ -13,7 +13,7 @@
   import Modal from "@lib/components/Modal.svelte"
   import ModalBody from "@lib/components/ModalBody.svelte"
   import {pushToast} from "@app/toast"
-  import {publishReport} from "@app/core/commands"
+  import {publishReport} from "@app/reports"
 
   const {url, event} = $props()
 

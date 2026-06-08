@@ -18,7 +18,8 @@
   import Profile from "@app/components/Profile.svelte"
   import RoomName from "@app/components/RoomName.svelte"
   import RoomMembersAdd from "@app/components/RoomMembersAdd.svelte"
-  import {deriveRoom, deriveRoomMembers, deriveUserIsRoomAdmin} from "@app/core/state"
+  import {deriveRoom} from "@app/groups"
+  import {deriveRoomMembers, deriveUserIsRoomAdmin} from "@app/members"
   import {pushModal} from "@app/modal"
   import {pushToast} from "@app/toast"
 

@@ -15,8 +15,9 @@
   import ModalSubtitle from "@lib/components/ModalSubtitle.svelte"
   import ModalFooter from "@lib/components/ModalFooter.svelte"
   import InfoSignatures from "@app/components/InfoSignatures.svelte"
-  import {relaysPendingTrust} from "@app/core/state"
-  import {removeSpaceMembership, addTrustedRelay, removeTrustedRelay} from "@app/core/commands"
+  import {relaysPendingTrust} from "@app/policies"
+  import {removeSpace} from "@app/groups"
+  import {addTrustedRelay, removeTrustedRelay} from "@app/settings"
   import {pushModal} from "@app/modal"
 
   type Props = {
@@ -31,7 +32,7 @@
     loading = true
 
     try {
-      await removeSpaceMembership(url)
+      await removeSpace(url)
       await removeTrustedRelay(url)
       goto("/home")
     } finally {

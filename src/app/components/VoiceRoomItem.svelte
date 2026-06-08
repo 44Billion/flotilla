@@ -11,7 +11,7 @@
   import {pushModal} from "@app/modal"
   import VoiceRoomJoinDialog from "@app/components/VoiceRoomJoinDialog.svelte"
   import VoiceParticipantMediaBadges from "@app/components/VoiceParticipantMediaBadges.svelte"
-  import {makeRoomId} from "@app/core/state"
+  import {makeRoomId} from "@app/groups"
   import {
     VoiceState,
     currentVoiceRoom,

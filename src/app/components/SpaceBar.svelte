@@ -8,7 +8,7 @@
   import Button from "@lib/components/Button.svelte"
   import PageBar from "@lib/components/PageBar.svelte"
   import RelayIcon from "@app/components/RelayIcon.svelte"
-  import {decodeRelay} from "@app/core/state"
+  import {decodeRelay} from "@app/relays"
   import {makeSpacePath} from "@app/routes"
 
   interface Props {

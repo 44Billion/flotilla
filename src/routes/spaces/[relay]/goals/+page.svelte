@@ -16,8 +16,9 @@
   import SpaceBar from "@app/components/SpaceBar.svelte"
   import GoalItem from "@app/components/GoalItem.svelte"
   import GoalCreate from "@app/components/GoalCreate.svelte"
-  import {decodeRelay, makeCommentFilter} from "@app/core/state"
-  import {makeFeed} from "@app/core/requests"
+  import {decodeRelay} from "@app/relays"
+  import {makeCommentFilter} from "@app/content"
+  import {makeFeed} from "@app/feeds"
   import {pushModal} from "@app/modal"
 
   const url = decodeRelay($page.params.relay!)

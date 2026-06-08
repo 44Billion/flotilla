@@ -9,7 +9,7 @@
   import {repository, loadRelayList} from "@welshman/app"
   import Button from "@lib/components/Button.svelte"
   import ProfileSpaces from "@app/components/ProfileSpaces.svelte"
-  import {deriveGroupList, getSpaceUrlsFromGroupList} from "@app/core/state"
+  import {deriveGroupList, getSpaceUrlsFromGroupList} from "@app/groups"
   import {goToEvent} from "@app/routes"
   import {pushModal} from "@app/modal"
 

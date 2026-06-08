@@ -11,7 +11,7 @@
   import {fly} from "@lib/transition"
   import Button from "@lib/components/Button.svelte"
   import Icon from "@lib/components/Icon.svelte"
-  import {CONTENT_KINDS} from "@app/core/state"
+  import {CONTENT_KINDS} from "@app/content"
   import {goToEvent} from "@app/routes"
 
   type Props = {

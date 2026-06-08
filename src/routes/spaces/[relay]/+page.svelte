@@ -2,7 +2,7 @@
   import {page} from "$app/stores"
   import theme from "tailwindcss/defaultTheme"
   import SecondaryNav from "@lib/components/SecondaryNav.svelte"
-  import {decodeRelay} from "@app/core/state"
+  import {decodeRelay} from "@app/relays"
   import {goToSpace} from "@app/routes"
   import PrimaryNavSpaces from "@app/components/PrimaryNavSpaces.svelte"
   import SpaceMenu from "@app/components/SpaceMenu.svelte"

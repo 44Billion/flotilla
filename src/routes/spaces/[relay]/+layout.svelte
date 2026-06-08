@@ -15,8 +15,9 @@
   import SpaceJoin from "@app/components/SpaceJoin.svelte"
   import {pushModal} from "@app/modal"
   import {makeSpacePath} from "@app/routes"
-  import {decodeRelay, userGroupList, relaysPendingTrust, userSpaceUrls} from "@app/core/state"
-  import {deriveRelayAuthError} from "@app/core/commands"
+  import {decodeRelay, deriveRelayAuthError} from "@app/relays"
+  import {userGroupList, userSpaceUrls} from "@app/groups"
+  import {relaysPendingTrust} from "@app/policies"
 
   type Props = {
     children?: Snippet

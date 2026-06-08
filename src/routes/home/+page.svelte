@@ -8,7 +8,7 @@
   import Button from "@lib/components/Button.svelte"
   import CardButton from "@lib/components/CardButton.svelte"
   import {goToSpace} from "@app/routes"
-  import {PLATFORM_NAME, PLATFORM_RELAYS} from "@app/core/state"
+  import {PLATFORM_NAME, PLATFORM_RELAYS} from "@app/env"
 
   const openChat = () => goto("/chat")
 

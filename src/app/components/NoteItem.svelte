@@ -9,7 +9,9 @@
   import NoteContent from "@app/components/NoteContent.svelte"
   import NoteCard from "@app/components/NoteCard.svelte"
   import ReactionSummary from "@app/components/ReactionSummary.svelte"
-  import {publishDelete, publishReaction, canEnforceNip70} from "@app/core/commands"
+  import {publishDelete} from "@app/deletes"
+  import {publishReaction} from "@app/reactions"
+  import {canEnforceNip70} from "@app/relays"
 
   type Props = {
     event: TrustedEvent

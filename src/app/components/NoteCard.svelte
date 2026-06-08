@@ -9,7 +9,7 @@
   import Profile from "@app/components/Profile.svelte"
   import ProfileName from "@app/components/ProfileName.svelte"
   import {goToEvent} from "@app/routes"
-  import {isEventMuted} from "@app/core/state"
+  import {isEventMuted} from "@app/social"
 
   const {
     event,

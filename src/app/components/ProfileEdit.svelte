@@ -10,7 +10,7 @@
   import ProfileEditForm from "@app/components/ProfileEditForm.svelte"
   import {clearModals} from "@app/modal"
   import {pushToast} from "@app/toast"
-  import {updateProfile} from "@app/core/commands"
+  import {updateProfile} from "@app/profiles"
 
   const profile = $profilesByPubkey.get($pubkey!) || makeProfile()
   const initialValues = {profile}

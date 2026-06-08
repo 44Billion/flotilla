@@ -10,9 +10,13 @@
   import {goto} from "$app/navigation"
   import {page} from "$app/stores"
   import {sync, throttled} from "@welshman/store"
-  import {call} from "@welshman/lib"
-  import {defaultSocketPolicies} from "@welshman/net"
-  import {pubkey, sessions, signerLog, shouldUnwrap} from "@welshman/app"
+  import {always, call} from "@welshman/lib"
+  import {defaultSocketPolicies, netContext} from "@welshman/net"
+  import {appContext, pubkey, sessions, signerLog, shouldUnwrap} from "@welshman/app"
+  import {routerContext} from "@welshman/router"
+  import {verifyEvent} from "@welshman/util"
+  import type {TrustedEvent} from "@welshman/util"
+  import {context as pomadeContext} from "@pomade/core"
   import * as lib from "@welshman/lib"
   import * as util from "@welshman/util"
   import * as feeds from "@welshman/feeds"
@@ -29,12 +33,34 @@
   import {setupHistory} from "@app/routes"
   import {setupAnalytics} from "@app/analytics"
   import {authPolicy, blockPolicy, trustPolicy, mostlyRestrictedPolicy} from "@app/policies"
-  import {db, kv, ss} from "@app/core/storage"
-  import {device, userSettingsValues, notificationSettings, pushState} from "@app/core/state"
-  import {syncApplicationData} from "@app/core/sync"
-  import * as commands from "@app/core/commands"
-  import * as requests from "@app/core/requests"
-  import * as appState from "@app/core/state"
+  import {db, kv, ss} from "@app/storage"
+  import {device} from "@app/device"
+  import {getSetting, userSettingsValues, notificationSettings} from "@app/settings"
+  import {DUFFLEPUD_URL, INDEXER_RELAYS, POMADE_SIGNERS} from "@app/env"
+  import {pushState} from "@app/push/adapters/common"
+  import {syncApplicationData} from "@app/sync"
+  import * as groups from "@app/groups"
+  import * as comments from "@app/comments"
+  import * as deletes from "@app/deletes"
+  import * as reactions from "@app/reactions"
+  import * as profiles from "@app/profiles"
+  import * as lightning from "@app/lightning"
+  import * as uploads from "@app/uploads"
+  import * as appPolls from "@app/polls"
+  import * as reports from "@app/reports"
+  import * as relays from "@app/relays"
+  import * as settings from "@app/settings"
+  import * as members from "@app/members"
+  import * as chats from "@app/chats"
+  import * as content from "@app/content"
+  import * as env from "@app/env"
+  import * as repository from "@app/repository"
+  import * as social from "@app/social"
+  import * as appDevice from "@app/device"
+  import * as actionItems from "@app/actionItems"
+  import * as appFeeds from "@app/feeds"
+  import * as invites from "@app/invites"
+  import * as healthChecks from "@app/healthChecks"
   import {theme} from "@app/theme"
   import {toast, pushToast} from "@app/toast"
   import * as notifications from "@app/notifications"
@@ -69,11 +95,38 @@
     ...feeds,
     ...net,
     ...app,
-    ...appState,
-    ...commands,
-    ...requests,
+    ...groups,
+    ...relays,
+    ...settings,
+    ...members,
+    ...chats,
+    ...content,
+    ...env,
+    ...repository,
+    ...social,
+    ...appDevice,
+    ...actionItems,
+    ...appFeeds,
+    ...invites,
+    ...healthChecks,
+    ...comments,
+    ...deletes,
+    ...reactions,
+    ...profiles,
+    ...lightning,
+    ...uploads,
+    ...appPolls,
+    ...reports,
     ...notifications,
   })
+
+  // Set up context for various modules
+  pomadeContext.setSignerUrls(POMADE_SIGNERS)
+  pomadeContext.setArgonWorker(import("@pomade/core/argon-worker.js?worker"))
+  appContext.dufflepudUrl = DUFFLEPUD_URL
+  routerContext.getIndexerRelays = always(INDEXER_RELAYS)
+  netContext.isEventValid = (event: TrustedEvent, url: string) =>
+    getSetting<string[]>("trusted_relays").includes(url) || verifyEvent(event)
 
   // Listen for deep link events
   App.addListener("appUrlOpen", async (event: URLOpenListenerEvent) => {

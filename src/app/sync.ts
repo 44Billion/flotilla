@@ -41,21 +41,19 @@ import {
   shouldUnwrap,
   hasNegentropy,
 } from "@welshman/app"
+import {REACTION_KINDS, CONTENT_KINDS, makeCommentFilter} from "@app/content"
+import {INDEXER_RELAYS} from "@app/env"
+import {loadSettings} from "@app/settings"
 import {
-  REACTION_KINDS,
-  CONTENT_KINDS,
-  INDEXER_RELAYS,
-  loadSettings,
   loadGroupList,
   userSpaceUrls,
   userGroupList,
-  decodeRelay,
   getSpaceUrlsFromGroupList,
   getSpaceRoomsFromGroupList,
-  makeCommentFilter,
-  loadFeedsForPubkey,
-} from "@app/core/state"
-import {hasBlossomSupport} from "@app/core/commands"
+} from "@app/groups"
+import {decodeRelay} from "@app/relays"
+import {loadFeedsForPubkey} from "@app/feeds"
+import {hasBlossomSupport} from "@app/uploads"
 import {LIVEKIT_PARTICIPANTS} from "@app/call/voice"
 
 // Utils

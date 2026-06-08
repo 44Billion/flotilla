@@ -19,7 +19,7 @@
   import LogInEmail from "@app/components/LogInEmail.svelte"
   import LogInKey from "@app/components/LogInKey.svelte"
   import {pushModal, clearModals} from "@app/modal"
-  import {PLATFORM_NAME, POMADE_SIGNERS} from "@app/core/state"
+  import {PLATFORM_NAME, POMADE_SIGNERS} from "@app/env"
   import {pushToast} from "@app/toast"
   import {setChecked} from "@app/notifications"
 

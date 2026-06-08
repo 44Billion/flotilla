@@ -1,4 +1,4 @@
-import {db, kv, ss} from "@app/core/storage"
+import {db, kv, ss} from "@app/storage"
 import {deactivateCurrentPomadeSession} from "@app/pomade"
 import {Push} from "@app/push"
 

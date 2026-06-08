@@ -22,7 +22,8 @@
   import CalendarEventMeta from "@app/components/CalendarEventMeta.svelte"
   import CalendarEventDate from "@app/components/CalendarEventDate.svelte"
   import EventReply from "@app/components/EventReply.svelte"
-  import {deriveEvent, decodeRelay} from "@app/core/state"
+  import {deriveEvent} from "@app/repository"
+  import {decodeRelay} from "@app/relays"
 
   const {relay, address} = $page.params as MakeNonOptional<typeof $page.params>
   const url = decodeRelay(relay)

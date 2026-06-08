@@ -18,11 +18,11 @@
   import ModalBody from "@lib/components/ModalBody.svelte"
   import DateTimeInput from "@lib/components/DateTimeInput.svelte"
   import EditorContent from "@app/editor/EditorContent.svelte"
-  import {PROTECTED} from "@app/core/state"
+  import {PROTECTED, publishRoomQuote} from "@app/groups"
   import {makeEditor} from "@app/editor"
   import {DraftKey} from "@app/drafts"
   import {pushToast} from "@app/toast"
-  import {canEnforceNip70, publishRoomQuote} from "@app/core/commands"
+  import {canEnforceNip70} from "@app/relays"
 
   type Values = {
     d: string
