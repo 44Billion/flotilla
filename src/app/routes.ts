@@ -6,7 +6,7 @@ import {page} from "$app/stores"
 import {nthEq} from "@welshman/lib"
 import type {TrustedEvent} from "@welshman/util"
 import {getAddress} from "@welshman/util"
-import {tracker, userMessagingRelayList} from "@welshman/app"
+import {tracker, userMessagingRelayList, getRelay} from "@welshman/app"
 import {identity} from "@welshman/lib"
 import {
   getTagValue,
@@ -21,7 +21,7 @@ import {
 } from "@welshman/util"
 import {makeChatId} from "@app/chats"
 import {entityLink} from "@app/env"
-import {encodeRelay} from "@app/relays"
+import {encodeRelay, hasNip29} from "@app/relays"
 import {DM_KINDS} from "@app/content"
 import {ROOM} from "@app/groups"
 import {pushModal} from "@app/modal"
@@ -84,6 +84,8 @@ export const goToSpace = async (url: string) => {
 
   if (prevPath && prevPath !== makeSpacePath(url)) {
     goto(prevPath, {replaceState: true})
+  } else if (!hasNip29(getRelay(url))) {
+    goto(makeSpaceChatPath(url), {replaceState: true})
   } else if (window.matchMedia(`(min-width: ${theme.screens.md})`).matches) {
     goto(makeSpacePath(url, "recent"), {replaceState: true})
   } else {
