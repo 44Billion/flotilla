@@ -13,8 +13,9 @@
   import ModalSubtitle from "@lib/components/ModalSubtitle.svelte"
   import ModalTitle from "@lib/components/ModalTitle.svelte"
   import {AbortError, TimeoutError} from "$lib/util"
+  import ProfileCircles from "@app/components/ProfileCircles.svelte"
   import {displayRoom} from "@app/core/state"
-  import {joinVoiceRoom} from "@app/call/voice"
+  import {deriveVoiceParticipants, joinVoiceRoom, loadVoiceParticipants} from "@app/call/voice"
   import {popModal} from "@app/util/modal"
   import {pushToast} from "@app/util/toast"
 
@@ -26,6 +27,8 @@
   const {url, h}: Props = $props()
 
   const spaceLabel = $derived(displayRelayUrl(url))
+  const participants = deriveVoiceParticipants(url, h)
+  const participantPubkeys = $derived($participants.flatMap(p => (p.pubkey ? [p.pubkey] : [])))
 
   let audioInputs = $state<MediaDeviceInfo[]>([])
   let selectedDeviceId = $state("")
@@ -42,6 +45,7 @@
   }
 
   $effect(() => {
+    void loadVoiceParticipants(url, h)
     void loadDevices()
   })
 
@@ -81,6 +85,11 @@
         </span>
       </ModalSubtitle>
     </ModalHeader>
+    {#if participantPubkeys.length > 0}
+      <div class="flex justify-center py-2">
+        <ProfileCircles pubkeys={participantPubkeys} size={5} limit={3} />
+      </div>
+    {/if}
     <p class="text-sm opacity-80">Select a microphone to join the call:</p>
     <div class="flex flex-col gap-4 pt-2">
       <div class="flex items-center gap-2">

@@ -4,6 +4,7 @@
   import {loadProfile, displayProfileByPubkey} from "@welshman/app"
   import SecondaryNavItem from "@lib/components/SecondaryNavItem.svelte"
   import ProfileCircle from "@app/components/ProfileCircle.svelte"
+  import ProfileCircles from "@app/components/ProfileCircles.svelte"
   import RoomImage from "@app/components/RoomImage.svelte"
   import RoomName from "@app/components/RoomName.svelte"
   import {makeRoomPath} from "@app/util/routes"
@@ -20,7 +21,11 @@
     voiceState,
     type VoiceParticipant,
   } from "@app/call/stores"
-  import {cancelJoinVoiceRoom, deriveVoiceParticipants} from "@app/call/voice"
+  import {
+    cancelJoinVoiceRoom,
+    deriveVoiceParticipants,
+    loadVoiceParticipants,
+  } from "@app/call/voice"
 
   interface Props {
     url: string
@@ -32,6 +37,7 @@
   const {url, h, replaceState = false, notification = false}: Props = $props()
 
   const participants = deriveVoiceParticipants(url, h)
+  const participantPubkeys = $derived($participants.flatMap(p => (p.pubkey ? [p.pubkey] : [])))
   const isActive = $derived(
     $voiceState === VoiceState.Connected && $currentVoiceRoom?.id === makeRoomId(url, h),
   )
@@ -52,6 +58,10 @@
     await goto(makeRoomPath(url, h), {replaceState})
     pushModal(VoiceRoomJoinDialog, {url, h})
   }
+
+  $effect(() => {
+    void loadVoiceParticipants(url, h)
+  })
 
   $effect(() => {
     for (const p of $participants) {
@@ -75,29 +85,33 @@
       {/if}
       <RoomName {url} {h} />
     </div>
-    {#if $participants.length > 0}
-      {#each $participants as p (participantKey(p as VoiceParticipant))}
-        <div class="flex items-center gap-2 ml-6">
-          <div
-            class={cx(
-              "inline-flex shrink-0 items-center justify-center rounded-full transition-shadow",
-              isActive && $isParticipantSpeaking(p) && "ring-2 ring-success",
-            )}>
-            <ProfileCircle pubkey={p.pubkey} size={5} class="h-5 w-5" />
-          </div>
-          <span class="ellipsize min-w-0 flex-1 text-xs opacity-70">
-            {p.pubkey ? displayProfileByPubkey(p.pubkey) : "Unknown"}
-          </span>
-          {#if isActive}
-            {@const media = $mediaStateByIdentity(p.identity)}
+    {#if participantPubkeys.length > 0}
+      {#if isActive}
+        {#each $participants as p (participantKey(p as VoiceParticipant))}
+          {@const media = $mediaStateByIdentity(p.identity)}
+          <div class="flex items-center gap-2 ml-6">
+            <div
+              class={cx(
+                "inline-flex shrink-0 items-center justify-center rounded-full transition-shadow",
+                $isParticipantSpeaking(p) && "ring-2 ring-success",
+              )}>
+              <ProfileCircle pubkey={p.pubkey} size={5} class="h-5 w-5" />
+            </div>
+            <span class="ellipsize min-w-0 flex-1 text-xs opacity-70">
+              {p.pubkey ? displayProfileByPubkey(p.pubkey) : "Unknown"}
+            </span>
             <VoiceParticipantMediaBadges
               muted={media.muted}
               cameraOn={media.cameraOn}
               size={3}
               class="shrink-0" />
-          {/if}
+          </div>
+        {/each}
+      {:else}
+        <div class="ml-6">
+          <ProfileCircles pubkeys={participantPubkeys} size={5} limit={3} />
         </div>
-      {/each}
+      {/if}
     {/if}
   </div>
 </SecondaryNavItem>

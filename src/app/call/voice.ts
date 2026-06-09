@@ -19,6 +19,7 @@ import {map, not, nthEq, reject, removeUndefined, uniqBy} from "@welshman/lib"
 import type {TrustedEvent} from "@welshman/util"
 import {makeHttpAuth, makeHttpAuthHeader, getTags} from "@welshman/util"
 import {signer} from "@welshman/app"
+import {load} from "@welshman/net"
 import {getLivekitEndpoint} from "$lib/livekit"
 import {AbortError, TimeoutError, whenAborted, whenTimeout} from "$lib/util"
 import {
@@ -154,6 +155,12 @@ const fetchLivekitToken = async (
   return response.json()
 }
 
+export const loadVoiceParticipants = (url: string, h: string) =>
+  load({
+    relays: [url],
+    filters: [{kinds: [LIVEKIT_PARTICIPANTS], "#d": [h]}],
+  })
+
 export const deriveVoiceParticipants = (url: string, h: string) =>
   // We use the livekit identity list while in a call, and fall back to the list in kind 39004.
   derived(
@@ -173,7 +180,7 @@ export const deriveVoiceParticipants = (url: string, h: string) =>
         if (!latestEvent) return []
         const participants = removeUndefined(
           map(
-            (tag: string[]) => (tag[1] ? {pubkey: tag[1], identity: tag[1]} : undefined),
+            (tag: string[]) => (tag[1] ? participantFromLiveKitIdentity(tag[1]) : undefined),
             getTags("participant", latestEvent.tags),
           ),
         )

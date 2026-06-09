@@ -1,4 +1,5 @@
 <script lang="ts">
+  import cx from "classnames"
   import {getProfile, loadProfile} from "@welshman/app"
   import {isMobile} from "@lib/html"
   import ProfileCircle from "@app/components/ProfileCircle.svelte"
@@ -6,10 +7,20 @@
   type Props = {
     pubkeys: string[]
     size?: number
+    limit?: number
+    class?: string
   }
 
-  const {pubkeys, size = 7}: Props = $props()
-  const limit = isMobile ? 7 : 10
+  const {pubkeys, size = 7, limit, class: className}: Props = $props()
+  const effectiveLimit = $derived(limit ?? (isMobile ? 7 : 10))
+
+  const dimensions = $derived(
+    size <= 5
+      ? {box: "h-5 w-5", overlap: "-mr-2", overflow: "text-[9px]"}
+      : size <= 6
+        ? {box: "h-6 w-6", overlap: "-mr-2.5", overflow: "text-[10px]"}
+        : {box: "h-8 w-8", overlap: "-mr-3", overflow: "text-xs"},
+  )
 
   for (const pubkey of pubkeys) {
     loadProfile(pubkey)
@@ -20,13 +31,31 @@
 
     return filtered.length > 0 ? filtered : pubkeys.slice(0, 1)
   })
+
+  const displayPubkeys = $derived(visiblePubkeys.toSorted().slice(0, effectiveLimit))
+  const overflowCount = $derived(Math.max(0, pubkeys.length - effectiveLimit))
 </script>
 
-<div class="flex pr-3">
-  {#each visiblePubkeys.toSorted().slice(0, limit) as pubkey (pubkey)}
+<div class={cx("flex", size <= 5 ? "pr-2" : "pr-3", className)}>
+  {#each displayPubkeys as pubkey (pubkey)}
     <div
-      class="z-feature -mr-3 inline-block flex h-8 w-8 items-center justify-center rounded-full bg-base-100">
-      <ProfileCircle class="h-8 w-8 bg-base-300" {pubkey} {size} />
+      class={cx(
+        "z-feature inline-block flex items-center justify-center rounded-full bg-base-100",
+        dimensions.box,
+        dimensions.overlap,
+      )}>
+      <ProfileCircle class={cx(dimensions.box, "bg-base-300")} {pubkey} {size} />
     </div>
   {/each}
+  {#if overflowCount > 0}
+    <div
+      class={cx(
+        "z-feature inline-flex items-center justify-center rounded-full bg-neutral font-medium text-neutral-content",
+        dimensions.box,
+        dimensions.overlap,
+        dimensions.overflow,
+      )}>
+      +{overflowCount}
+    </div>
+  {/if}
 </div>
