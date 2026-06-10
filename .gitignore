@@ -70,10 +70,10 @@ GoogleService-Info.plist
 
 # IDEs and editors
 .roo
-.idea/
-.vscode/
-.claude/
-.local/
+.idea
+.vscode
+.claude
+.local
 
 # OS generated
 .DS_Store
