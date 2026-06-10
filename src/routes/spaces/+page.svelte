@@ -26,7 +26,7 @@
   import SpaceAdd from "@app/components/SpaceAdd.svelte"
   import SpaceInviteAccept from "@app/components/SpaceInviteAccept.svelte"
   import SpaceJoin from "@app/components/SpaceJoin.svelte"
-  import {userSpaceUrls, loadUserGroupList, groupListPubkeysByUrl, setSpaceOrder} from "@app/groups"
+  import {userSpaceUrls, loadUserGroupList, groupListPubkeysByUrl, setSpaces} from "@app/groups"
   import {PLATFORM_RELAYS, DEFAULT_RELAYS} from "@app/env"
   import {bootstrapPubkeys} from "@app/social"
   import {parseInviteLink} from "@app/invites"
@@ -128,7 +128,7 @@
     lastDragTarget = undefined
 
     if (dragStartOrder && !isSameOrder(dragStartOrder, orderedSpaceUrls)) {
-      void setSpaceOrder(orderedSpaceUrls).catch(console.error)
+      void setSpaces(orderedSpaceUrls).catch(console.error)
     }
 
     dragStartOrder = undefined

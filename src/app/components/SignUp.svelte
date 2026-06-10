@@ -22,8 +22,10 @@
     INDEXER_RELAYS,
     DEFAULT_RELAYS,
     DEFAULT_MESSAGING_RELAYS,
+    DEFAULT_SPACES,
   } from "@app/env"
   import {setChecked} from "@app/notifications"
+  import {setSpaces} from "@app/groups"
   import {loginWithPomade} from "@app/pomade"
   import {pushModal, clearModals} from "@app/modal"
 
@@ -51,6 +53,9 @@
 
     // Save the user's profile
     initProfile(getKey<Profile>("signup.profile")!)
+
+    // Auto-join default spaces
+    setSpaces(DEFAULT_SPACES)
 
     // Don't show any notifications for old content
     setChecked("*")

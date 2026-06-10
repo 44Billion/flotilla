@@ -311,7 +311,7 @@ export const removeSpace = async (url: string) => {
   return publishThunk({event, relays})
 }
 
-export const setSpaceOrder = async (urls: string[]) => {
+export const setSpaces = async (urls: string[]) => {
   const list = get(userGroupList) || makeList({kind: ROOMS})
   const orderedUrls = uniq(urls.map(normalizeRelayUrl))
   const relayTags = list.publicTags.filter(t => t[0] === "r")
