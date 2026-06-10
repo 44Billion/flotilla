@@ -1,5 +1,7 @@
 <script lang="ts">
   import {onDestroy} from "svelte"
+  import cx from "classnames"
+  import {first} from "@welshman/lib"
   import type {NativeEmoji} from "emoji-picker-element/shared"
   import {signer, deriveZapperForPubkey} from "@welshman/app"
   import {request} from "@welshman/net"
@@ -24,6 +26,7 @@
   import QRCode from "@app/components/QRCode.svelte"
   import WalletConnect from "@app/components/WalletConnect.svelte"
   import {pushModal} from "@app/modal"
+  import {zapAmounts} from "@app/settings"
   import {clip, pushToast} from "@app/toast"
 
   type Props = {
@@ -34,30 +37,13 @@
 
   const {url, pubkey, eventId}: Props = $props()
 
-  const minPos = 1
-  const maxPos = 1000
-  const minVal = 21
-  const maxVal = 1000000
   const zapperStore = deriveZapperForPubkey(pubkey)
 
-  const posToAmount = (pos: number) => {
-    const normalizedPos = (pos - minPos) / (maxPos - minPos)
-    const logMin = Math.log(minVal)
-    const logMax = Math.log(maxVal)
-    const logValue = logMin + normalizedPos * (logMax - logMin)
-    return Math.round(Math.exp(logValue))
-  }
-
-  const amountToPos = (amount: number) => {
-    const clampedAmount = Math.max(minVal, Math.min(maxVal, amount))
-    const logMin = Math.log(minVal)
-    const logMax = Math.log(maxVal)
-    const logValue = Math.log(clampedAmount)
-    const normalizedPos = (logValue - logMin) / (logMax - logMin)
-    return Math.round(minPos + normalizedPos * (maxPos - minPos))
-  }
-
   const back = () => history.back()
+
+  const selectAmount = (preset: number) => {
+    amount = preset
+  }
 
   const onEmoji = (emoji: NativeEmoji) => {
     content = emoji.unicode
@@ -120,8 +106,7 @@
     }
   }
 
-  let pos = $state(minPos)
-  let amount = $state(minVal)
+  let amount = $state<number>(first($zapAmounts) ?? 21)
   let content = $state("⚡️")
   let loading = $state(false)
   let invoice = $state<string>()
@@ -129,17 +114,6 @@
 
   onDestroy(() => {
     paymentController?.abort()
-  })
-
-  $effect(() => {
-    amount = posToAmount(pos)
-  })
-
-  $effect(() => {
-    const newPos = amountToPos(amount)
-    if (newPos !== pos) {
-      pos = newPos
-    }
   })
 </script>
 
@@ -189,12 +163,15 @@
           </div>
         {/snippet}
       </FieldInline>
-      <input
-        class="range range-primary -mt-2"
-        type="range"
-        min={minPos}
-        max={maxPos}
-        bind:value={pos} />
+      <div class="flex flex-wrap justify-end gap-2">
+        {#each $zapAmounts as preset}
+          <Button
+            class={cx("btn btn-sm rounded-full", preset === amount ? "btn-primary" : "btn-neutral")}
+            onclick={() => selectAmount(preset)}>
+            {preset}
+          </Button>
+        {/each}
+      </div>
       <p class="card2 card-sm bg-alt text-center flex justify-between items-center">
         Want to zap directly?
         <Button class="btn btn-neutral btn-sm" onclick={connectWallet}>

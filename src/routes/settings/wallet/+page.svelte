@@ -1,12 +1,17 @@
 <script lang="ts">
   import cx from "classnames"
-  import {LOCALE, always, call, sleep} from "@welshman/lib"
+  import {LOCALE, always, call, removeAt, replaceAt, sleep} from "@welshman/lib"
   import {WalletType, displayRelayUrl, isNWCWallet, fromMsats} from "@welshman/util"
   import {session, pubkey, profilesByPubkey} from "@welshman/app"
   import DownloadMinimalistic from "@assets/icons/download-minimalistic.svg?dataurl"
   import UploadMinimalistic from "@assets/icons/upload-minimalistic.svg?dataurl"
+  import Bolt from "@assets/icons/bolt.svg?dataurl"
+  import AddCircle from "@assets/icons/add-circle.svg?dataurl"
+  import TrashBin2 from "@assets/icons/trash-bin-2.svg?dataurl"
+  import {preventDefault} from "@lib/html"
   import Icon from "@lib/components/Icon.svelte"
   import Button from "@lib/components/Button.svelte"
+  import Spinner from "@lib/components/Spinner.svelte"
   import WalletPay from "@app/components/WalletPay.svelte"
   import WalletReceive from "@app/components/WalletReceive.svelte"
   import WalletConnect from "@app/components/WalletConnect.svelte"
@@ -14,9 +19,10 @@
   import WalletUpdateReceivingAddress from "@app/components/WalletUpdateReceivingAddress.svelte"
   import {pushModal} from "@app/modal"
   import {getNwcClient, getWebLn} from "@app/lightning"
+  import {userSettingsValues, publishSettings} from "@app/settings"
+  import {pushToast} from "@app/toast"
   import Wallet2 from "@assets/icons/wallet.svg?dataurl"
   import CheckCircle from "@assets/icons/check-circle.svg?dataurl"
-  import AddCircle from "@assets/icons/add-circle.svg?dataurl"
   import CloseCircle from "@assets/icons/close-circle.svg?dataurl"
   import InfoCircle from "@assets/icons/info-circle.svg?dataurl"
 
@@ -78,6 +84,56 @@
   $effect(() => {
     startWalletStatusCheck($session?.wallet)
   })
+
+  const resetZapAmounts = () => {
+    zapAmountDraft = [...$userSettingsValues.zap_amounts]
+  }
+
+  const addZapAmount = () => {
+    zapAmountDraft = [...zapAmountDraft, zapAmountDraft.at(-1) || 21]
+  }
+
+  const removeZapAmount = (index: number) => {
+    if (zapAmountDraft.length > 1) {
+      zapAmountDraft = removeAt(index, zapAmountDraft)
+    }
+  }
+
+  const onZapAmountInput = (e: Event) => {
+    const target = e.currentTarget as HTMLInputElement
+    const index = Number(target.dataset.index)
+
+    zapAmountDraft = replaceAt(index, Number(target.value), zapAmountDraft)
+  }
+
+  const onZapAmountsSubmit = preventDefault(async () => {
+    zapAmountsLoading = true
+
+    try {
+      if (zapAmountDraft.length === 0) {
+        return pushToast({
+          theme: "error",
+          message: "Add at least one zap amount.",
+        })
+      }
+
+      if (zapAmountDraft.some(amount => amount <= 0)) {
+        return pushToast({
+          theme: "error",
+          message: "Zap amounts must be greater than zero.",
+        })
+      }
+
+      await publishSettings({zap_amounts: zapAmountDraft})
+
+      pushToast({message: "Your zap amounts have been saved!"})
+    } finally {
+      zapAmountsLoading = false
+    }
+  })
+
+  let zapAmountDraft = $state([...$userSettingsValues.zap_amounts])
+  let zapAmountsLoading = $state(false)
 </script>
 
 <div class="content column gap-4">
@@ -206,4 +262,50 @@
       </div>
     {/if}
   </div>
+  <form class="card2 bg-alt flex flex-col gap-6 shadow-md" onsubmit={onZapAmountsSubmit}>
+    <strong class="flex items-center gap-3 text-lg">
+      <Icon icon={Bolt} />
+      Zap Amounts
+    </strong>
+    <p class="text-sm opacity-75">Preset amounts shown when sending a zap.</p>
+    <div class="flex flex-col gap-2">
+      {#each zapAmountDraft as amount, index}
+        <div class="flex items-center gap-2">
+          <Button
+            class="btn btn-ghost btn-sm"
+            type="button"
+            onclick={() => removeZapAmount(index)}
+            disabled={zapAmountDraft.length === 1}>
+            <Icon icon={TrashBin2} />
+          </Button>
+          <label class="input input-bordered flex grow items-center gap-2">
+            <Icon icon={Bolt} />
+            <input
+              type="number"
+              class="grow"
+              min="1"
+              data-index={index}
+              value={amount}
+              oninput={onZapAmountInput} />
+          </label>
+        </div>
+      {/each}
+      <Button class="btn btn-link w-fit px-0" type="button" onclick={addZapAmount}>
+        <Icon icon={AddCircle} size={5} />
+        Add amount
+      </Button>
+    </div>
+    <div class="flex flex-row items-center justify-between gap-4">
+      <Button
+        class="btn btn-neutral"
+        type="button"
+        onclick={resetZapAmounts}
+        disabled={zapAmountsLoading}>
+        Discard Changes
+      </Button>
+      <Button type="submit" class="btn btn-primary" disabled={zapAmountsLoading}>
+        <Spinner loading={zapAmountsLoading}>Save Changes</Spinner>
+      </Button>
+    </div>
+  </form>
 </div>

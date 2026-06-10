@@ -37,6 +37,7 @@ export type SettingsValues = {
   send_delay: number
   font_size: number
   alerts: SpaceNotificationSettings[]
+  zap_amounts: number[]
 }
 
 export type Settings = {
@@ -54,6 +55,7 @@ export const defaultSettings: SettingsValues = {
   send_delay: 0,
   font_size: 1.1,
   alerts: [],
+  zap_amounts: [21, 210, 2100, 21000],
 }
 
 export const settingsByPubkey = deriveItemsByKey({
@@ -79,6 +81,8 @@ export const userSettings = makeUserData(settingsByPubkey, loadSettings)
 export const loadUserSettings = makeUserLoader(loadSettings)
 
 export const userSettingsValues = derived(userSettings, $s => $s?.values || defaultSettings)
+
+export const zapAmounts = derived(userSettingsValues, $settings => $settings.zap_amounts)
 
 export const getSettings = getter(userSettingsValues)
 
