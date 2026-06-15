@@ -1,11 +1,15 @@
 <script lang="ts">
+  import {session} from "@welshman/app"
   import {Capacitor} from "@capacitor/core"
   import Link from "@lib/components/Link.svelte"
   import Button from "@lib/components/Button.svelte"
+  import Zap from "@app/components/Zap.svelte"
+  import ZapInvoice from "@app/components/ZapInvoice.svelte"
   import Icon from "@lib/components/Icon.svelte"
   import ProfileDetail from "@app/components/ProfileDetail.svelte"
   import {PLATFORM_NAME} from "@app/env"
   import {pushModal} from "@app/modal"
+  import {makeSpacePath} from "@app/routes"
   import Code from "@assets/icons/code-2.svg?dataurl"
   import Global from "@assets/icons/global.svg?dataurl"
   import Pen from "@assets/icons/pen.svg?dataurl"
@@ -16,6 +20,8 @@
   const pubkey = "97c70a44366a6535c145b333f973ea86dfdc2d7a99da618c40c64705ad98e322"
 
   const openProfile = () => pushModal(ProfileDetail, {pubkey})
+
+  const zap = () => pushModal($session?.wallet ? Zap : ZapInvoice, {pubkey})
 </script>
 
 <div class="mt-8 min-h-screen bg-base-200 sm:hero">
@@ -28,18 +34,14 @@
           <div class="card2 bg-alt flex flex-col gap-2 text-center shadow-lg">
             <h3 class="text-2xl sm:h-12">Donate</h3>
             <p class="sm:h-16">Funds will be used to support development.</p>
-            <Link external href="https://geyser.fund/project/flotilla" class="btn btn-primary">
-              Support the Developer
-            </Link>
+            <Button onclick={zap} class="btn btn-primary">Zap the Developer</Button>
           </div>
         {/if}
         <div class="card2 bg-alt flex flex-col gap-2 text-center shadow-lg">
           <h3 class="text-2xl sm:h-12">Get in touch</h3>
           <p class="sm:h-16">Having problems? Let us know.</p>
-          <Link
-            class="btn btn-primary"
-            href="/chat/97c70a44366a6535c145b333f973ea86dfdc2d7a99da618c40c64705ad98e322">
-            Chat with the Developer
+          <Link class="btn btn-primary" href={makeSpacePath("support.flotilla.social")}>
+            Get Support
           </Link>
         </div>
       </div>

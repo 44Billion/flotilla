@@ -30,7 +30,7 @@
   import {clip, pushToast} from "@app/toast"
 
   type Props = {
-    url: string
+    url?: string
     pubkey: string
     eventId?: string
   }
