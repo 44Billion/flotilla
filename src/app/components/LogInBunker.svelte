@@ -23,7 +23,6 @@
   import {clearModals} from "@app/modal"
   import {setChecked} from "@app/notifications"
   import {pushToast} from "@app/toast"
-  import {SIGNER_RELAYS} from "@app/env"
   import {NIP46_PERMS} from "@app/nip46"
 
   const back = () => {
@@ -38,7 +37,14 @@
     onNostrConnect: async (response: Nip46ResponseWithResult) => {
       const pubkey = await controller.broker.getPublicKey()
 
-      loginWithNip46(pubkey, controller.clientSecret, response.event.pubkey, SIGNER_RELAYS)
+      // Use the broker's current relays rather than the ones we started with, since
+      // the signer may have asked us to switch relays during the connection handshake.
+      loginWithNip46(
+        pubkey,
+        controller.clientSecret,
+        response.event.pubkey,
+        controller.broker.params.relays,
+      )
       setChecked("*")
       clearModals()
     },
@@ -78,7 +84,8 @@
         broker.cleanup()
         controller.stop()
 
-        loginWithNip46(pubkey, clientSecret, signerPubkey, relays)
+        // connect() may have switched relays, so persist the broker's current relays.
+        loginWithNip46(pubkey, clientSecret, signerPubkey, broker.params.relays)
         setChecked("*")
       } else {
         return pushToast({
