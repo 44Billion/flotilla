@@ -76,7 +76,7 @@
           onclick={() => selectAccount(option)}
           disabled={loading}
           class="card2 bg-alt flex w-full items-center p-3 text-left">
-          <Profile pubkey={option.pubkey} />
+          <Profile inert pubkey={option.pubkey} />
         </Button>
       {/each}
     </div>
