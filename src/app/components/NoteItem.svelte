@@ -23,7 +23,7 @@
 
   const relays = url ? [url] : Router.get().Event(event).getUrls()
 
-  const shouldProtect = url ? canEnforceNip70(url) : Promise.resolve(false)
+  const shouldProtect = url ? canEnforceNip70(url) : false
 
   const deleteReaction = async (event: TrustedEvent) =>
     publishDelete({relays, event, protect: await shouldProtect})

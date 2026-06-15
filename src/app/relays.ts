@@ -24,7 +24,14 @@ import {
   uniq,
 } from "@welshman/lib"
 import {throttled} from "@welshman/store"
-import {loadRelay, manageRelay, publishThunk, sign, waitForThunkError} from "@welshman/app"
+import {
+  getRelay,
+  loadRelay,
+  manageRelay,
+  publishThunk,
+  sign,
+  waitForThunkError,
+} from "@welshman/app"
 import {checkRelayHasLivekit} from "$lib/livekit"
 import {stripPrefix} from "@lib/util"
 import {relaysMostlyRestricted} from "@app/policies"
@@ -34,6 +41,9 @@ export const hasNip29 = (relay?: RelayProfile) =>
 
 export const hasNip50 = (relay?: RelayProfile) =>
   Boolean(relay?.supported_nips?.map?.(String)?.includes?.("50"))
+
+export const hasNip70 = (relay?: RelayProfile) =>
+  Boolean(relay?.supported_nips?.map?.(String)?.includes?.("70"))
 
 export const encodeRelay = (url: string) =>
   encodeURIComponent(
@@ -151,13 +161,7 @@ export const requestRelayClaims = async (urls: string[]) =>
     fromPairs(await Promise.all(urls.map(async url => [url, await requestRelayClaim(url)]))),
   )
 
-export const canEnforceNip70 = async (url: string) => {
-  const socket = Pool.get().get(url)
-
-  await socket.auth.attemptAuth(sign)
-
-  return socket.auth.status !== AuthStatus.None
-}
+export const canEnforceNip70 = (url: string) => hasNip70(getRelay(url))
 
 export const attemptRelayAccess = async (url: string, claim = "") => {
   const socket = Pool.get().get(url)
