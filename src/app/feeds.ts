@@ -18,7 +18,7 @@ import {
   now,
   on,
   sortBy,
-  WEEK,
+  MONTH,
   YEAR,
 } from "@welshman/lib"
 import {
@@ -122,7 +122,7 @@ export const makeFeed = ({
   const controller = new AbortController()
   const events = writable<TrustedEvent[]>([])
 
-  let interval = int(WEEK)
+  let interval = int(MONTH)
   let buffer = sortEventsDesc(getEventsForUrl(url, filters))
   let backwardWindow = [at - interval, at]
   let forwardWindow = [at, at + interval]
@@ -213,7 +213,7 @@ export const makeFeed = ({
     if (events.length === 0) {
       interval = Math.round(interval * 1.1)
     } else {
-      interval = int(WEEK)
+      interval = int(MONTH)
     }
   }
 
@@ -280,7 +280,7 @@ export const makeCalendarFeed = ({
   element: HTMLElement
   onExhausted?: () => void
 }) => {
-  const interval = int(5, WEEK)
+  const interval = int(5, MONTH)
   const controller = new AbortController()
 
   let exhaustedScrollers = 0
