@@ -6,6 +6,7 @@
   import Button from "@lib/components/Button.svelte"
   import Spinner from "@lib/components/Spinner.svelte"
   import NoteCard from "@app/components/NoteCard.svelte"
+  import NoteContent from "@app/components/NoteContent.svelte"
   import NoteContentMinimal from "@app/components/NoteContentMinimal.svelte"
   import {deriveEvent} from "@app/repository"
   import {entityLink} from "@app/env"
@@ -43,7 +44,9 @@
 
 <Button class="my-2 block w-full max-w-full text-left" {onclick}>
   {#if $quote}
-    {#if $quote.kind === MESSAGE}
+    {#if $quote.content.trim().match(/^(nostr:)?nevent1[a-z0-9]+$/)}
+      <NoteContent {url} event={$quote} />
+    {:else if $quote.kind === MESSAGE}
       <div
         class="border-l-2 border-solid border-l-primary py-1 pl-2 opacity-90"
         style="background-color: color-mix(in srgb, var(--color-primary) 10%, var(--color-base-300) 90%);">
