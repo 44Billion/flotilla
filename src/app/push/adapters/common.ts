@@ -26,7 +26,7 @@ import {
 import {DM_KINDS, CONTENT_KINDS, makeCommentFilter} from "@app/content"
 import {notificationSettings, shouldNotify, userSettingsValues} from "@app/settings"
 import {userSpaceUrls} from "@app/groups"
-import {makeSpacePath, getEventPath} from "@app/routes"
+import {getEventPath, goToSpace} from "@app/routes"
 
 export type PushSubscription = {
   key: string
@@ -111,7 +111,7 @@ export const onPushNotificationAction = async (action: ActionPerformed) => {
   if (event) {
     goto(await getEventPath(event, [relay]))
   } else {
-    goto(makeSpacePath(relay))
+    goToSpace(relay)
   }
 }
 

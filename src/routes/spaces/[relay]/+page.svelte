@@ -10,7 +10,7 @@
   const url = decodeRelay($page.params.relay!)
   const md = parseFloat(theme.screens.md) * 16
 
-  let width = $state(0)
+  let width = $state(window.innerWidth)
 
   $effect(() => {
     if (width > md) {

@@ -1,7 +1,6 @@
 <script lang="ts">
   import {debounce} from "throttle-debounce"
   import {dissoc, maybe} from "@welshman/lib"
-  import {goto} from "$app/navigation"
   import {preventDefault} from "@lib/html"
   import {slideAndFade} from "@lib/transition"
   import Spinner from "@lib/components/Spinner.svelte"
@@ -22,7 +21,7 @@
   import RelaySummary from "@app/components/RelaySummary.svelte"
   import SpaceJoinSettings from "@app/components/SpaceJoinSettings.svelte"
   import {pushToast} from "@app/toast"
-  import {makeSpacePath} from "@app/routes"
+  import {goToSpace} from "@app/routes"
   import {relaysMostlyRestricted} from "@app/policies"
   import {notificationSettings, setSpaceNotifications} from "@app/settings"
   import {parseInviteLink} from "@app/invites"
@@ -68,7 +67,7 @@
       }
 
       await addSpace(url)
-      await goto(makeSpacePath(url), {replaceState: true})
+      await goToSpace(url)
 
       broadcastUserData([url])
       relaysMostlyRestricted.update(dissoc(url))

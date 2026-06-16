@@ -1,6 +1,5 @@
 <script lang="ts">
   import {onMount} from "svelte"
-  import {goto} from "$app/navigation"
   import {dissoc, maybe} from "@welshman/lib"
   import {preventDefault} from "@lib/html"
   import AltArrowLeft from "@assets/icons/alt-arrow-left.svg?dataurl"
@@ -22,7 +21,7 @@
   import {notificationSettings} from "@app/settings"
   import {pushModal} from "@app/modal"
   import {pushToast} from "@app/toast"
-  import {makeSpacePath} from "@app/routes"
+  import {goToSpace} from "@app/routes"
   import {Push} from "@app/push"
 
   type Props = {
@@ -56,7 +55,7 @@
       }
 
       await addSpace(url)
-      await goto(makeSpacePath(url), {replaceState: true})
+      await goToSpace(url)
 
       broadcastUserData([url])
       relaysMostlyRestricted.update(dissoc(url))
