@@ -29,20 +29,22 @@
     <Button onclick={back} class="place-self-start pr-3 md:hidden">
       <Icon icon={ArrowLeft} size={7} />
     </Button>
-    <div class="ellipsize whitespace-nowrap flex grow items-center justify-between gap-4">
-      <div class="flex flex-col">
-        <div class="flex gap-2 items-center">
-          <RelayIcon {url} size={5} class="rounded-full md:hidden" />
-          <div class="hidden md:contents">
+    <div class="flex grow items-center justify-between gap-4">
+      <div class="flex min-w-0 flex-col">
+        <div class="flex min-w-0 items-start gap-2">
+          <RelayIcon {url} size={5} class="shrink-0 rounded-full md:hidden" />
+          <div class="hidden shrink-0 md:flex md:items-center">
             {@render leading?.()}
           </div>
-          {@render title?.()}
+          <div class="min-w-0">
+            {@render title?.()}
+          </div>
         </div>
-        <div class="text-xs text-primary md:hidden">
+        <div class="text-xs text-primary pl-7 md:hidden">
           {displayRelayUrl(url)}
         </div>
       </div>
-      <div class="flex gap-2 items-start">
+      <div class="flex shrink-0 items-center gap-2">
         {@render action?.()}
       </div>
     </div>

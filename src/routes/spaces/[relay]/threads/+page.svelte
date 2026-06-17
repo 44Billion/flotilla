@@ -3,10 +3,9 @@
   import {readable} from "svelte/store"
   import type {Readable} from "svelte/store"
   import {page} from "$app/stores"
-  import {sortBy, partition, spec, max, pushToMapKey} from "@welshman/lib"
+  import {sortBy, partition, spec, max, pushToMapKey, groupBy} from "@welshman/lib"
   import type {TrustedEvent} from "@welshman/util"
   import {THREAD, getTagValue} from "@welshman/util"
-  import {fly} from "@lib/transition"
   import NotesMinimalistic from "@assets/icons/notes-minimalistic.svg?dataurl"
   import Add from "@assets/icons/add.svg?dataurl"
   import Icon from "@lib/components/Icon.svelte"
@@ -14,9 +13,10 @@
   import PageContent from "@lib/components/PageContent.svelte"
   import Spinner from "@lib/components/Spinner.svelte"
   import SpaceBar from "@app/components/SpaceBar.svelte"
-  import ThreadItem from "@app/components/ThreadItem.svelte"
+  import ThreadBoard from "@app/components/ThreadBoard.svelte"
   import ThreadCreate from "@app/components/ThreadCreate.svelte"
   import {decodeRelay} from "@app/relays"
+  import {displayRoom} from "@app/groups"
   import {makeCommentFilter} from "@app/content"
   import {makeFeed} from "@app/feeds"
   import {pushModal} from "@app/modal"
@@ -29,9 +29,9 @@
 
   const createThread = () => pushModal(ThreadCreate, {url})
 
-  const items = $derived.by(() => {
+  const threadFeed = $derived.by(() => {
     const scores = new Map<string, number[]>()
-    const [goals, comments] = partition(spec({kind: THREAD}), $events)
+    const [threads, comments] = partition(spec({kind: THREAD}), $events)
 
     for (const comment of comments) {
       const id = getTagValue("E", comment.tags)
@@ -41,7 +41,13 @@
       }
     }
 
-    return sortBy(e => -max([...(scores.get(e.id) || []), e.created_at]), goals)
+    const items = sortBy(e => -max([...(scores.get(e.id) || []), e.created_at]), threads)
+
+    const byRoom = groupBy(e => getTagValue("h", e.tags) || "", items)
+    const roomName = (h: string) => (h ? displayRoom(url, h) : "general").toLowerCase()
+    const boards = sortBy(([h]) => roomName(h), Array.from(byRoom.entries()))
+
+    return {items, boards}
   })
 
   onMount(() => {
@@ -77,17 +83,15 @@
   {/snippet}
 </SpaceBar>
 
-<PageContent bind:element class="flex flex-col gap-2 p-2">
-  {#each items as event (event.id)}
-    <div in:fly>
-      <ThreadItem {url} event={$state.snapshot(event)} />
-    </div>
+<PageContent bind:element class="flex flex-col gap-4 p-2">
+  {#each threadFeed.boards as [h, threads] (h || "general")}
+    <ThreadBoard {url} {h} {threads} />
   {/each}
   <p class="flex h-10 items-center justify-center py-20">
     <Spinner {loading}>
       {#if loading}
         Looking for threads...
-      {:else if items.length === 0}
+      {:else if threadFeed.items.length === 0}
         No threads found.
       {:else}
         That's all!

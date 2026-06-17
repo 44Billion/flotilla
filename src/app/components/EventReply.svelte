@@ -1,15 +1,17 @@
 <script lang="ts">
   import {onMount} from "svelte"
   import {writable} from "svelte/store"
+  import type {TrustedEvent} from "@welshman/util"
   import {isMobile, preventDefault} from "@lib/html"
   import {fly} from "@lib/transition"
   import Paperclip from "@assets/icons/paperclip-2.svg?dataurl"
   import Icon from "@lib/components/Icon.svelte"
   import Button from "@lib/components/Button.svelte"
   import EditorContent from "@app/editor/EditorContent.svelte"
+  import ChatComposeParent from "@app/components/ChatComposeParent.svelte"
   import {publishComment} from "@app/comments"
   import {canEnforceNip70} from "@app/relays"
-  import {PROTECTED} from "@app/groups"
+  import {PROTECTED, prependParent} from "@app/groups"
   import {makeEditor} from "@app/editor"
   import {DraftKey} from "@app/drafts"
   import {pushToast} from "@app/toast"
@@ -18,8 +20,17 @@
     content?: string | object
   }
 
-  const {url, event, onClose, onSubmit} = $props()
-  const draftKey = new DraftKey<Values>(`reply:${event.id}`)
+  type Props = {
+    url: string
+    event: TrustedEvent
+    parent?: TrustedEvent
+    onClose: () => void
+    onClearParent?: () => void
+    onSubmit: (thunk: unknown) => void
+  }
+
+  const {url, event, parent, onClose, onClearParent, onSubmit}: Props = $props()
+  const draftKey = new DraftKey<Values>(`reply:${event.id}:${parent?.id || ""}`)
   const initialValues = draftKey.get()
   const shouldProtect = canEnforceNip70(url)
   const uploading = writable(false)
@@ -31,8 +42,8 @@
     if ($uploading) return
 
     const ed = await editor
-    const content = ed.getText({blockSeparator: "\n"}).trim()
-    const tags = ed.storage.nostr.getEditorTags()
+    let content = ed.getText({blockSeparator: "\n"}).trim()
+    let tags = ed.storage.nostr.getEditorTags()
 
     if (await shouldProtect) {
       tags.push(PROTECTED)
@@ -43,6 +54,10 @@
         theme: "error",
         message: "Please provide a message for your reply.",
       })
+    }
+
+    if (parent) {
+      ;({content, tags} = prependParent(parent, {content, tags}, url))
     }
 
     draftKey.clear()
@@ -87,6 +102,9 @@
   onsubmit={preventDefault(submit)}
   class="left-content bottom-sai right-sai fixed z-feature mb-14 md:mb-0 w-full md:w-auto pr-2">
   <div class="card2 mx-2 my-2 bg-alt shadow-md">
+    {#if parent}
+      <ChatComposeParent event={parent} clear={() => onClearParent?.()} verb="Replying to" />
+    {/if}
     <div class="relative">
       <div class="note-editor grow overflow-hidden">
         <EditorContent {autofocus} {editor} />

@@ -20,7 +20,7 @@ import {
   getRelaysFromList,
 } from "@welshman/util"
 import {makeChatId} from "@app/chats"
-import {entityLink} from "@app/env"
+import {entityLink, PLATFORM_URL} from "@app/env"
 import {encodeRelay, hasNip29} from "@app/relays"
 import {DM_KINDS} from "@app/content"
 import {ROOM} from "@app/groups"
@@ -209,6 +209,17 @@ export const getEventPath = (event: TrustedEvent, urls: string[]) => {
   }
 
   return entityLink(nip19.neventEncode({id: event.id, relays: urls}))
+}
+
+export const makeEventPermalink = (event: TrustedEvent, url?: string) => {
+  const urls = url ? [url] : Array.from(tracker.getRelays(event.id))
+  const path = getEventPath(event, urls)
+
+  if (path.includes("://")) {
+    return path
+  }
+
+  return `${PLATFORM_URL}${path}#${nip19.neventEncode({id: event.id, relays: urls})}`
 }
 
 export const getRoomItemPath = (url: string, event: TrustedEvent) => {
