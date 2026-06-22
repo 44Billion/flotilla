@@ -12,7 +12,7 @@
   import Popover from "@lib/components/Popover.svelte"
   import Button from "@lib/components/Button.svelte"
   import Confirm from "@lib/components/Confirm.svelte"
-  import {deriveUserIsSpaceAdmin} from "@app/members"
+  import {deriveUserIsSpaceAdmin, banSpaceMembers} from "@app/members"
   import {publishDelete} from "@app/deletes"
   import {canEnforceNip70} from "@app/relays"
   import {pushToast} from "@app/toast"
@@ -91,10 +91,7 @@
       title: "Ban User",
       message: `Are you sure you want to ban @${displayProfileByPubkey(pubkey)} from the space?`,
       confirm: async () => {
-        const {error} = await manageRelay(url, {
-          method: ManagementMethod.BanPubkey,
-          params: [pubkey, reason],
-        })
+        const error = await banSpaceMembers(url, [pubkey], reason)
 
         if (error) {
           pushToast({theme: "error", message: error})

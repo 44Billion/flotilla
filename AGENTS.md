@@ -170,6 +170,9 @@ src/
 - Do not define svelte event handlers inline, instead name them and put them in the script section of templates
 - Avoid using `as`, except where necessary. Instead, annotate function parameters, and ensure upstream values are typed correctly.
 - Instead of `getTag(tagName, event.tags)?.[1] || ""`, use `getTagValue(tagName, event.tags)`
+- Do not render a profile's `about` directly (e.g. `profile.about`); use the `ProfileInfo` component instead.
+- Use `type Props` instead of interface when defining props for svelte components.
+- When a component's value/prop shape mirrors a subset of an existing type, derive it with `Pick`/`Partial` and `export` that type from the component's `<script module>` (e.g. a `Values` type) for callers to import, instead of re-enumerating its sub-properties.
 
 **Human-First Simplicity (Jon Staab Style):**
 

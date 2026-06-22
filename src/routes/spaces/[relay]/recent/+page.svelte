@@ -294,7 +294,7 @@
   {/snippet}
 </SpaceBar>
 
-<PageContent class="flex flex-col gap-2 p-2" bind:element>
+<PageContent class="flex flex-col gap-2 p-2 sm:gap-4 sm:p-4" bind:element>
   {#if $recentActivity.length === 0}
     <p class="flex flex-col items-center py-20 text-center">No recent activity found!</p>
   {:else}

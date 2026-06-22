@@ -6,7 +6,7 @@
   import Magnifier from "@assets/icons/magnifier.svg?dataurl"
   import AltArrowDown from "@assets/icons/alt-arrow-down.svg?dataurl"
   import RemoteControllerMinimalistic from "@assets/icons/remote-controller-minimalistic.svg?dataurl"
-  import UserRounded from "@assets/icons/user-rounded.svg?dataurl"
+  import Home from "@assets/icons/home.svg?dataurl"
   import Danger from "@assets/icons/danger.svg?dataurl"
   import LinkRound from "@assets/icons/link-round.svg?dataurl"
   import Exit from "@assets/icons/logout-3.svg?dataurl"
@@ -29,12 +29,10 @@
   import SecondaryNavItem from "@lib/components/SecondaryNavItem.svelte"
   import SecondaryNavHeader from "@lib/components/SecondaryNavHeader.svelte"
   import SecondaryNavSection from "@lib/components/SecondaryNavSection.svelte"
-  import SpaceDetail from "@app/components/SpaceDetail.svelte"
   import SpaceInvite from "@app/components/SpaceInvite.svelte"
   import SpaceExit from "@app/components/SpaceExit.svelte"
   import SpaceJoin from "@app/components/SpaceJoin.svelte"
   import RelayName from "@app/components/RelayName.svelte"
-  import SpaceMembers from "@app/components/SpaceMembers.svelte"
   import SpaceActionItems from "@app/components/SpaceActionItems.svelte"
   import RoomCreate from "@app/components/RoomCreate.svelte"
   import SpaceMenuRoomItem from "@app/components/SpaceMenuRoomItem.svelte"
@@ -42,7 +40,7 @@
   import SocketStatusIndicator from "@app/components/SocketStatusIndicator.svelte"
   import {ENABLE_ZAPS} from "@app/env"
   import {CONTENT_KINDS} from "@app/content"
-  import {deriveSpaceMembers, deriveUserCanCreateRoom, deriveUserIsSpaceAdmin} from "@app/members"
+  import {deriveUserCanCreateRoom, deriveUserIsSpaceAdmin} from "@app/members"
   import {
     deriveUserRooms,
     deriveOtherRooms,
@@ -70,7 +68,6 @@
   const userRooms = deriveUserRooms(url)
   const otherRooms = deriveOtherRooms(url)
   const otherVoiceRooms = deriveOtherVoiceRooms(url)
-  const members = deriveSpaceMembers(url)
   const userIsAdmin = deriveUserIsSpaceAdmin(url)
   const actionItems = deriveSpaceActionItems(url)
 
@@ -96,10 +93,6 @@
   const toggleMenu = () => {
     showMenu = !showMenu
   }
-
-  const showDetail = () => pushModal(SpaceDetail, {url})
-
-  const showMembers = () => pushModal(SpaceMembers, {url})
 
   const showActionItems = () => pushModal(SpaceActionItems, {url})
 
@@ -164,22 +157,6 @@
                 Create Invite
               </Button>
             </li>
-            <li>
-              <Button onclick={showDetail}>
-                <Icon icon={RemoteControllerMinimalistic} />
-                Space Information
-              </Button>
-            </li>
-            <li>
-              <Button onclick={showMembers}>
-                <Icon icon={UserRounded} />
-                {#if $members === undefined}
-                  View Members
-                {:else}
-                  View Members ({$members.length})
-                {/if}
-              </Button>
-            </li>
             {#if $userIsAdmin}
               <li>
                 <Button onclick={showActionItems}>
@@ -230,6 +207,9 @@
       {/if}
     </div>
     <div class="flex min-h-0 flex-1 flex-col gap-1 overflow-auto overflow-x-hidden">
+      <SecondaryNavItem href={makeSpacePath(url, "about")}>
+        <Icon icon={Home} /> Space Details
+      </SecondaryNavItem>
       {#if hasNip29($relay)}
         <SecondaryNavItem href={makeSpacePath(url, "recent")}>
           <Icon icon={History} /> Recent Activity
@@ -311,8 +291,8 @@
   <div
     class="flex shrink-0 flex-col gap-2 p-2 pt-0 -mt-4 pb-[calc(var(--saib)+0.25rem)] md:pb-2 z-nav">
     <VoiceWidget />
-    <Button class="btn btn-neutral btn-sm h-10" onclick={showDetail}>
+    <Link href={makeSpacePath("about")} class="btn btn-neutral btn-sm h-10">
       <SocketStatusIndicator {url} />
-    </Button>
+    </Link>
   </div>
 </div>

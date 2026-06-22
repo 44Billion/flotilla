@@ -1,5 +1,4 @@
 <script lang="ts">
-  import {displayRelayUrl} from "@welshman/util"
   import AltArrowLeft from "@assets/icons/alt-arrow-left.svg?dataurl"
   import Spinner from "@lib/components/Spinner.svelte"
   import Button from "@lib/components/Button.svelte"
@@ -12,43 +11,55 @@
   import ModalSubtitle from "@lib/components/ModalSubtitle.svelte"
   import ModalFooter from "@lib/components/ModalFooter.svelte"
   import ProfileMultiSelect from "@app/components/ProfileMultiSelect.svelte"
-  import {addSpaceMembers} from "@app/members"
+  import {addSpaceMembers, assignRole, type SpaceRole} from "@app/members"
   import {pushToast} from "@app/toast"
 
   interface Props {
     url: string
+    role: SpaceRole
   }
 
-  const {url}: Props = $props()
+  const {url, role}: Props = $props()
 
   const back = () => history.back()
 
-  const addMember = async () => {
+  let loading = $state(false)
+  let pubkeys: string[] = $state([])
+
+  const submit = async () => {
     loading = true
 
     try {
-      const error = await addSpaceMembers(url, pubkeys)
+      // Ensure they're space members first, then assign the role
+      const memberError = await addSpaceMembers(url, pubkeys)
 
-      if (error) {
-        pushToast({theme: "error", message: error})
-      } else {
-        pushToast({message: "Members have successfully been added!"})
-        back()
+      if (memberError) {
+        pushToast({theme: "error", message: memberError})
+        return
       }
+
+      for (const pubkey of pubkeys) {
+        const error = await assignRole(url, pubkey, role.id)
+
+        if (error) {
+          pushToast({theme: "error", message: error})
+          return
+        }
+      }
+
+      pushToast({message: "Members assigned!"})
+      back()
     } finally {
       loading = false
     }
   }
-
-  let loading = $state(false)
-  let pubkeys: string[] = $state([])
 </script>
 
 <Modal>
   <ModalBody>
     <ModalHeader>
-      <ModalTitle>Add Members</ModalTitle>
-      <ModalSubtitle>to {displayRelayUrl(url)}</ModalSubtitle>
+      <ModalTitle>Add to {role.label || "Role"}</ModalTitle>
+      <ModalSubtitle>Assign members to this role</ModalSubtitle>
     </ModalHeader>
     <Field>
       {#snippet label()}
@@ -64,7 +75,7 @@
       <Icon icon={AltArrowLeft} />
       Go back
     </Button>
-    <Button class="btn btn-primary" onclick={addMember} disabled={loading}>
+    <Button class="btn btn-primary" onclick={submit} disabled={loading || pubkeys.length === 0}>
       <Spinner {loading}>Save changes</Spinner>
     </Button>
   </ModalFooter>

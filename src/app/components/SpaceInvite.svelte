@@ -2,29 +2,36 @@
   import {onMount} from "svelte"
   import {sleep} from "@welshman/lib"
   import {request} from "@welshman/net"
-  import {displayRelayUrl, getTagValue, RELAY_INVITE} from "@welshman/util"
+  import {displayRelayUrl, getTagValue, ManagementMethod, RELAY_INVITE} from "@welshman/util"
   import {Share} from "@capacitor/share"
   import LinkRound from "@assets/icons/link-round.svg?dataurl"
   import Upload from "@assets/icons/upload.svg?dataurl"
   import Copy from "@assets/icons/copy.svg?dataurl"
+  import AltArrowLeft from "@assets/icons/alt-arrow-left.svg?dataurl"
   import Spinner from "@lib/components/Spinner.svelte"
   import Field from "@lib/components/Field.svelte"
   import Button from "@lib/components/Button.svelte"
   import Icon from "@lib/components/Icon.svelte"
+  import Divider from "@lib/components/Divider.svelte"
   import Modal from "@lib/components/Modal.svelte"
   import ModalBody from "@lib/components/ModalBody.svelte"
   import ModalHeader from "@lib/components/ModalHeader.svelte"
   import ModalTitle from "@lib/components/ModalTitle.svelte"
   import ModalSubtitle from "@lib/components/ModalSubtitle.svelte"
   import ModalFooter from "@lib/components/ModalFooter.svelte"
+  import ProfileMultiSelect from "@app/components/ProfileMultiSelect.svelte"
   import QRCode from "@app/components/QRCode.svelte"
-  import {clip} from "@app/toast"
+  import {clip, pushToast} from "@app/toast"
   import {PLATFORM_URL} from "@app/env"
-  import {deriveRelayAuthError} from "@app/relays"
+  import {deriveRelayAuthError, deriveSupportedMethods} from "@app/relays"
+  import {addSpaceMembers} from "@app/members"
 
   const {url} = $props()
 
+  const supportedMethods = deriveSupportedMethods(url)
+  const canAddMembers = $derived($supportedMethods.includes(ManagementMethod.AllowPubkey))
   const authError = deriveRelayAuthError(url)
+
   let networkError = $state(false)
   const isExplicitAuthError = $derived(
     $authError &&
@@ -53,6 +60,28 @@
   let claim = $state("")
   let loading = $state(true)
   let invite = $state("")
+
+  let adding = $state(false)
+  let pubkeys: string[] = $state([])
+
+  const addMembers = async () => {
+    if (pubkeys.length === 0) return
+
+    adding = true
+
+    try {
+      const error = await addSpaceMembers(url, pubkeys)
+
+      if (error) {
+        pushToast({theme: "error", message: error})
+      } else {
+        pushToast({message: "Members have successfully been added!"})
+        back()
+      }
+    } finally {
+      adding = false
+    }
+  }
 
   $effect(() => {
     const relay = displayRelayUrl(url)
@@ -124,7 +153,7 @@
               <div class="flex w-full gap-2">
                 {#if canShare}
                   <Button
-                    class="input input-bordered flex shrink-0 w-12 items-center justify-center p-0"
+                    class="input input-bordered flex w-12 shrink-0 items-center justify-center p-0"
                     onclick={shareInvite}>
                     <Icon icon={Upload} />
                   </Button>
@@ -152,8 +181,32 @@
         </div>
       {/if}
     </div>
+    {#if canAddMembers}
+      <Divider>or</Divider>
+      <Field>
+        {#snippet label()}
+          <p>Add members directly</p>
+        {/snippet}
+        {#snippet input()}
+          <ProfileMultiSelect bind:value={pubkeys} />
+        {/snippet}
+      </Field>
+    {/if}
   </ModalBody>
   <ModalFooter>
-    <Button class="btn btn-primary grow" onclick={back}>Done</Button>
+    {#if canAddMembers}
+      <Button class="btn btn-link" onclick={back}>
+        <Icon icon={AltArrowLeft} />
+        Go back
+      </Button>
+      <Button
+        class="btn btn-primary"
+        onclick={addMembers}
+        disabled={adding || pubkeys.length === 0}>
+        <Spinner loading={adding}>Save</Spinner>
+      </Button>
+    {:else}
+      <Button class="btn btn-primary grow" onclick={back}>Done</Button>
+    {/if}
   </ModalFooter>
 </Modal>

@@ -14,6 +14,7 @@ import {
   ROOM_MEMBERS,
   ROOM_REMOVE_MEMBER,
   getPubkeyTagValues,
+  getTags,
   getTagValue,
   getTagValues,
   sortEventsAsc,
@@ -23,10 +24,135 @@ import {first, memoize, sortBy, spec, uniq} from "@welshman/lib"
 import {addRoomMember, manageRelay, pubkey, waitForThunkError} from "@welshman/app"
 import {get} from "svelte/store"
 import {deriveEventsForUrl, deriveRelaySignedEvents} from "@app/repository"
+
 export const deriveSpaceMembers = (url: string) =>
   derived(deriveRelaySignedEvents(url, [{kinds: [RELAY_MEMBERS]}]), ([event]) =>
     uniq(getTagValues("member", event?.tags ?? [])),
   )
+
+export const RELAY_ROLE = 33534
+
+export type SpaceRole = {
+  id: string
+  label: string
+  description: string
+  color: number
+  order: number
+}
+
+// hue is 0-255; map to 0-360deg. Saturation/lightness chosen to read on both themes.
+export const roleColorHue = (color: number) => (((color % 256) + 256) % 256) * (360 / 256)
+
+export const roleColor = (color: number) => `hsl(${roleColorHue(color)}, 70%, 50%)`
+
+export const roleColorSoft = (color: number) => `hsl(${roleColorHue(color)}, 70%, 90%)`
+
+export const deriveSpaceRoles = (url: string) =>
+  derived(deriveRelaySignedEvents(url, [{kinds: [RELAY_ROLE]}]), $events => {
+    const roles: SpaceRole[] = []
+
+    for (const event of $events) {
+      const id = getTagValue("d", event.tags)
+
+      if (id) {
+        roles.push({
+          id,
+          label: getTagValue("label", event.tags) ?? "",
+          description: getTagValue("description", event.tags) ?? "",
+          color: parseInt(getTagValue("color", event.tags) ?? "0", 10) || 0,
+          order: parseInt(getTagValue("order", event.tags) ?? "0", 10) || 0,
+        })
+      }
+    }
+
+    return sortBy(r => [r.order, r.label] as [number, string], roles)
+  })
+
+// Map<pubkey, roleId[]> parsed from EXTRA values on ["member", pubkey, ...roleIds] tags
+export const deriveSpaceMemberRoles = (url: string) =>
+  derived(deriveRelaySignedEvents(url, [{kinds: [RELAY_MEMBERS]}]), ([event]) => {
+    const memberRoles = new Map<string, string[]>()
+
+    if (event) {
+      for (const tag of getTags("member", event.tags)) {
+        const pubkey = tag[1]
+        const roleIds = tag.slice(2)
+
+        if (pubkey) {
+          memberRoles.set(pubkey, roleIds)
+        }
+      }
+    }
+
+    return memberRoles
+  })
+
+export const createRole = async (
+  url: string,
+  id: string,
+  label: string,
+  description: string,
+  color: number,
+  order: number,
+): Promise<string | undefined> => {
+  const {error} = await manageRelay(url, {
+    method: "createrole" as ManagementMethod,
+    params: [id, label, description, color.toString(), order.toString()],
+  })
+
+  return error
+}
+
+export const editRole = async (
+  url: string,
+  id: string,
+  label: string,
+  description: string,
+  color: number,
+  order: number,
+): Promise<string | undefined> => {
+  const {error} = await manageRelay(url, {
+    method: "editrole" as ManagementMethod,
+    params: [id, label, description, color.toString(), order.toString()],
+  })
+
+  return error
+}
+
+export const deleteRole = async (url: string, id: string): Promise<string | undefined> => {
+  const {error} = await manageRelay(url, {
+    method: "deleterole" as ManagementMethod,
+    params: [id],
+  })
+
+  return error
+}
+
+export const assignRole = async (
+  url: string,
+  pubkey: string,
+  roleId: string,
+): Promise<string | undefined> => {
+  const {error} = await manageRelay(url, {
+    method: "assignrole" as ManagementMethod,
+    params: [pubkey, roleId],
+  })
+
+  return error
+}
+
+export const unassignRole = async (
+  url: string,
+  pubkey: string,
+  roleId: string,
+): Promise<string | undefined> => {
+  const {error} = await manageRelay(url, {
+    method: "unassignrole" as ManagementMethod,
+    params: [pubkey, roleId],
+  })
+
+  return error
+}
 
 export const deriveRoomMembers = (url: string, h: string) => {
   const filters: Filter[] = [{kinds: [ROOM_MEMBERS], "#d": [h]}]
@@ -283,6 +409,47 @@ export const addSpaceMembers = async (
           params: [pubkey],
         }),
       ),
+  )
+
+  for (const {error} of results) {
+    if (error) {
+      return error
+    }
+  }
+}
+
+export const removeSpaceMembers = async (
+  url: string,
+  pubkeys: string[],
+): Promise<string | undefined> => {
+  const results = await Promise.all(
+    pubkeys.map(pubkey =>
+      manageRelay(url, {
+        method: ManagementMethod.UnallowPubkey,
+        params: [pubkey],
+      }),
+    ),
+  )
+
+  for (const {error} of results) {
+    if (error) {
+      return error
+    }
+  }
+}
+
+export const banSpaceMembers = async (
+  url: string,
+  pubkeys: string[],
+  reason = "",
+): Promise<string | undefined> => {
+  const results = await Promise.all(
+    pubkeys.map(pubkey =>
+      manageRelay(url, {
+        method: ManagementMethod.BanPubkey,
+        params: reason ? [pubkey, reason] : [pubkey],
+      }),
+    ),
   )
 
   for (const {error} of results) {

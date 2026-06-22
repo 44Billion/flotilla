@@ -33,7 +33,7 @@
       <div class="flex min-w-0 flex-col">
         <div class="flex min-w-0 items-start gap-2">
           <RelayIcon {url} size={5} class="shrink-0 rounded-full md:hidden" />
-          <div class="hidden shrink-0 md:flex md:items-center">
+          <div class="hidden shrink-0 md:flex md:items-center place-self-center">
             {@render leading?.()}
           </div>
           <div class="min-w-0">

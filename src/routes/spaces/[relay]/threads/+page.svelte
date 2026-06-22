@@ -83,7 +83,7 @@
   {/snippet}
 </SpaceBar>
 
-<PageContent bind:element class="flex flex-col gap-4 p-2">
+<PageContent bind:element class="flex flex-col gap-2 p-2 sm:gap-4 sm:p-4">
   {#each threadFeed.boards as [h, threads] (h || "general")}
     <ThreadBoard {url} {h} {threads} />
   {/each}

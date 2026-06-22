@@ -77,7 +77,7 @@
   {/snippet}
 </SpaceBar>
 
-<PageContent bind:element class="flex flex-col gap-2 p-2">
+<PageContent bind:element class="flex flex-col gap-2 p-2 sm:gap-4 sm:p-4">
   {#each items as event (event.id)}
     <div in:fly>
       <ClassifiedItem {url} event={$state.snapshot(event)} />

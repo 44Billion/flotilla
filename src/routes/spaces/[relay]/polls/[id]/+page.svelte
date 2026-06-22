@@ -64,7 +64,7 @@
   {/snippet}
 </SpaceBar>
 
-<PageContent class="flex flex-col gap-2 p-2">
+<PageContent class="flex flex-col gap-2 p-2 sm:gap-4 sm:p-4">
   {#if $event}
     <div class="flex flex-col gap-3">
       <NoteCard event={$event} {url} class="card2 bg-alt z-feature w-full">

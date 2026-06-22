@@ -26,6 +26,12 @@ export const makeCommentFilter = (kinds: number[], extra: Filter = {}) => ({
   ...extra,
 })
 
+export const makeDeleteFilter = (kinds: number[], extra: Filter = {}) => ({
+  kinds: [DELETE],
+  "#k": kinds.map(String),
+  ...extra,
+})
+
 export const REPOST_KINDS = [REPOST, GENERIC_REPOST]
 
 export const REACTION_KINDS = [REPORT, DELETE, REACTION]

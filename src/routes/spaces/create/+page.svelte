@@ -10,7 +10,7 @@
 </script>
 
 <Page>
-  <PageContent class="flex flex-col items-center gap-2 p-2">
+  <PageContent class="flex flex-col items-center gap-2 p-2 sm:gap-4 sm:p-4">
     <PageHeader>
       {#snippet title()}
         <div>Choose your Hosting Plan</div>

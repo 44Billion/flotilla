@@ -1,0 +1,49 @@
+<script lang="ts">
+  import {randomId} from "@welshman/lib"
+  import Modal from "@lib/components/Modal.svelte"
+  import ModalBody from "@lib/components/ModalBody.svelte"
+  import ModalHeader from "@lib/components/ModalHeader.svelte"
+  import ModalTitle from "@lib/components/ModalTitle.svelte"
+  import ModalSubtitle from "@lib/components/ModalSubtitle.svelte"
+  import RelayName from "@app/components/RelayName.svelte"
+  import RoleForm, {type Values} from "@app/components/RoleForm.svelte"
+  import {createRole} from "@app/members"
+  import {pushToast} from "@app/toast"
+
+  type Props = {
+    url: string
+  }
+
+  const {url}: Props = $props()
+
+  const back = () => history.back()
+
+  let loading = $state(false)
+
+  const onSubmit = async ({label, description, color}: Values) => {
+    loading = true
+
+    try {
+      const error = await createRole(url, randomId(), label, description, color, 0)
+
+      if (error) {
+        pushToast({theme: "error", message: error})
+      } else {
+        pushToast({message: "Role created!"})
+        back()
+      }
+    } finally {
+      loading = false
+    }
+  }
+</script>
+
+<Modal>
+  <ModalBody>
+    <ModalHeader>
+      <ModalTitle>Create Role</ModalTitle>
+      <ModalSubtitle>in <RelayName {url} class="text-primary" /></ModalSubtitle>
+    </ModalHeader>
+    <RoleForm {loading} {onSubmit} />
+  </ModalBody>
+</Modal>

@@ -248,7 +248,7 @@
       </div>
     </div>
   </PageBar>
-  <PageContent class="flex flex-col gap-2 p-2">
+  <PageContent class="flex flex-col gap-2 p-2 sm:gap-4 p-4">
     <div class="flex flex-col gap-2" bind:this={element}>
       {#each PLATFORM_RELAYS as url (url)}
         <Button

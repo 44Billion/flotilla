@@ -33,7 +33,7 @@
 </script>
 
 <div
-  class="ml-sai mt-sai mb-sai relative z-popover isolate hidden w-14 shrink-0 bg-base-200 pt-2 md:block">
+  class="ml-sai mt-sai mb-sai relative z-popover isolate hidden w-14 shrink-0 bg-base-200 pt-2 md:block border-r border-solid border-base-content/15 dark:border-base-content/10">
   <div class="flex h-full flex-col" class:justify-between={PLATFORM_RELAYS.length === 0}>
     <PrimaryNavSpaces />
     {#if PLATFORM_RELAYS.length > 0}

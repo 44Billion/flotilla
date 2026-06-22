@@ -65,7 +65,7 @@
   {/snippet}
 </SpaceBar>
 
-<PageContent class="flex flex-col gap-3 p-2">
+<PageContent class="flex flex-col gap-2 p-2 sm:gap-4 sm:p-4">
   {#if $event}
     <div class="card2 bg-alt col-3 z-feature">
       <div class="flex items-start gap-4">

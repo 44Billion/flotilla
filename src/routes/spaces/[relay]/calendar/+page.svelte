@@ -126,9 +126,9 @@
   {/snippet}
 </SpaceBar>
 
-<PageContent bind:element class="flex flex-col gap-2 p-2">
+<PageContent bind:element class="flex flex-col gap-2 p-2 sm:px-4">
   {#each items as { event, dateDisplay, isFirstFutureEvent }, i (event.id)}
-    <div class={"calendar-event-" + event.id}>
+    <div class="flex flex-col gap-2 calendar-event-{event.id}">
       {#if isFirstFutureEvent}
         <div class="flex items-center gap-2 p-2">
           <div class="h-px grow bg-primary"></div>

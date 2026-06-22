@@ -76,6 +76,9 @@
       <ModalSubtitle>on {displayRelayUrl(url)}</ModalSubtitle>
     </ModalHeader>
     <div class="flex flex-col gap-2">
+      {#if $bans.length === 0}
+        <div class="card2 bg-base-200 p-4 text-sm opacity-70">No banned users.</div>
+      {/if}
       {#each $bans as { pubkey, reason } (pubkey)}
         <div class="card2 bg-alt relative">
           <div class="flex items-center justify-between gap-2">

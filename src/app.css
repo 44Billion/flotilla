@@ -414,11 +414,11 @@ progress[value]::-webkit-progress-value {
 /* content width for fixed elements */
 
 .left-content {
-  @apply md:left-[calc(18.5rem+var(--sail))];
+  @apply left-sai md:left-[calc(18.5rem+var(--sail))];
 }
 
 .left-content-full {
-  @apply md:left-[calc(3.5rem+var(--sail))];
+  @apply left-sai md:left-[calc(3.5rem+var(--sail))];
 }
 
 /* Keyboard open state adjustments */

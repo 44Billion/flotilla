@@ -53,6 +53,7 @@ import {
 } from "@app/groups"
 import {decodeRelay} from "@app/relays"
 import {loadFeedsForPubkey} from "@app/feeds"
+import {RELAY_ROLE} from "@app/members"
 import {hasBlossomSupport} from "@app/uploads"
 import {LIVEKIT_PARTICIPANTS} from "@app/call/voice"
 
@@ -268,7 +269,7 @@ const syncUserData = () => {
 const syncSpace = (url: string) => {
   const since = ago(WEEK)
   const controller = new AbortController()
-  const relayKinds = [RELAY_MEMBERS]
+  const relayKinds = [RELAY_MEMBERS, RELAY_ROLE]
   const roomMetaKinds = [ROOM_META, ROOM_ADMINS, ROOM_MEMBERS, LIVEKIT_PARTICIPANTS]
   const roomDeleteKinds = [ROOM_DELETE, ROOM_JOIN, ROOM_LEAVE]
 
@@ -277,8 +278,8 @@ const syncSpace = (url: string) => {
     signal: controller.signal,
     filters: [
       {kinds: [...relayKinds, ...roomMetaKinds, ...roomDeleteKinds, ...CONTENT_KINDS, MESSAGE]},
-      makeCommentFilter(CONTENT_KINDS, {since}),
       {kinds: [...REACTION_KINDS, POLL_RESPONSE], since},
+      makeCommentFilter(CONTENT_KINDS, {since}),
     ],
   })
 

@@ -1,13 +1,7 @@
 <script lang="ts">
   import {onMount} from "svelte"
   import {removeUndefined} from "@welshman/lib"
-  import {ManagementMethod} from "@welshman/util"
-  import {
-    manageRelay,
-    deriveProfile,
-    displayProfileByPubkey,
-    loadMessagingRelayList,
-  } from "@welshman/app"
+  import {deriveProfile, displayProfileByPubkey, loadMessagingRelayList} from "@welshman/app"
   import AltArrowLeft from "@assets/icons/alt-arrow-left.svg?dataurl"
   import Code2 from "@assets/icons/code-2.svg?dataurl"
   import Letter from "@assets/icons/letter-opened.svg?dataurl"
@@ -29,7 +23,12 @@
   import EventInfo from "@app/components/EventInfo.svelte"
   import ProfileBadges from "@app/components/ProfileBadges.svelte"
   import {pubkeyLink} from "@app/env"
-  import {deriveUserIsSpaceAdmin, deriveSpaceBannedPubkeyItems, addSpaceMembers} from "@app/members"
+  import {
+    deriveUserIsSpaceAdmin,
+    deriveSpaceBannedPubkeyItems,
+    addSpaceMembers,
+    banSpaceMembers,
+  } from "@app/members"
   import {pushModal} from "@app/modal"
   import {pushToast} from "@app/toast"
   import {goToChat} from "@app/routes"
@@ -68,10 +67,7 @@
       title: "Ban User",
       message: `Are you sure you want to ban @${displayProfileByPubkey(pubkey)} from the space?`,
       confirm: async () => {
-        const {error} = await manageRelay(url!, {
-          method: ManagementMethod.BanPubkey,
-          params: [pubkey],
-        })
+        const error = await banSpaceMembers(url!, [pubkey])
 
         if (error) {
           pushToast({theme: "error", message: error})

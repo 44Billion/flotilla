@@ -33,7 +33,7 @@
   const copyPubkey = () => clip(nip19.npubEncode(pubkey))
 </script>
 
-<div class="flex max-w-full items-start gap-3">
+<div class="flex max-w-full items-start gap-2">
   {#if inert}
     <span class="py-1">
       <ProfileCircle {pubkey} size={avatarSize} />
@@ -46,7 +46,7 @@
   <div class="flex min-w-0 flex-col">
     <div class="flex items-center gap-2">
       {#if inert}
-        <span class="text-bold overflow-hidden text-ellipsis">
+        <span class="text-bold overflow-hidden text-ellipsis whitespace-nowrap">
           {$profileDisplay}
         </span>
       {:else}

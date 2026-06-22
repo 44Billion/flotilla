@@ -1,4 +1,5 @@
 <script lang="ts">
+  import cx from "classnames"
   import {fromNostrURI} from "@welshman/util"
   import {nthEq} from "@welshman/lib"
   import {
@@ -37,10 +38,11 @@
   interface Props {
     event: any
     trimParent?: boolean
+    singleLine?: boolean
     url?: string
   }
 
-  const {event, trimParent = false, url}: Props = $props()
+  const {event, trimParent = false, singleLine = false, url}: Props = $props()
 
   const fullContent = parse(event)
 
@@ -104,10 +106,18 @@
       </p>
     </div>
   {:else}
-    <div class="overflow-hidden text-ellipsis wrap-break-word">
+    <div
+      class={cx(
+        "overflow-hidden text-ellipsis",
+        singleLine ? "whitespace-nowrap" : "wrap-break-word",
+      )}>
       {#each shortContent as parsed, i}
         {#if isNewline(parsed)}
-          <ContentNewline value={parsed.value} />
+          {#if singleLine}
+            {" "}
+          {:else}
+            <ContentNewline value={parsed.value} />
+          {/if}
         {:else if isTopic(parsed)}
           <ContentTopic value={parsed.value} />
         {:else if isEmoji(parsed)}

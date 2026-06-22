@@ -126,7 +126,7 @@
 <Modal tag="form" onsubmit={preventDefault(trySubmit)}>
   <ModalBody>
     <ModalHeader>
-      <ModalTitle>Edit a Space</ModalTitle>
+      <ModalTitle>Edit this Space</ModalTitle>
       <ModalSubtitle><span class="text-primary">{displayRelayUrl(url)}</span></ModalSubtitle>
     </ModalHeader>
     <FieldInline>
