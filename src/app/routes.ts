@@ -87,7 +87,7 @@ export const goToSpace = async (url: string) => {
   } else if (!hasNip29(getRelay(url))) {
     goto(makeSpaceChatPath(url), {replaceState: true})
   } else if (window.matchMedia(`(min-width: ${theme.screens.md})`).matches) {
-    goto(makeSpacePath(url, "recent"), {replaceState: true})
+    goto(makeSpacePath(url, "about"), {replaceState: true})
   } else {
     goto(makeSpacePath(url), {replaceState: true})
   }

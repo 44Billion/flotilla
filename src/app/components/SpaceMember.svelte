@@ -3,8 +3,6 @@
   import {displayProfileByPubkey} from "@welshman/app"
   import {fly} from "@lib/transition"
   import MenuDots from "@assets/icons/menu-dots.svg?dataurl"
-  import UserRounded from "@assets/icons/user-rounded.svg?dataurl"
-  import Letter from "@assets/icons/letter-opened.svg?dataurl"
   import Pen from "@assets/icons/pen.svg?dataurl"
   import UserMinus from "@assets/icons/user-minus.svg?dataurl"
   import MinusCircle from "@assets/icons/minus-circle.svg?dataurl"
@@ -21,7 +19,6 @@
   import {deriveSupportedMethods} from "@app/relays"
   import {pushModal} from "@app/modal"
   import {pushToast} from "@app/toast"
-  import {goToChat} from "@app/routes"
 
   interface Props {
     url: string
@@ -45,11 +42,6 @@
   const openProfile = () => {
     menuOpen = false
     pushModal(ProfileDetail, {pubkey, url})
-  }
-
-  const sendMessage = () => {
-    menuOpen = false
-    goToChat([pubkey])
   }
 
   const editRoles = () => {
@@ -94,7 +86,7 @@
   }
 </script>
 
-<div class="card2 card2-sm border border-solid border-base-content/20 relative">
+<div class="card2 card2-sm relative">
   <button
     type="button"
     class="absolute inset-0 cursor-pointer rounded-box"
@@ -115,48 +107,44 @@
         <ProfileInfo {pubkey} {url} singleLine />
       </div>
     </div>
-    <div class="pointer-events-auto relative shrink-0">
-      <Button class="btn btn-square btn-ghost btn-sm" onclick={() => (menuOpen = !menuOpen)}>
-        <Icon icon={MenuDots} />
-      </Button>
-      {#if menuOpen}
-        <Popover hideOnClick onClose={closeMenu}>
-          <ul
-            transition:fly
-            class="menu absolute right-0 z-popover mt-2 w-52 gap-1 rounded-box bg-base-100 p-2 shadow-md">
-            <li>
-              <Button onclick={sendMessage}>
-                <Icon icon={Letter} />
-                Send message
-              </Button>
-            </li>
-            {#if canAssign || canUnassign}
-              <li>
-                <Button onclick={editRoles}>
-                  <Icon icon={Pen} />
-                  Edit roles
-                </Button>
-              </li>
-            {/if}
-            {#if canUnallow}
-              <li>
-                <Button onclick={removeMember}>
-                  <Icon icon={UserMinus} />
-                  Remove member
-                </Button>
-              </li>
-            {/if}
-            {#if canBan}
-              <li>
-                <Button class="text-error" onclick={banMember}>
-                  <Icon icon={MinusCircle} />
-                  Ban member
-                </Button>
-              </li>
-            {/if}
-          </ul>
-        </Popover>
-      {/if}
-    </div>
+    {#if canAssign || canUnassign || canUnallow || canBan}
+      <div class="pointer-events-auto relative shrink-0">
+        <Button class="btn btn-square btn-ghost btn-sm" onclick={() => (menuOpen = !menuOpen)}>
+          <Icon icon={MenuDots} />
+        </Button>
+        {#if menuOpen}
+          <Popover hideOnClick onClose={closeMenu}>
+            <ul
+              transition:fly
+              class="menu absolute right-0 z-popover mt-2 w-52 gap-1 rounded-box bg-base-100 p-2 shadow-md">
+              {#if canAssign || canUnassign}
+                <li>
+                  <Button onclick={editRoles}>
+                    <Icon icon={Pen} />
+                    Edit roles
+                  </Button>
+                </li>
+              {/if}
+              {#if canUnallow}
+                <li>
+                  <Button onclick={removeMember}>
+                    <Icon icon={UserMinus} />
+                    Remove member
+                  </Button>
+                </li>
+              {/if}
+              {#if canBan}
+                <li>
+                  <Button class="text-error" onclick={banMember}>
+                    <Icon icon={MinusCircle} />
+                    Ban member
+                  </Button>
+                </li>
+              {/if}
+            </ul>
+          </Popover>
+        {/if}
+      </div>
+    {/if}
   </div>
 </div>

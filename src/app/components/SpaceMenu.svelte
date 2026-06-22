@@ -5,7 +5,7 @@
   import {fly} from "@lib/transition"
   import Magnifier from "@assets/icons/magnifier.svg?dataurl"
   import AltArrowDown from "@assets/icons/alt-arrow-down.svg?dataurl"
-  import RemoteControllerMinimalistic from "@assets/icons/remote-controller-minimalistic.svg?dataurl"
+  import UsersGroup from "@assets/icons/users-group-rounded.svg?dataurl"
   import Home from "@assets/icons/home.svg?dataurl"
   import Danger from "@assets/icons/danger.svg?dataurl"
   import LinkRound from "@assets/icons/link-round.svg?dataurl"
@@ -219,6 +219,9 @@
           <Icon icon={ChatRound} /> Chat
         </SecondaryNavItem>
       {/if}
+      <SecondaryNavItem href={makeSpacePath(url, "directory")}>
+        <Icon icon={UsersGroup} /> Directory
+      </SecondaryNavItem>
       {#if ENABLE_ZAPS && $spaceKinds.has(ZAP_GOAL)}
         <SecondaryNavItem href={goalsPath}>
           <Icon icon={StarFallMinimalistic} /> Goals

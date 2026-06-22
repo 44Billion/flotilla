@@ -77,7 +77,7 @@
             <span class="loading loading-spinner"></span>
           </div>
         {:then preview}
-          <div class="bg-alt flex max-w-xl flex-col leading-normal">
+          <div class="border border-solid border-base-content/20 flex max-w-xl flex-col leading-normal rounded-box">
             {#if preview.image && !hideImage}
               <img
                 alt=""
@@ -92,7 +92,7 @@
             </div>
           </div>
         {:catch}
-          <p class="bg-alt p-12 text-center leading-normal">
+          <p class="border border-solid border-base-content/20 p-12 text-center leading-normal">
             Unable to load a preview for {url}
           </p>
         {/await}

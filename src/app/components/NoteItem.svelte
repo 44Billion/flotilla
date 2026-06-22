@@ -40,7 +40,7 @@
     })
 </script>
 
-<NoteCard {event} {url} class="cv card2 bg-alt">
+<NoteCard {event} {url} class="cv card2">
   <NoteContent {event} expandMode="inline" />
   <div class="flex w-full justify-between gap-2">
     <ReactionSummary {url} {event} {deleteReaction} {createReaction} reactionClass="tooltip-right">

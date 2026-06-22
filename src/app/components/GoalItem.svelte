@@ -21,7 +21,7 @@
 </script>
 
 <Link
-  class="cv col-2 card2 bg-alt w-full cursor-pointer shadow-md"
+  class="cv col-2 card2 w-full cursor-pointer"
   href={makeGoalPath(url, event.id)}>
   <p class="text-2xl">{event.content}</p>
   <Content

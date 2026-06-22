@@ -90,13 +90,13 @@
     {:else}
       <div class="flex flex-col gap-2">
         {#each $roles as role (role.id)}
-          <label class="card2 card2-sm bg-alt flex cursor-pointer items-center gap-3">
+          <label class="card2 card2-sm flex justify-between cursor-pointer gap-3">
+            <RoleItem {role} />
             <input
               type="checkbox"
               class="checkbox checkbox-sm"
               checked={selected.has(role.id)}
               onchange={() => toggle(role.id)} />
-            <RoleItem {role} />
           </label>
         {/each}
       </div>

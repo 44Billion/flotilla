@@ -23,7 +23,7 @@
     </PageHeader>
     <div class="flex w-full max-w-lg flex-col gap-4 lg:max-w-4xl">
       <div class="grid grid-cols-1 gap-2 lg:grid-cols-2">
-        <div class="card2 bg-alt flex flex-col gap-5">
+        <div class="card2 flex flex-col gap-5">
           <div class="flex flex-col gap-3">
             <div class="bg-primary/20 flex h-10 w-10 items-center justify-center rounded-md">
               <Icon icon={CloudCheck} class="text-primary" />
@@ -59,7 +59,7 @@
             <Icon icon={ArrowRight} />
           </Link>
         </div>
-        <div class="card2 bg-alt border-primary flex flex-col gap-5 border">
+        <div class="card2 border-primary flex flex-col gap-5 border">
           <div class="flex flex-col gap-3">
             <div class="flex items-start justify-between">
               <img alt="Coracle Logo" src="/coracle.png" class="h-10 w-10" />

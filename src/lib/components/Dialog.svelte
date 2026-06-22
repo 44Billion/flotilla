@@ -44,7 +44,7 @@
   )
 </script>
 
-<div class="center fixed inset-0 z-modal">
+<div class="dialog center fixed inset-0 z-modal">
   <button
     type="button"
     aria-label="Close dialog"

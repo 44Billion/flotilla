@@ -20,6 +20,7 @@ import {
   RELAY_REMOVE_MEMBER,
   MESSAGE,
   POLL_RESPONSE,
+  APP_DATA,
   isSignedEvent,
   unionFilters,
 } from "@welshman/util"
@@ -54,6 +55,7 @@ import {
 import {decodeRelay} from "@app/relays"
 import {loadFeedsForPubkey} from "@app/feeds"
 import {RELAY_ROLE} from "@app/members"
+import {FEATURED_CONTENT_D} from "@app/featured"
 import {hasBlossomSupport} from "@app/uploads"
 import {LIVEKIT_PARTICIPANTS} from "@app/call/voice"
 
@@ -278,6 +280,7 @@ const syncSpace = (url: string) => {
     signal: controller.signal,
     filters: [
       {kinds: [...relayKinds, ...roomMetaKinds, ...roomDeleteKinds, ...CONTENT_KINDS, MESSAGE]},
+      {kinds: [APP_DATA], "#d": [FEATURED_CONTENT_D]},
       {kinds: [...REACTION_KINDS, POLL_RESPONSE], since},
       makeCommentFilter(CONTENT_KINDS, {since}),
     ],

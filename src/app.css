@@ -85,7 +85,7 @@
 }
 
 @utility card2 {
-  @apply rounded-box text-base-content p-4 sm:p-6;
+  @apply rounded-box text-base-content border-base-content/20 border border-solid p-4 sm:p-6 shadow-xl/5 bg-base-100;
 }
 
 @utility column {
@@ -274,6 +274,11 @@
 
 .card2.card2-sm {
   @apply text-base-content p-2 sm:p-4;
+}
+
+.card2 .card2,
+.dialog .card2 {
+  @apply shadow-none;
 }
 
 [data-tip]::before {
