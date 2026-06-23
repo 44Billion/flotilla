@@ -14,7 +14,7 @@ RUN corepack enable
 
 WORKDIR /app
 ENV NODE_OPTIONS=--max_old_space_size=16384
-COPY package.json pnpm-lock.yaml ./
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 RUN pnpm i --frozen-lockfile
 COPY . .
 ARG VITE_BUILD_HASH
