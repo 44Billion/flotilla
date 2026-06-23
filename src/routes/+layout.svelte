@@ -1,7 +1,6 @@
 <script lang="ts">
   import "@src/app.css"
   import "@welshman/editor/index.css"
-  import "@capacitor-community/safe-area"
   import * as nip19 from "nostr-tools/nip19"
   import type {Unsubscriber} from "svelte/store"
   import {get} from "svelte/store"

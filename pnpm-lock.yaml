@@ -14,9 +14,6 @@ importers:
       '@aparajita/capacitor-secure-storage':
         specifier: ^8.0.0
         version: 8.0.0
-      '@capacitor-community/safe-area':
-        specifier: ^8.0.1
-        version: 8.0.1(@capacitor/core@8.3.4)
       '@capacitor/android':
         specifier: ^8.0.1
         version: 8.3.4(@capacitor/core@8.3.4)
@@ -778,11 +775,6 @@ packages:
 
   '@canvas/image-data@1.1.0':
     resolution: {integrity: sha512-QdObRRjRbcXGmM1tmJ+MrHcaz1MftF2+W7YI+MsphnsCrmtyfS0d5qJbk0MeSbUeyM/jCb0hmnkXPsy026L7dA==}
-
-  '@capacitor-community/safe-area@8.0.1':
-    resolution: {integrity: sha512-zVVQ7k94DbOff1mHP8qrZGTJZWyhGZnKHD2eXdcobIoOBFW9CeVphLNZYDCop/DBsHXfv6r8k0/Ac8xMIlwT+A==}
-    peerDependencies:
-      '@capacitor/core': '>=8.0.0'
 
   '@capacitor/android@8.3.4':
     resolution: {integrity: sha512-7gJjrG3X32Am1QMLqgMztWTYMLMVNE+VZwhekNxhvYizH4mOV05vH+rC9B+f17bCkYZfyu/qXQX6hoY7kLeVZw==}
@@ -5846,10 +5838,6 @@ snapshots:
   '@bufbuild/protobuf@1.10.1': {}
 
   '@canvas/image-data@1.1.0': {}
-
-  '@capacitor-community/safe-area@8.0.1(@capacitor/core@8.3.4)':
-    dependencies:
-      '@capacitor/core': 8.3.4
 
   '@capacitor/android@8.3.4(@capacitor/core@8.3.4)':
     dependencies:

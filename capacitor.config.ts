@@ -7,22 +7,18 @@ const config: CapacitorConfig = {
   ios: {
     scheme: "Flotilla Chat",
   },
-  android: {
-    adjustMarginsForEdgeToEdge: true,
-  },
   plugins: {
     CapacitorHttp: {
       enabled: true,
     },
     SystemBars: {
-      insetsHandling: "enable",
+      insetsHandling: "css",
     },
     SplashScreen: {
       androidSplashResourceName: "splash",
     },
     Keyboard: {
       style: "DARK",
-      resizeOnFullScreen: true,
     },
     Badge: {
       persist: true,
