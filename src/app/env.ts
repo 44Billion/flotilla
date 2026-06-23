@@ -50,7 +50,7 @@ export const DEFAULT_SPACES = fromCsv(import.meta.env.VITE_DEFAULT_SPACES).map(n
 
 export const DEFAULT_PUBKEYS = import.meta.env.VITE_DEFAULT_PUBKEYS
 
-export const DUFFLEPUD_URL = "https://dufflepud.onrender.com"
+export const DUFFLEPUD_URL = "https://dufflepud.coracle.social"
 
 export const THUMBNAIL_URL = import.meta.env.VITE_THUMBNAIL_URL
 
