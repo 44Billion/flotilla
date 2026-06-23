@@ -53,7 +53,10 @@
     </ModalHeader>
     <Field>
       {#snippet info()}
-        <p>Each entry is shown on the space's About page. Links will be fetched and displayed automatically.</p>
+        <p>
+          Each entry is shown on the space's About page. Links will be fetched and displayed
+          automatically.
+        </p>
       {/snippet}
       {#snippet input()}
         <InputList bind:value={content} placeholder="URL or nevent...">

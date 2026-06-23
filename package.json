@@ -1,6 +1,6 @@
 {
   "name": "flotilla",
-  "version": "1.8.0",
+  "version": "1.8.1",
   "private": true,
   "scripts": {
     "dev": "vite dev",
@@ -63,7 +63,7 @@
     "@getalby/sdk": "^5.1.2",
     "@hono/node-server": "^2.0.0",
     "@noble/curves": "^1.9.7",
-    "@pomade/core": "^0.3.0",
+    "@pomade/core": "^0.3.1",
     "@poppanator/sveltekit-svg": "^7.0.0",
     "@sveltejs/adapter-static": "^3.0.10",
     "@tiptap/core": "^2.27.2",

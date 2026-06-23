@@ -20,9 +20,7 @@
   const h = getTagValue("h", event.tags)
 </script>
 
-<Link
-  class="cv col-2 card2 w-full cursor-pointer"
-  href={makeThreadPath(url, event.id)}>
+<Link class="cv col-2 card2 w-full cursor-pointer" href={makeThreadPath(url, event.id)}>
   {#if title}
     <div class="flex w-full items-center justify-between gap-2">
       <p class="text-xl">{title}</p>

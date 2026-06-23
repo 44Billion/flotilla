@@ -1,5 +1,26 @@
 # Changelog
 
+# 1.8.1
+
+* Add space dashboard and directory
+* Add space roles
+* Fix UI bugs
+* Redesign threads as a linear phpBB-style forum view
+* Unwrap messages that are only quotes
+* Use direct zapping for the donate page, link to flotilla space for support
+* Speed up feed loading
+* Fix bunker login
+* Add welshman skill
+* Replace zap slider with common amount pills
+* Make join rejections due to an empty claim more forgiving
+* Show voice room participants before joining
+* Fix direct links to spaces
+* Show per-relay publish status on outgoing messages
+* Fix A/V call bugs
+* Sync checked read state for cross-device badges
+* Fix deleted rooms persisting in navigation
+* Turn on notification defaults and prompt on first DM visit
+
 # 1.8.0
 
 * Fix relay badge overflow

@@ -77,7 +77,8 @@
             <span class="loading loading-spinner"></span>
           </div>
         {:then preview}
-          <div class="border border-solid border-base-content/20 flex max-w-xl flex-col leading-normal rounded-box">
+          <div
+            class="border border-solid border-base-content/20 flex max-w-xl flex-col leading-normal rounded-box">
             {#if preview.image && !hideImage}
               <img
                 alt=""

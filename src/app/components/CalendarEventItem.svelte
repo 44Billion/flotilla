@@ -18,9 +18,7 @@
   const h = getTagValue("h", event.tags)
 </script>
 
-<Link
-  class="cv col-3 card2 w-full cursor-pointer"
-  href={makeCalendarPath(url, getAddress(event))}>
+<Link class="cv col-3 card2 w-full cursor-pointer" href={makeCalendarPath(url, getAddress(event))}>
   <CalendarEventHeader {event} />
   <div class="flex w-full flex-col items-end justify-between gap-2 sm:flex-row">
     <span class="whitespace-nowrap py-1 text-sm opacity-75">

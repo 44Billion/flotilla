@@ -2,7 +2,6 @@ import {derived} from "svelte/store"
 import {first, now} from "@welshman/lib"
 import {APP_DATA, getTagValues} from "@welshman/util"
 import type {ManagementMethod} from "@welshman/util"
-import {publish} from "@welshman/net"
 import {deriveRelay, manageRelay} from "@welshman/app"
 import {deriveEventsForUrl} from "@app/repository"
 
@@ -42,7 +41,7 @@ export const setFeaturedContent = async (
 
   const {error} = await manageRelay(url, {
     method: "signevent" as ManagementMethod,
-    params: [template],
+    params: [template as unknown as string],
   })
 
   return error

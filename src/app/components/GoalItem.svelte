@@ -20,9 +20,7 @@
   const h = getTagValue("h", event.tags)
 </script>
 
-<Link
-  class="cv col-2 card2 w-full cursor-pointer"
-  href={makeGoalPath(url, event.id)}>
+<Link class="cv col-2 card2 w-full cursor-pointer" href={makeGoalPath(url, event.id)}>
   <p class="text-2xl">{event.content}</p>
   <Content
     event={{content: summary, tags: event.tags}}
