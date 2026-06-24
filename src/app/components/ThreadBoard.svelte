@@ -12,7 +12,7 @@
   const {url, h, threads}: Props = $props()
 </script>
 
-<section class="overflow-hidden rounded-box border border-base-content/15 bg-base-100 shadow-sm">
+<section class="rounded-box border border-base-content/15 bg-base-100 shadow-sm">
   <header
     class="flex items-center justify-between gap-2 border-b border-base-content/15 bg-base-200/70 px-4 py-2.5">
     <h2 class="text-sm font-bold sm:text-base">
@@ -27,14 +27,20 @@
       {threads.length === 1 ? "topic" : "topics"}
     </span>
   </header>
-  <div
-    class="hidden border-b border-base-content/10 bg-base-200/40 px-4 py-2 text-xs font-bold uppercase tracking-wide opacity-60 sm:grid sm:grid-cols-[1fr_8rem_5rem_8rem] sm:gap-x-4">
-    <span>Topic</span>
-    <span>Author</span>
-    <span class="text-center">Replies</span>
-    <span class="text-right">Last post</span>
-  </div>
-  {#each threads as event (event.id)}
-    <ThreadBoardItem {url} {event} />
-  {/each}
+  <table class="w-full border-collapse">
+    <thead
+      class="hidden text-xs font-bold uppercase tracking-wide opacity-60 sm:table-header-group">
+      <tr class="border-b border-base-content/10 bg-base-200/40">
+        <th class="px-4 py-2 text-left font-bold">Topic</th>
+        <th class="w-32 px-4 py-2 text-left font-bold">Author</th>
+        <th class="w-20 px-4 py-2 text-center font-bold">Replies</th>
+        <th class="w-32 px-4 py-2 text-right font-bold">Last post</th>
+      </tr>
+    </thead>
+    <tbody>
+      {#each threads as event (event.id)}
+        <ThreadBoardItem {url} {event} />
+      {/each}
+    </tbody>
+  </table>
 </section>

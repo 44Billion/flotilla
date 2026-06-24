@@ -93,8 +93,6 @@
         Looking for threads...
       {:else if threadFeed.items.length === 0}
         No threads found.
-      {:else}
-        That's all!
       {/if}
     </Spinner>
   </p>
