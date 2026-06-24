@@ -99,7 +99,7 @@ export const mostlyRestrictedPolicy = (socket: Socket) => {
   const pending = new Set<string>()
 
   const updateStatus = (error?: string) => {
-    if (restricted > total / 2) {
+    if (total > 5 && restricted > total / 2) {
       if (error) {
         return relaysMostlyRestricted.update(assoc(socket.url, error))
       }

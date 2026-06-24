@@ -123,7 +123,7 @@
           <div class="card2 bg-alt flex flex-col gap-4">
             <p class="opacity-75">You're about to join:</p>
             <RelaySummary url={inviteData.url} />
-            <SpaceJoinSettings url={inviteData.url} bind:error bind:notifications />
+            <SpaceJoinSettings url={inviteData.url} {error} bind:notifications />
           </div>
         </div>
       </div>

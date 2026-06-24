@@ -177,14 +177,24 @@ export const attemptRelayAccess = async (url: string, claim = "") => {
     return `Failed to connect`
   }
 
+  // Some relays are extra slow, remove this when welshman is updated
+  await poll({
+    signal: AbortSignal.timeout(3000),
+    condition: () => socket.auth.status === AuthStatus.Requested,
+  })
+
   await socket.auth.attemptAuth(sign)
 
+  // Some relays are extra slow, remove this when welshman is updated
+  await poll({
+    signal: AbortSignal.timeout(3000),
+    condition: () => socket.auth.status !== AuthStatus.PendingResponse,
+  })
+
   if (![AuthStatus.None, AuthStatus.Ok].includes(socket.auth.status)) {
-    if (socket.auth.details) {
-      return `Failed to authenticate (${socket.auth.details})`
-    } else {
-      return `Failed to authenticate (${last(socket.auth.status.split(":"))})`
-    }
+    const message = socket.auth.details || last(socket.auth.status.split(":"))
+
+    return `Failed to authenticate (${message})`
   }
 
   const error = await waitForThunkError(publishJoinRequest({url, claim}))

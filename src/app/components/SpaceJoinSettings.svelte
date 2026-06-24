@@ -10,7 +10,7 @@
     notifications: boolean
   }
 
-  let {url, error = $bindable(), notifications = $bindable()}: Props = $props()
+  let {url, error, notifications = $bindable()}: Props = $props()
 </script>
 
 <div class="card2 card2-sm bg-alt">

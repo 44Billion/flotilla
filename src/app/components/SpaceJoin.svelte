@@ -81,7 +81,7 @@
 <Modal tag="form" onsubmit={preventDefault(join)}>
   <ModalBody>
     <RelaySummary {url} />
-    <SpaceJoinSettings {url} bind:error bind:notifications />
+    <SpaceJoinSettings {url} {error} bind:notifications />
   </ModalBody>
   <ModalFooter>
     <Button class="btn btn-link" onclick={back} disabled={loading}>
