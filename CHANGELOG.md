@@ -1,5 +1,10 @@
 # Changelog
 
+# 1.8.2
+
+* Fix thread board styling
+* Fix space joining errors
+
 # 1.8.1
 
 * Add space dashboard and directory
